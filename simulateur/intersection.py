@@ -1,10 +1,10 @@
 class intersection:
-		"""
-			Modélise une intersection.
-				# coordonees : Position de l'intersection sur la grille
-				# @author : Bonfante
-		"""
-	
+	"""
+		Modelise une intersection.
+			# coordonees : Position de l'intersection sur la grille
+			# @author : Bonfante
+	"""
+		
 	def __init__(self, coordonnees):
 		# Liste des voitures sur l'intersection
 		self.vehicules = []
@@ -54,11 +54,11 @@ class intersection:
 		self.vehicules.append(voiture)
 		
 	def notifie_temps(self, temps, simulation_manager):
-	"""
-		Methode appelée lorsque le simulateur augmente le temps
-	"""
-	self.mise_a_jour_controle_acces(temps,simulation_manager)
-	self.avancer_vehicule()
+		"""
+			Methode appelée lorsque le simulateur augmente le temps
+		"""
+		self.mise_a_jour_controle_acces(temps,simulation_manager)
+		self.avancer_vehicule()
 		
 	def avancer_vehicule(self):
 		"""
