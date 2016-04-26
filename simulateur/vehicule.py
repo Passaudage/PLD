@@ -28,11 +28,11 @@ class vehicule:
         return
 
 
-    def notify(self):
+    def notifie(self):
         return
 
     def avancer(self, prochaine_voiture):
-        return
+        #fait avancer le vehicule
 
     def set_vehicule_precedent(self, vehicule):
         self.vehicule_precedent = vehicule
