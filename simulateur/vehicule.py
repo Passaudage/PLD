@@ -10,7 +10,6 @@ class vehicule:
         self.max_acceleration = max_acceleration
         self.aggressivite = aggressivite
         self.longueur = longueur
-        self.changeDirection(0,0)
         self.voie = voie
         self.prochaine_direction = prochaine_direction
         self.vehicule_precedent
@@ -35,16 +34,19 @@ class vehicule:
         return
 
 
-    def notifie(self):
+    def notifie_temps(self):
         return
 
     def avance_vehicule(self, vehicule_suivant):
         #fait avancer le vehicule
         return
 
+    def greffe_arbre(self, vehicule_precedent):
+        self.set_vehicule_precedent(vehicule_precedent)
+        vehicule_precedent.set_vehicule_suivant(self)
+
     def set_vehicule_precedent(self, vehicule):
         self.vehicule_precedent = vehicule
-        vehicule.set_vehicule_suivant(self)
 
 
     def set_vehicule_suivant(self, vehicule):
@@ -52,5 +54,5 @@ class vehicule:
 
     def propager_racine(self):
 
-
+    def est_la_bonne_voie(self):
         #suis je sur la bonne direction ?
