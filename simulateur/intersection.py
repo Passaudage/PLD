@@ -17,6 +17,9 @@ class intersection:
 		
 		# Liste voies sortantes
 		self.sortant = [] 
+		
+		# Liste controleurs d'acces
+		self.controleurs_acces = []
 			
 	def ajoute_voie_entree(self, voie):
 		"""
@@ -24,6 +27,7 @@ class intersection:
 			avec le controleur d'acces associé
 		"""
 		self.entrant.append(voie)
+		self.controleurs_acces.append(voie.get_controleur_acces())
 		
 	def ajoute_voie_sortie(self,voie):
 		"""
@@ -31,9 +35,6 @@ class intersection:
 		"""
 		self.sortant.append(voie)
 		
-	def ajoute_controle_acces(self,controle_acces):
-		self.controle_acces.append(controle_acces)
-	
 	def get_entrant(self):
 		"""
 			Retourne les voies entrantes
@@ -46,11 +47,18 @@ class intersection:
 		"""
 		return self.sortant
 	
-	def ajoute_vehicule(self,voiture):
+	def ajoute_vehicule(self,voiture): ## TODO Utile ??
 		"""
 			Ajoute une voiture au milieu du carrefour
 		"""
 		self.vehicules.append(voiture)
+		
+	def notifie_temps(self, temps, simulation_manager):
+	"""
+		Methode appelée lorsque le simulateur augmente le temps
+	"""
+	self.mise_a_jour_controle_acces(temps,simulation_manager)
+	self.avancer_vehicule()
 		
 	def avancer_vehicule(self):
 		"""
@@ -64,11 +72,5 @@ class intersection:
 			Mise à jour des controleurs d'acces
 		"""
 		for i in range(len(self.entrant)):
-			self.entrant[i].mise_a_jour_controle_acces(temps, simulation_manager)
+			self.entrant[i].mise_a_jour_controle_acces(temps, simulation_manager) ## TODO Paul
 	
-	def notifie_temps(self, temps, simulation_manager):
-		"""
-			Methode appelée lorsque le simulateur augmente le temps
-		"""
-		self.mise_a_jour_controle_acces(temps,simulation_manager)
-		self.avancer_vehicule()
