@@ -18,6 +18,7 @@ class feu():
 			# intersection : Intersection sur laquelle agit le feu
 			# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
 			# temps_cycle : temps du cycle en secondes
+			# @author : Bonfante
 	"""
 	
 	def __init__(self, intersection, temps_vert=10, temps_cycle = 20):
@@ -44,7 +45,7 @@ class feu():
 			Change la couleur du feu en fonction du temps
 		"""
 		# Recupere le temps absolu dans le simulation manager
-		temps_absolu = simulation_manager.get_temps_absolu() #TODO Luc
+		temps_absolu = simulation_manager.temps 
 		# Choisir la bonne couleur du feu
 		temp = temps_absolu%self.temps_cycle
 		if(temp<self.temps_vert):
