@@ -1,10 +1,14 @@
+"""
+	Si tu vois une chèvre dans le repaire d'un lion, aie peur d'elle.
+"""
+
 class intersection:
-		"""
-			Modélise une intersection.
-				# coordonees : Position de l'intersection sur la grille
-				# @author : Bonfante
-		"""
-	
+	"""
+		Modelise une intersection.
+			# coordonees : Position de l'intersection sur la grille
+			# @author : Bonfante
+	"""
+		
 	def __init__(self, coordonnees):
 		# Liste des voitures sur l'intersection
 		self.vehicules = []
@@ -18,7 +22,7 @@ class intersection:
 		# Liste voies sortantes
 		self.sortant = [] 
 		
-		# Liste controleurs d'acces
+		# Liste controleurs d'acces (feux)
 		self.controleurs_acces = []
 			
 	def ajoute_voie_entree(self, voie):
@@ -54,11 +58,11 @@ class intersection:
 		self.vehicules.append(voiture)
 		
 	def notifie_temps(self, temps, simulation_manager):
-	"""
-		Methode appelée lorsque le simulateur augmente le temps
-	"""
-	self.mise_a_jour_controle_acces(temps,simulation_manager)
-	self.avancer_vehicule()
+		"""
+			Methode appelée lorsque le simulateur augmente le temps
+		"""
+		self.mise_a_jour_controle_acces(temps,simulation_manager)
+		self.avancer_vehicule()
 		
 	def avancer_vehicule(self):
 		"""
@@ -71,6 +75,6 @@ class intersection:
 		"""
 			Mise à jour des controleurs d'acces
 		"""
-		for i in range(len(self.entrant)):
-			self.entrant[i].mise_a_jour_controle_acces(temps, simulation_manager) ## TODO Paul
+		for i in range(len(self.controleurs_acces)):
+			self.controleurs_acces[i].notifie_temps(temps, simulation_manager) 
 	

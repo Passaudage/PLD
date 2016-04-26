@@ -1,4 +1,9 @@
+"""
+	Celui qui n'a jamais eu de poule, l'abbreuve à la rivière.
+"""
+
 from enum import Enum
+
 class Couleur(Enum):
 	"""
 		Enumération utilisée pour la couleur des feux
@@ -7,7 +12,7 @@ class Couleur(Enum):
 	rouge = 0
 	vert = 1
 
-class feu(controle_access):
+class feu():
 	"""
 		Modélise un feu de signalisation.
 			# intersection : Intersection sur laquelle agit le feu
