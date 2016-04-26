@@ -2,37 +2,37 @@ class intersection:
 		"""
 			Modélise une intersection.
 				# coordonees : Position de l'intersection sur la grille
-				# entrante : voies entrantes selon le formalisme Bonfantien
-				# sortante : voies sortantes selon le formalisme Bonfantien
-				# temps_vert : temps que l'axe passé en parametre reste au vert en secondes
-				# axe : 0 si axe 1-3, 1 si axe 2-4
-				# /!\ Voir dessin Bonfante si questions /!\
+				# @author : Bonfante
 		"""
 	
-	def __init__(self, coordonnees, entrante, sortante, temps_vert=10, axe=0):
+	def __init__(self, coordonnees):
+		# Liste des voitures sur l'intersection
 		self.vehicules = []
 		
 		# Position de l'intersection
 		self.coordonnees = coordonnees 
 		
 		# Liste voies entrantes
-		# entrant[0] = voie tout droit et gauche
-		# entrant[1] = voie tout droit et droite
-		# /!\ Voir dessin Bonfante si questions /!\
-		self.entrant = entrant 
+		self.entrant = [] 
 		
 		# Liste voies sortantes
-		# sortant[0] = Droite 1
-		# sortant[1] = Droite 2
-		# sortant[2] = Tout droit 1
-		# sortant[3] = Tout droit 2
-		# sortant[4] = Gauche 1
-		# sortant[5] = Gauche 2
-		# /!\ Voir dessin Bonfante si questions /!\
-		self.sortant = sortant 
+		self.sortant = [] 
+			
+	def ajoute_voie_entree(self, voie):
+		"""
+			Ajoute une voie entrante sur l'intersection 
+			avec le controleur d'acces associé
+		"""
+		self.entrant.append(voie)
 		
-		# Feu agissant sur l'intersection
-		self.feu = feu(self,temps_vert,axe)
+	def ajoute_voie_sortie(self,voie):
+		"""
+			Ajoute une voie sortante sur l'intersection 
+		"""
+		self.sortant.append(voie)
+		
+	def ajoute_controle_acces(self,controle_acces):
+		self.controle_acces.append(controle_acces)
 	
 	def get_entrant(self):
 		"""
@@ -58,9 +58,17 @@ class intersection:
 		"""
 		for i in range(len(self.vehicules)):
 			self.vehicules[i].avancer()
+			
+	def mise_a_jour_controle_acces(self, temps, simulation_manager):
+		"""
+			Mise à jour des controleurs d'acces
+		"""
+		for i in range(len(self.entrant)):
+			self.entrant[i].mise_a_jour_controle_acces(temps, simulation_manager)
 	
 	def notifie_temps(self, temps, simulation_manager):
 		"""
 			Methode appelée lorsque le simulateur augmente le temps
 		"""
+		self.mise_a_jour_controle_acces(temps,simulation_manager)
 		self.avancer_vehicule()

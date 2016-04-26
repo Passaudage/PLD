@@ -6,17 +6,16 @@ class Couleur(Enum):
 	rouge = 0
 	vert = 1
 
-class feu:
+class feu(controleAcces):
 		"""
 			Modélise un feu de signalisation.
 				# intersection : Intersection sur laquelle agit le feu
 				# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
 				# temps_cycle : temps du cycle en secondes
-				# axe : 0 si axe 1-3, 1 si axe 2-4
-				# /!\ Voir dessin Bonfante si questions /!\
+				# @author : Bonfante
 		"""
 	
-	def __init__(self, intersection, temps_vert=10, temps_cycle = 20, axe=0):
+	def __init__(self, intersection, temps_vert=10, temps_cycle = 20):
 		# Intersection ou se trouve le feu
 		self.intersection = intersection
 		
@@ -25,11 +24,6 @@ class feu:
 		
 		# Temps de la durée d'un cycle de feu
 		self.temps_cycle = temps_cycle
-		
-		# Axe que l'on contrôle
-		# 0 si axe 1-3
-		# 1 si axe 2-4
-		self.axe = axe
 		
 		# Couleur actuel de l'axe passé en parametre
 		self.couleur_axe = Couleur.vert
@@ -53,5 +47,5 @@ class feu:
 		else:
 			self.couleur_axe = Couleur.rouge
 	
-	def estPassant(self):
+	def est_passant(self):
 		return self.couleur_axe == Couleur.vert
