@@ -1,18 +1,22 @@
 from enum import Enum
 class Couleur(Enum):
+	"""
+		Enumération utilisée pour la couleur des feux
+	"""
 	rouge = 0
 	vert = 1
 
 class feu:
+		"""
+			Modélise un feu de signalisation.
+				# intersection : Intersection sur laquelle agit le feu
+				# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
+				# temps_cycle : temps du cycle en secondes
+				# axe : 0 si axe 1-3, 1 si axe 2-4
+				# /!\ Voir dessin Bonfante si questions /!\
+		"""
 	
 	def __init__(self, intersection, temps_vert=10, temps_cycle = 20, axe=0):
-		"""
-			# intersection : Intersection sur laquelle agit le feu
-			# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
-			# temps_cycle : temps du cycle en secondes
-			# axe : 0 si axe 1-3, 1 si axe 2-4
-			# /!\ Voir dessin Bonfante si questions /!\
-		"""
 		# Intersection ou se trouve le feu
 		self.intersection = intersection
 		
@@ -48,3 +52,6 @@ class feu:
 			self.couleur_axe = Couleur.vert
 		else:
 			self.couleur_axe = Couleur.rouge
+	
+	def estPassant(self):
+		return self.couleur_axe == Couleur.vert

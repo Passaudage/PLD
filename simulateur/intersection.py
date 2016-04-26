@@ -1,14 +1,15 @@
 class intersection:
+		"""
+			Modélise une intersection.
+				# coordonees : Position de l'intersection sur la grille
+				# entrante : voies entrantes selon le formalisme Bonfantien
+				# sortante : voies sortantes selon le formalisme Bonfantien
+				# temps_vert : temps que l'axe passé en parametre reste au vert en secondes
+				# axe : 0 si axe 1-3, 1 si axe 2-4
+				# /!\ Voir dessin Bonfante si questions /!\
+		"""
 	
 	def __init__(self, coordonnees, entrante, sortante, temps_vert=10, axe=0):
-		"""
-			# coordonees : Position de l'intersection sur la grille
-			# entrante : voies entrantes selon le formalisme Bonfantien
-			# sortante : voies sortantes selon le formalisme Bonfantien
-			# temps_vert : temps que l'axe passé en parametre reste au vert en secondes
-			# axe : 0 si axe 1-3, 1 si axe 2-4
-			# /!\ Voir dessin Bonfante si questions /!\
-		"""
 		self.vehicules = []
 		
 		# Position de l'intersection
