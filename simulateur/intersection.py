@@ -1,3 +1,7 @@
+"""
+	Si tu vois une chèvre dans le repaire d'un lion, aie peur d'elle.
+"""
+
 class intersection:
 	"""
 		Modelise une intersection.
@@ -18,7 +22,7 @@ class intersection:
 		# Liste voies sortantes
 		self.sortant = [] 
 		
-		# Liste controleurs d'acces
+		# Liste controleurs d'acces (feux)
 		self.controleurs_acces = []
 			
 	def ajoute_voie_entree(self, voie):
