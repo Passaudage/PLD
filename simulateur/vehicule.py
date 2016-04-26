@@ -27,8 +27,6 @@ class vehicule:
 
         return False
 
-
-
     def calculerVitesse(self):
 
         return
