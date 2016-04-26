@@ -1,13 +1,13 @@
 from abc import ABCMeta
 
-class controleAccess(metaclass=ABCMeta):
+class controle_access(metaclass=ABCMeta):
     @abstractmethod
-    def estPassant():
+    def est_passant():
     @abstractmethod
     def notifie_temps(self, temps, simulation_manager):
 
-class voiePrioritaire(controleAcces):
-    def estPassant():
+class voie_prioritaire(controle_access):
+    def est_passant():
         return True
     def notifie_temps(self, temps, simulation_manager):
         pass

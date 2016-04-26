@@ -2,22 +2,22 @@ from enum import Enum
 class Couleur(Enum):
 	"""
 		Enumération utilisée pour la couleur des feux
+			# @author : Bonfante
 	"""
 	rouge = 0
 	vert = 1
 
-class feu(controleAcces):
-		"""
-			Modélise un feu de signalisation.
-				# intersection : Intersection sur laquelle agit le feu
-				# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
-				# temps_cycle : temps du cycle en secondes
-				# @author : Bonfante
-		"""
+class feu(controle_access):
+	"""
+		Modélise un feu de signalisation.
+			# intersection : Intersection sur laquelle agit le feu
+			# temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
+			# temps_cycle : temps du cycle en secondes
+	"""
 	
 	def __init__(self, intersection, temps_vert=10, temps_cycle = 20):
 		# Intersection ou se trouve le feu
-		self.intersection = intersection
+		self.intersection = intersection # TODO necessaire ??
 		
 		# Temps que l'axe passé en parametre reste vert
 		self.temps_vert = temps_vert
@@ -39,7 +39,7 @@ class feu(controleAcces):
 			Change la couleur du feu en fonction du temps
 		"""
 		# Recupere le temps absolu dans le simulation manager
-		temps_absolu = simulation_manager.get_temps_absolu()
+		temps_absolu = simulation_manager.get_temps_absolu() #TODO Luc
 		# Choisir la bonne couleur du feu
 		temp = temps_absolu%self.temps_cycle
 		if(temp<self.temps_vert):
