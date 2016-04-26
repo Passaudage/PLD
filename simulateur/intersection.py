@@ -71,6 +71,6 @@ class intersection:
 		"""
 			Mise à jour des controleurs d'acces
 		"""
-		for i in range(len(self.entrant)):
-			self.entrant[i].mise_a_jour_controle_acces(temps, simulation_manager) ## TODO Paul
+		for i in range(len(self.controleurs_acces)):
+			self.controleurs_acces[i].notifie_temps(temps, simulation_manager) 
 	
