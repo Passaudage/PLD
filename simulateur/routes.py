@@ -1,4 +1,3 @@
-from enum import Enum
 
 import coordonnees
 import controleAcces
@@ -8,11 +7,12 @@ import vehicule
 class voie:
     def __init__(self, direction, controleur_acces, troncon, feu, coordonnees_debut, coordonnees_fin):
         self.intersectionsAccessibles = []
-        self.direction = direction
         self.controleur_acces = controleur_acces
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
+        self.vehicules = []
+        self.directions = set([])
 
 
     def mise_a_jour_controle_acces(self, temps, simulation_manager):
@@ -21,9 +21,16 @@ class voie:
     def get_controleur_acces(self):
         return self.controleur_acces
 
+    def puis_je_passer(self, direction):
 
 
+    #set de direction + probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba
 
+    #ajouter voiture
+
+    #notification du véhicule en tête qui s'en va
+
+    # dernier élément
 
     def setTroncon(self, troncon):
         self.troncon = troncon
@@ -37,11 +44,6 @@ class troncon:
         self.voies = []
 
     #trouver voie avec bonne direction
-
-class direction(Enum):
-    gauche = 1
-    tout_droit = 2
-    droite = 3
 
 
     """
