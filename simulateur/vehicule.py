@@ -4,10 +4,11 @@ class vehicule:
     acceleration = coordonnees(0,0)
     vitesse = coordonnees(0,0)
     est_arrete = False
+    proportion_discourtois = 0.8
 
-    def __init__(self, coordonnees, aggressivite, longueur, voie, prochaine_direction):
+    def __init__(self, coordonnees, discourtois, longueur, voie, prochaine_direction):
         self.coordonnees = coordonnees
-        self.aggressivite = aggressivite
+        self.discourtois = discourtois
         self.longueur = longueur
         self.changeDirection(0,0)
         self.voie = voie

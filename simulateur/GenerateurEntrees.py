@@ -1,6 +1,7 @@
-import SimulationManager
+from SimulationManager import *
 from math import *
 import random
+import Vehicule
 
 def proba_poisson(k, freq, temps_obs):
         #Calcul du lambda correspondant
@@ -32,6 +33,14 @@ class GenerateurEntrees:
         self._timestamp_max = heures_freqs[-1][0]
         self._timestamp_min = heures_freqs[0][0]
         self._etendue = self.timestamp_max - self.timestamp_min
+        self._voies_sortantes = []
+        self._voies_entrantes = []
+
+    def ajoute_voie_entrante(self, voie):
+        self._voies_entrantes.append(voie);
+    
+    def ajoute_voie_sortante(self, voie):
+        self._voies_sortantes.append(voie);
 
     def notifie_temps(self, increment, moteur):
         freq = 0
@@ -51,6 +60,12 @@ class GenerateurEntrees:
         
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
         
+        for i in xrange(0, nombre_voit_crees):
+            longueur = random.normalvariate(428, 50)
+            aggressivite = (random.random() < Vehicule.Vehicule.proportion_discourtois)
+            voie = random.random() % len(self.voies_sortantes);
+
+            voie.creer_vehicule(discourtois, longueur);
 
 
 
@@ -76,3 +91,4 @@ class GenerateurEntrees:
 #for i in range(0, 1000):
 #    R.append(var_poisson(1, 10))
 #print(R)
+
