@@ -18,8 +18,6 @@ class voie:
     def mise_a_jour_controle_acces(self, temps, simulation_manager):
          self.controleur_acces.notifie_temps(self, temps, simulation_manager)
 
-    def get_controleur_acces(self):
-        return self.controleur_acces
 
     def puis_je_passer(self, direction):
 
@@ -27,8 +25,12 @@ class voie:
     #set de direction + probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba
 
     #ajouter voiture
+    def ajouter
 
     #notification du véhicule en tête qui s'en va
+    def supprimer_vehicule_en_tete(self, vehicule):
+        self.vehicules.remove(vehicule)
+
 
     # dernier élément
 
