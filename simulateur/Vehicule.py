@@ -1,6 +1,7 @@
-import coordonnees
-from routes import *
-import intersection
+import Coordonnees
+from Voie import *
+from Troncon import *
+import Intersection
 
 
 class Vehicule:
@@ -8,13 +9,13 @@ class Vehicule:
 	proportion_discourtois = 0.8
 
 
-	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, direction, vehicule_precedent):
+	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, destination, direction, vehicule_precedent):
 		self.coordonnees = coordonnees
 		self.max_acceleration = max_acceleration
 		self.longueur = longueur
 		self.prochaine_direction = prochaine_direction
 		self.voie = voie
-		self.destination = self.voie.coordonnees_fin		
+		self.destination = destination	
 		self.direction = direction
 		self.simulateur = simulateur
 		
@@ -24,11 +25,11 @@ class Vehicule:
 		self.intersection = None
 		
 		#Mise dans l'arbre
-		self.vehicule_precedent
+		self.vehicule_precedent = vehicule_precedent
 		self.vehicules_suivants = []
-		if(vehicule_precedent!=self):
-			self.greffe_arbre(voiture_fin)
-		else
+		if(vehicule_precedent!=None):
+			self.greffe_arbre(vehicule_precedent)
+		else:
 			self.racine = self
 			#se déclarer tête de liste
 			

@@ -1,8 +1,9 @@
 import math
 
-import coordonnees
-import feu
-import vehicule
+import Coordonnees
+import Feu
+import Vehicule
+import Troncon
 
 
 class Voie:
@@ -19,7 +20,7 @@ class Voie:
 
     def creer_vehicule(self, discourtois, longueur):
         prochaine_direction = "droite"
-        clio = vehicule(50, coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.trajectoire, None)
+        clio = vehicule(50, coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_fin, self.trajectoire, None)
         self.ajouter_vehicule(self)
         dernier_vehicule = self.dernier_vehicule()
         clio.greffe_arbre(dernier_vehicule)
