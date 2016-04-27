@@ -12,7 +12,7 @@ class Couleur(Enum):
 	rouge = 0
 	vert = 1
 
-class feu():
+class Feu():
 	"""
 		Modélise un feu de signalisation.
 			# intersection : Intersection sur laquelle agit le feu
@@ -21,26 +21,26 @@ class feu():
 			# @author : Bonfante
 	"""
 	
-	def __init__(self, intersection, temps_vert=10, temps_cycle = 20):
-		# Intersection ou se trouve le feu
-		self.intersection = intersection # TODO necessaire ??
+	def __init__(self, intersection, temps_vert = 10, couleur_direction = Couleur.vert):
+		# Intersection où se trouve le feu
+		self.intersection = intersection
 		
 		# Temps que l'axe passé en parametre reste vert
 		self.temps_vert = temps_vert
-		
-		# Temps de la durée d'un cycle de feu
-		self.temps_cycle = temps_cycle
-		
+				
 		# Couleur actuel de l'axe passé en parametre
-		self.couleur_axe = Couleur.vert
+		self.couleur_direction = couleur_direction
+		
+		# Timestamp de dernière modification
+		self.timestamp_derniere_modif = 0
 
 	def notifie_temps(self, temps, simulation_manager):
 		"""
 			Methode appelée lorsque le simulateur augmente le temps
 		"""
-		self.change_couleur(temps, simulation_manger)
+		self.change_couleur(temps, simulation_manager)
 		
-	def change_couleur(self,temps, simulation_manger):
+	def change_couleur(self, temps, simulation_manager):
 		"""
 			Change la couleur du feu en fonction du temps
 		"""
@@ -49,9 +49,11 @@ class feu():
 		# Choisir la bonne couleur du feu
 		temp = temps_absolu%self.temps_cycle
 		if(temp<self.temps_vert):
-			self.couleur_axe = Couleur.vert
+			self.couleur_direction = Couleur.vert
 		else:
-			self.couleur_axe = Couleur.rouge
+			self.couleur_direction = Couleur.rouge
+	
+	def definit_couleur(self, couleur_direction, timestamp):
 	
 	def est_passant(self):
-		return self.couleur_axe == Couleur.vert
+		return self.couleur_direction == Couleur.vert
