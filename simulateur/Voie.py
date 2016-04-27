@@ -7,13 +7,13 @@ import Troncon
 
 
 class Voie:
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
         self.vehicules = []
-        self.trajectoire = trajectoire
+        self.trajectoire = (coordonnees_fin-coordonnees_debut).normaliser()
         self.directions = directions
         self.feux = feu;
 
