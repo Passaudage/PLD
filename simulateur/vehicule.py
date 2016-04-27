@@ -1,7 +1,9 @@
 import coordonnees
+import voie
+import intersection
 
 
-class vehicule:
+class Vehicule:
 	distance_minimale = 30 #cm
 	self.vehicules_suivants = []
 	self.simulateur
@@ -104,6 +106,7 @@ class vehicule:
 						self.nouvelle_voie = None
 						self.destination = self.voie.coordonnees_fin
 						self.trajectoire = self.voie.trajectoire
+						self.voie.insertion_dans_liste(self,self.vehicule_precedent)
 						
 				
 		elif(self.intersection!=None):

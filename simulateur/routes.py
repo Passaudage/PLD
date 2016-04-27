@@ -5,7 +5,7 @@ import feu
 import vehicule
 
 
-class voie:
+class Voie:
     def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire):
         self.intersectionsAccessibles = []
         self.troncon = troncon
@@ -57,7 +57,7 @@ class voie:
         return self.troncon.getFeu(direction).est_passant()
 
 
-class troncon:
+class Troncon:
     const_largeur_voie = 350 #centimètres
     def __init__(self, tete, queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
         self.tete = tete #en haut ou à droite
