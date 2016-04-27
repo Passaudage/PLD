@@ -6,20 +6,20 @@ import vehicule
 
 
 class voie:
-    def __init__(self, direction, controleur_acces, troncon, feu, coordonnees_debut, coordonnees_fin):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire):
         self.intersectionsAccessibles = []
-        self.controleur_acces = controleur_acces
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
         self.vehicules = []
-        self.trajectoire = self.calculer_trajectoire()
-        self.directions = set()
+        self.trajectoire = trajectoire
+        self.directions = directions
+        self.feux = feu;
+
 
     def creer_vehicule(self, discourtois, longueur):
         prochaine_direction = "droite"
-        trajectoire = self.calculer_trajectoire(self)
-        clio = vehicule(50, coordonnees(0,0), discourtois, longueur, self, prochaine_direction, None)
+        clio = vehicule(50, coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.trajectoire, None)
         self.ajouter_vehicule(self)
         dernier_vehicule = self.dernier_vehicule()
         clio.greffe_arbre(dernier_vehicule)
@@ -30,13 +30,6 @@ class voie:
     def mise_a_jour_controle_acces(self, temps, simulation_manager):
          self.controleur_acces.notifie_temps(self, temps, simulation_manager)
 
-    def get_controleur_acces(self):
-        return self.controleur_acces
-
-    #trajectoire : coordonees vecteur norme 1
-    def calculer_trajectoire(self):
-        norme = math.sqrt((self.coordonnees_fin.x-self.coordonnees_debut.x)**2 + (self.coordonnees_fin.y-self.coordonnees_debut.y)**2)
-        return coordonnees((self.coordonnees_fin.x-self.coordonnees_debut.x)/norme, (self.coordonnees_fin.y-self.coordonnees_debut.y)/norme)
 
     """set de direction et probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba """
 
@@ -54,13 +47,44 @@ class voie:
     def setTroncon(self, troncon):
         self.troncon = troncon
 
+    def precedent(self, vehicule):
+        if(self.vehicules.index(vehicule)==0):
+            return None
+        else:
+            return self.vehicules.index(vehicule)-1
+
+    def est_passant(self, direction):
+        return self.troncon.getFeu(direction).est_passant()
+
+
 class troncon:
-    def __init__(self, tete, queue, probabilite_entree, longueur, coordonnees_):
-        self.tete = tete
-        self.queue = queue
-        self.probabilite_entree = probabilite_entree
-        self.longueur = longueur
-        self.voies = []
+    const_largeur_voie = 350 #centimètres
+    def __init__(self, tete, queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
+        self.tete = tete #en haut ou à droite
+        self.queue = queue #en bas ou à gauche
+        self.coordonees_debut = coordonnees_debut
+        self.coordonees_fin = coordonnees_fin
+        self.longueur = math.sqrt((self.coordonnees_fin.x-self.coordonnees_debut.x)**2 + (self.coordonnees_fin.y-self.coordonnees_debut.y)**2)
+        self.trajectoire = coordonnees((self.coordonnees_fin.x-self.coordonnees_debut.x)/self.longueur, (self.coordonnees_fin.y-self.coordonnees_debut.y)/self.longueur)
+        self.proba_dir_sens1 = proba_dir_sens1
+        self.proba_dir_sens2 = proba_dir_sens2
+        self.directions_sens1 = self.proba_dir_sens1.keys()
+        self.directions_sens2 = self.proba_dir_sens2.keys()
+        self.voies_sens1 = []
+        self.voies_sens2 = []
+        self.dir_voies = {}
+        self.dir_feu = {}
+
+        for direction in self.directions :
+            self.dir_feu[direction] = feu(self.tete)
+
+    def creer_voie(self, directions, sens):
+        if( sens == "sens1") :
+            
+            self.voies.append(voie(self, coordonnees_debut, coordonnees_fin, directions))
+
+
+
 
     #trouver voie avec bonne direction
     def trouver_voie_direction(self, direction):
@@ -69,6 +93,14 @@ class troncon:
             if(voie.direction_possible(direction)):
                 voies_possibles.append(voie)
         return voies_possibles
+
+    def getFeu(self, direction):
+        if(direction in self.dir_feu.keys()):
+            return self.dir_feu.get(direction)
+        else:
+            self.dir_feu[direction] = feu(self.tete)
+            return self.dir_feu.get(direction)
+
 
     """
     ainsi toujours poussé vers de nouveaux rivages
