@@ -78,11 +78,24 @@ class troncon:
         for direction in self.directions :
             self.dir_feu[direction] = feu(self.tete)
 
-    def creer_voie(self, directions, sens):
+    def creer_voie(self, directions, sens):  #on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
         if( sens == "sens1") :
-            
-            self.voies.append(voie(self, coordonnees_debut, coordonnees_fin, directions))
+            if(self.coordonnees_debut.x == self.coordonnees_fin.x):
+                coordonnees_debut = coordonnees(self.coordonees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_debut.y )
+                coordonnees_fin = coordonnees(self.coordonees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_fin.y )
+            if (self.coordonnees_debut.y == self.coordonnees_fin.y):
+                coordonnees_debut = coordonnees(self.coordonees_debut.x,self.coordonnees_debut.y + (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie)
+                coordonnees_fin = coordonnees(self.coordonees_fin.x ,self.coordonnees_fin.y + (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie)
+            self.voies.append(voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire))
 
+        if (sens == "sens2"):
+            if (self.coordonnees_debut.x == self.coordonnees_fin.x):
+                coordonnees_debut = coordonnees(self.coordonees_debut.x - (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie, self.coordonnees_debut.y)
+                coordonnees_fin = coordonnees(self.coordonees_debut.x - (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie, self.coordonnees_fin.y)
+            if (self.coordonnees_debut.y == self.coordonnees_fin.y):
+                coordonnees_debut = coordonnees(self.coordonees_debut.x, self.coordonnees_debut.y - (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie)
+                coordonnees_fin = coordonnees(self.coordonees_fin.x, self.coordonnees_fin.y - (len(self.voies_sens1) + 0, 5) * self.const_largeur_voie)
+            self.voies.append(voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire))
 
 
 

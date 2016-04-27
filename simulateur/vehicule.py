@@ -47,7 +47,7 @@ class vehicule:
 
 
     def avance_vehicule(self):
-        if(self.voie!=null):
+        if(self.voie!=None):
             if(self.voie.direction_possible(self.prochaine_direction)):
                 #tout droit
                 if(self.vehicule_precedent.voie==self.voie):
@@ -55,7 +55,7 @@ class vehicule:
             else:
                 pass
                 #changer de voie, attention à la pile avant la voie
-        elif(self.intersection!=null):
+        elif(self.intersection!=None):
             pass
             #faire transition
         return
