@@ -2,7 +2,7 @@
 	Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
 
-class intersection:
+class Intersection:
 	"""
 		Modelise une intersection.
 			# coordonees : Position de l'intersection sur la grille

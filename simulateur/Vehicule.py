@@ -1,33 +1,40 @@
-import coordonnees
+import Coordonnees
+from Voie import *
+from Troncon import *
+import Intersection
 
 
-class vehicule:
+class Vehicule:
 	distance_minimale = 30 #cm
-	self.vehicules_suivants = []
-	self.simulateur
 	proportion_discourtois = 0.8
 
 
-	def __init__(self, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, trajectoire, racine):
+	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, destination, direction, vehicule_precedent):
 		self.coordonnees = coordonnees
 		self.max_acceleration = max_acceleration
 		self.longueur = longueur
-		self.changeDirection(0,0)
 		self.prochaine_direction = prochaine_direction
-		self.vehicule_precedent
-		self.racine = racine
-		self.direction
 		self.voie = voie
-		self.destination = self.voie.coordonnees_fin
+		self.destination = destination	
+		self.direction = direction
+		self.simulateur = simulateur
+		
+		#non initialisés
+		self.racine = None
 		self.nouvelle_voie = None
 		self.intersection = None
-		self.trajectoire = trajectoire
-		voiture_fin = self.voie.get_dernier_element()
-		self.greffe_arbre(voiture_fin)
-
+		
+		#Mise dans l'arbre
+		self.vehicule_precedent = vehicule_precedent
+		self.vehicules_suivants = []
+		if(vehicule_precedent!=None):
+			self.greffe_arbre(vehicule_precedent)
+		else:
+			self.racine = self
+			#se déclarer tête de liste
 
 	def changeDirection(self, x, y):
-		self.direction = coordonnees(x, y)
+		self.direction = Coordonnees(x, y)
 
 	def avancerBoucle(pasTemporel):
 
@@ -58,7 +65,7 @@ class vehicule:
 				elif(self.vehicule_precedent.voie!=None):
 					pass
 					#on arrête de suivre le précédent de l'arbre (il est parti)
-					self.decrochage()
+					self.decrochage_arbre()
 					precedent = self.voie.precedent(self)
 					if(precedent==None):
 						if(self.verifie_feu()):
@@ -71,7 +78,7 @@ class vehicule:
 						self.suit_vehicule_devant() #on ne code avec le rectum par nos contrées
 				else:
 					if(self.verifie_feu()):
-						#passer le feu, demander l'intersection, demander trajectoire
+						#passer le feu, demander l'intersection, demander direction
 						pass
 					else:
 						self.avance_feu_rouge()
@@ -83,27 +90,28 @@ class vehicule:
 					#changer de voie, demander bonne voie au tronçon, demander liste vehicules des voies d'à côté.
 					self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(prochaine_direction)[0]
 					direction_virage = self.nouvelle_voie.coordonnees_debut.soustraction(self.voie.coordonnees_debut)
-					distance_avant = self.trajectoire.mult(2)
-					trajectoire_non_normalisee = direction_virage.addition(distance_avant)
-					self.destination = trajectoire_non_normalisee + self.coordonnees
-					self.trajectoire = trajectoire_non_normalisee.normaliser()
+					distance_avant = self.direction.mult(2)
+					direction_non_normalisee = direction_virage.addition(distance_avant)
+					self.destination = direction_non_normalisee + self.coordonnees
+					self.direction = direction_non_normalisee.normaliser()
 					
 					for vehicule in self.voie.vehicules:
-						if((vehicule.coordonnees - vehicule.voie.trajectoire.mult(vehicule.longueur) - vehicule.voie.coordonnees_debut).norme() < (self.coordonnees.addition(self.trajectoire).soustraction(vehicule.voie.coordonnees_debut)).norme()): #trajectoire dans voie
+						if((vehicule.coordonnees - vehicule.voie.direction.mult(vehicule.longueur) - vehicule.voie.coordonnees_debut).norme() < (self.coordonnees.addition(self.direction).soustraction(vehicule.voie.coordonnees_debut)).norme()): #direction dans voie
 							pass
-						elif((vehicule.coordonnees - vehicule.voie.coordonnees_debut).norme() > (self.coordonnees.addition(self.trajectoire).soustraction(vehicule.voie.coordonnees_debut)).norme()): #trajectoire dans voie
-							self.decrochage()
+						elif((vehicule.coordonnees - vehicule.voie.coordonnees_debut).norme() > (self.coordonnees.addition(self.direction).soustraction(vehicule.voie.coordonnees_debut)).norme()): #direction dans voie
+							self.decrochage_arbre()
 							self.greffe_arbre(vehicule)
 							self.avance_change_voie()
 						else: 
-							self.decrochage()
+							self.decrochage_arbre()
 							self.avance_change_voie()
 							self.greffe_arbre(vehicule.vehicule_precedent)
 					if(self.coordonnees == self.destination) :#changement de voie termine
 						self.voie = self.nouvelle_voie
 						self.nouvelle_voie = None
 						self.destination = self.voie.coordonnees_fin
-						self.trajectoire = self.voie.trajectoire
+						self.direction = self.voie.direction
+						self.voie.insertion_dans_liste(self,self.vehicule_precedent)
 						
 				
 		elif(self.intersection!=None):
@@ -115,11 +123,11 @@ class vehicule:
 		distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
 		distance_normee = distance_vecteur.norme()
 		distance_possible = min (self.calculerVitesse() , distance_normee)
-		trajet = self.trajectoire.mult(distance_possible)
+		trajet = self.direction.mult(distance_possible)
 		return trajet
 		
 	def suit_vehicule_devant(self):
-		marge = self.trajectoire.mult(self.vehicule_precedent.longueur + distance_minimale) #longueur + distance minimale
+		marge = self.direction.mult(self.vehicule_precedent.longueur + distance_minimale) #longueur + distance minimale
 		distance = self.vehicule_precedent.coordonnees.soustraction(marge)
 		trajet = self.calculer_trajet_max(distance)
 		self.coordonnees = self.coordonnees.addition(trajet)
@@ -133,7 +141,7 @@ class vehicule:
 		self.coordonnees = self.coordonnees.addition(trajet)		
 		
 	def avance_change_voie(self):
-		trajet = self.calculer_trajet_max(self.destination.soustraction(self.trajectoire.mult(30)))
+		trajet = self.calculer_trajet_max(self.destination.soustraction(self.direction.mult(30)))
 		self.coordonnees = self.coordonnees.addition(trajet)
 
 
@@ -163,7 +171,7 @@ class vehicule:
 	def supp_vehicule_suivant(self,vehicule):
 		self.vehicule_suivants.remove(vehicule)
 
-	def decrochage(self):
+	def decrochage_arbre(self):
 		self.vehicule_precedent.supp_vehicule_suivant(self)
 		self.vehicule_precedent = None
 		self.propager_racine(self)
