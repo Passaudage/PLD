@@ -1,12 +1,10 @@
 import coordonnees
-import voie
+from routes import *
 import intersection
 
 
 class Vehicule:
 	distance_minimale = 30 #cm
-	self.vehicules_suivants = []
-	self.simulateur
 	proportion_discourtois = 0.8
 
 
@@ -26,6 +24,8 @@ class Vehicule:
 		self.trajectoire = trajectoire
 		voiture_fin = self.voie.get_dernier_element()
 		self.greffe_arbre(voiture_fin)
+		self.vehicules_suivants = []
+		self.simulateur
 
 
 	def changeDirection(self, x, y):

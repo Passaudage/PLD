@@ -12,7 +12,7 @@ class Couleur(Enum):
 	rouge = 0
 	vert = 1
 
-class feu():
+class Feu():
 	"""
 		Modélise un feu de signalisation.
 			# intersection : Intersection sur laquelle agit le feu
