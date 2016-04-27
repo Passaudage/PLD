@@ -21,9 +21,12 @@ class Feu():
 			# @author : Bonfante
 	"""
 	
-	def __init__(self, intersection, temps_vert=10, temps_cycle = 20):
+	def __init__(self, intersection, direction, temps_vert=10, temps_cycle = 20):
 		# Intersection ou se trouve le feu
 		self.intersection = intersection # TODO necessaire ??
+		
+		# Direction que le feu reglemente
+		self.direction = direction
 		
 		# Temps que l'axe passé en parametre reste vert
 		self.temps_vert = temps_vert
