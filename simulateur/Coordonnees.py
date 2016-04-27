@@ -55,6 +55,10 @@ class Coordonnees:
 			Retourne la norme du vecteur.
 		"""
 		return math.hypot(self.x, self.y)
+		
+	def normaliser(self):
+		c = abs(self)
+		return Coordonnees(self.x/c, self.y/c)
 		 
 	def __str__(self): 
 		"""
