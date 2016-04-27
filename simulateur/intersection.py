@@ -1,5 +1,5 @@
 """
-	Si tu vois une chèvre dans le repaire d'un lion, aie peur d'elle.
+	Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
 
 class intersection:
@@ -28,10 +28,10 @@ class intersection:
 	def ajoute_voie_entree(self, voie):
 		"""
 			Ajoute une voie entrante sur l'intersection 
-			avec le controleur d'acces associé
+			avec le controleur d'acces associe
 		"""
 		self.entrant.append(voie)
-		self.controleurs_acces.append(voie.get_controleur_acces())
+		self.controleurs_acces.append(voie.controleur_acces)
 		
 	def ajoute_voie_sortie(self,voie):
 		"""
@@ -39,18 +39,6 @@ class intersection:
 		"""
 		self.sortant.append(voie)
 		
-	def get_entrant(self):
-		"""
-			Retourne les voies entrantes
-		"""
-		return self.entrant
-	
-	def get_sortant(self):
-		"""
-			Retourne les voies sortantes
-		"""
-		return self.sortant
-	
 	def ajoute_vehicule(self,voiture): ## TODO Utile ??
 		"""
 			Ajoute une voiture au milieu du carrefour
@@ -59,21 +47,21 @@ class intersection:
 		
 	def notifie_temps(self, temps, simulation_manager):
 		"""
-			Methode appelée lorsque le simulateur augmente le temps
+			Methode appelee lorsque le simulateur augmente le temps
 		"""
 		self.mise_a_jour_controle_acces(temps,simulation_manager)
 		self.avancer_vehicule()
 		
 	def avancer_vehicule(self):
 		"""
-			Faire avancer les véhicules au milieu du carrefour
+			Faire avancer les vehicules au milieu du carrefour
 		"""
 		for i in range(len(self.vehicules)):
 			self.vehicules[i].avancer()
 			
 	def mise_a_jour_controle_acces(self, temps, simulation_manager):
 		"""
-			Mise à jour des controleurs d'acces
+			Mise a jour des controleurs d'acces
 		"""
 		for i in range(len(self.controleurs_acces)):
 			self.controleurs_acces[i].notifie_temps(temps, simulation_manager) 

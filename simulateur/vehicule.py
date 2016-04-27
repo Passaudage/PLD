@@ -1,15 +1,13 @@
 import coordonnees
 
+
 class vehicule:
-    
-	acceleration = coordonnees(0,0)
-	vitesse = coordonnees(0,0)
-	est_arrete = False
 	self.vehicules_suivants = []
 	self.simulateur
+	proportion_discourtois = 0.8
 
 
-	def __init__(self, max_acceleration, coordonnees, longueur, voie, prochaine_direction, racine):
+	def __init__(self, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, racine):
 		self.coordonnees = coordonnees
 		self.max_acceleration = max_acceleration
 		self.longueur = longueur
@@ -52,10 +50,13 @@ class vehicule:
 		if(self.voie!=null):
 			if(self.voie.direction_possible(self.prochaine_direction)):
 				#tout droit
-				if(self.precedent.get_voie==self.voie)
+				if(self.vehicule_precedent.voie==self.voie):
+					pass
 			else:
+				pass
 				#changer de voie, attention à la pile avant la voie
 		elif(self.intersection!=null):
+			pass
 			#faire transition
 		return
 
