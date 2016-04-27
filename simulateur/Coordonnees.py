@@ -1,37 +1,63 @@
-import math
+import math 
 
-class Coordonnees:
-	def __init__(self, x = 0, y = 0):
-		self.x = x
-		self.y = y
-	 
-	def add(self,co2):
-		self.x += co2.x
-		self.y += co2.y
+class Coordonnees: 
+	"""
+		Classe permettant de modéliser des coordonnées.
+			# @author : Bonfante
+	"""
+	
+	def __init__(self, x=0, y=0): 
+		self.x=x 
+		self.y=y 
 		
-	def sub(self,co2):
-		self.x -= co2.x
-		self.y -= co2.y
+	def __eq__(self, vB): 
+		"""
+			Test l'égalité de deux vecteurs.
+		"""
+		return (self.x==vB.x) and (self.y==vB.y)    
+		    
+	def __add__(self, vB):  
+		"""
+			Retourne le vecteur somme.
+		"""
+		return Coordonnees(self.x+vB.x,self.y+vB.y) 
 		
-	def addition(co,co2):
-		toRet = Coordonnees(co.x+co2.x,co.y+co2.y)
-		return toRet
+	def __sub__(self, vB):  
+		"""
+			Retourne le vecteur différence .
+		"""
+		return Coordonnees(self.x-vB.x,self.y-vB.y) 
 		
-	def soustraction(co,co2):
-		toRet = Coordonnees(co.x-co2.x,co.y-co2.y)
-		return toRet
+	def __mul__(self, c): 
+		"""
+			Retourne le produit scalaire si le parametre est une coordonnée.
+			Retourne le vecteur multiplé par un scalaire si c'est une valeur.
+		"""
+		if isinstance(c,Coordonnees): 
+			return  self.x*c.x+self.y*c.y
+		else: 
+			return Coordonnees(c*self.x,c*self.y)
+			
+	def __pow__(self, c): 
+		"""
+			Retourne le produit vectoriel.
+		"""
+		return self.x*c.y-self.y*c.x
 		
-	def __mul__(self,co):
-		return Coordonnees(self.x-co.x,self.y-co.y)
+	def __div__(self, c): 
+		"""
+			Retourne le vecteur ayant subi une division scalaire.
+		"""
+		return Coordonnees(self.x/c, self.y/c)
 		
-	def norme(self):
-		return math.sqrt(self.produit_scalaire(self))
-
-	def produit_scalaire(self,co2):
-		return self.x*co2.x+self.y*co2.y
-
-	def mult(self,k):
-		return Coordonnees(self.x*k, self.y*k)
-		
-	def normaliser(self):
-		return Coordonnes(self.x/self.norme(), self.y/self.norme())
+	def __abs__(self): 
+		"""
+			Retourne la norme du vecteur.
+		"""
+		return math.hypot(self.x, self.y)
+		 
+	def __str__(self): 
+		"""
+			Retourne la réprésentation de la coordonnée sous forme d'une chaîne.
+		"""
+		return '('+str(self.x)+','+str(self.y)+')'
