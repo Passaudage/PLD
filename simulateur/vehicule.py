@@ -32,7 +32,6 @@ class vehicule:
 		return False
 
 
-
 	def calculerVitesse(self):
 		return 1389*self.increment_temps #cm/increment_temps AIIIGHT
 
@@ -109,6 +108,7 @@ class vehicule:
 		trajet = self.calculer_trajet_max(self.voie.coordonnees_fin)
 		self.coordonnees = self.coordonnees.addition(trajet)		
 
+
 	#S'ajouter en feuille sur un arbre
 	def greffe_arbre(self,vehicule_precedent):
 		self.set_vehicule_precedent(vehicule_precedent)
@@ -142,4 +142,4 @@ class vehicule:
 
 		#suis je sur la bonne direction ?
 
-		#Quel monde cruel aije mis au monde ?
+		#Quel monde cruel ai-je mis au monde ?
