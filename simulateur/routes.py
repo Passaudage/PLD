@@ -12,7 +12,7 @@ class voie:
 		self.coordonnees_debut = coordonnees_debut
 		self.coordonnees_fin = coordonnees_fin
 		self.vehicules = []
-		self.directions = set([])
+		self.directions = set()
 		
 		
 		
@@ -23,9 +23,13 @@ class voie:
 			L'ajoute à l'arbre
 		"""
 		prochaine_direction = "droite";
-		clio = vehicule(50, coordonnees, discourtois, longueur, self, prochaine_direction, null)
-		#ajouter à la fin de la liste
-		#ajouter à la fin de l'arbre
+		clio = vehicule(50, coordonnees_debut, discourtois, longueur, self, prochaine_direction, null)
+		self.vehicules.append(clio)
+		dernier_vehicule = self.vehicules[-1]
+		clio.greffe_arbre(dernier_vehicule)
+		
+	def direction_possible(direction):
+		return (direction in directions)
 
 
 	def mise_a_jour_controle_acces(self, temps, simulation_manager):
@@ -57,7 +61,12 @@ class troncon:
 		self.voies = []
 
 	#trouver voie avec bonne direction
-
+	def trouver_voie_direction(self, direction):
+		voies_possibles = []
+		for voie in self.voies:
+			if(voie.direction_possible(direction)):
+				voies_possibles.append(voie)
+		return voies_possibles
 
 	"""
 	ainsi toujours poussé vers de nouveaux rivages
