@@ -29,3 +29,6 @@ class coordonnees:
 
 	def mult(self,k):
 		return coordonnees(self.x*k, self.y*k)
+		
+	def normaliser(self):
+		return coordonnes(self.x/self.norme(), self.y/self.norme())

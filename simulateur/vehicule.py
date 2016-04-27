@@ -18,6 +18,8 @@ class vehicule:
 		self.racine = racine
 		self.direction
 		self.voie = voie
+		self.destination = self.voie.coordonnees_fin
+		self.nouvelle_voie = None
 		self.intersection = None
 		self.trajectoire = trajectoire
 		voiture_fin = self.voie.get_dernier_element()
@@ -69,19 +71,41 @@ class vehicule:
 						self.suit_vehicule_devant() #on ne code avec le rectum par nos contrées
 				else:
 					if(self.verifie_feu()):
-						#passer le feu
+						#passer le feu, demander l'intersection, demander trajectoire
 						pass
 					else:
 						self.avance_feu_rouge()
 			else:
-				pass
-				#changer de voie, attention à la pile avant la voie
 				if(self.vehicule_precedent.coordonnees==self.coordonnees):
 					pass
 					#pas encore dans le carrefour
 				else:
-					pass
 					#changer de voie, demander bonne voie au tronçon, demander liste vehicules des voies d'à côté.
+					self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(prochaine_direction)[0]
+					direction_virage = self.nouvelle_voie.coordonnees_debut.soustraction(self.voie.coordonnees_debut)
+					distance_avant = self.trajectoire.mult(2)
+					trajectoire_non_normalisee = direction_virage.addition(distance_avant)
+					self.destination = trajectoire_non_normalisee + self.coordonnees
+					self.trajectoire = trajectoire_non_normalisee.normaliser()
+					
+					for vehicule in self.voie.vehicules:
+						if((vehicule.coordonnees - vehicule.voie.trajectoire.mult(vehicule.longueur) - vehicule.voie.coordonnees_debut).norme() < (self.coordonnees.addition(self.trajectoire).soustraction(vehicule.voie.coordonnees_debut)).norme()): #trajectoire dans voie
+							pass
+						elif((vehicule.coordonnees - vehicule.voie.coordonnees_debut).norme() > (self.coordonnees.addition(self.trajectoire).soustraction(vehicule.voie.coordonnees_debut)).norme()): #trajectoire dans voie
+							self.decrochage()
+							self.greffe_arbre(vehicule)
+							self.avance_change_voie()
+						else: 
+							self.decrochage()
+							self.avance_change_voie()
+							self.greffe_arbre(vehicule.vehicule_precedent)
+					if(self.coordonnees == self.destination) :#changement de voie termine
+						self.voie = self.nouvelle_voie
+						self.nouvelle_voie = None
+						self.destination = self.voie.coordonnees_fin
+						self.trajectoire = self.voie.trajectoire
+						
+				
 		elif(self.intersection!=None):
 			pass
 			#faire transition
@@ -107,12 +131,23 @@ class vehicule:
 	def avance_feu_rouge(self):
 		trajet = self.calculer_trajet_max(self.voie.coordonnees_fin)
 		self.coordonnees = self.coordonnees.addition(trajet)		
+		
+	def avance_change_voie(self):
+		trajet = self.calculer_trajet_max(self.destination.soustraction(self.trajectoire.mult(30)))
+		self.coordonnees = self.coordonnees.addition(trajet)
 
 
 	#S'ajouter en feuille sur un arbre
 	def greffe_arbre(self,vehicule_precedent):
 		self.set_vehicule_precedent(vehicule_precedent)
 		vehicule_precedent.set_vehicules_suivants(self)
+		self.propager_racine(vehicule_precedent.racine)
+		
+	def change_arbre(self,vehicule_precedent):
+		self.vehicule_precedent.supp_vehicule_suivant(self)
+		self.set_vehicule_precedent(vehicule_precedent)
+		vehicule_precedent.set_vehicules_suivants(self)
+		self.propager_racine(vehicule_precedent.racine)
 
 
 	def set_vehicule_precedent(self, vehicule):
