@@ -1,13 +1,15 @@
-import Coordonnees
+from Coordonnees import *
 from Voie import *
 from Troncon import *
 import Intersection
+import random
 
 
 class Vehicule:
+        distance_minimale_roulant = 150 #cm
 	distance_minimale = 30 #cm
 	proportion_discourtois = 0.8
-
+        acceleration_max = 100 # cm.s^(-2)
 
 	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, destination, direction, vehicule_precedent):
 		self.coordonnees = coordonnees
@@ -18,6 +20,9 @@ class Vehicule:
 		self.destination = destination	
 		self.direction = direction
 		self.simulateur = simulateur
+                self.vitesse = Coordonnees()
+                self.acceleration = Coordonnees()
+                self.politesse_changement_voie = random.random()
 		
 		#non initialisés
 		self.racine = None
@@ -46,7 +51,7 @@ class Vehicule:
 
 
 	def notifie_temps(self, nb_increment, simulateur):
-		self.increment_temps = 1 / simulateur.nombre_ticks_seconde 
+		self.increment_temps = nb_increment / (simulateur.nombre_ticks_seconde)
 		self.avance_vehicule()
 		if (len(self.vehicules_suivants) == 0):
 			return
@@ -59,11 +64,10 @@ class Vehicule:
 		if(self.voie!=None):
 			if(self.voie.direction_possible(self.prochaine_direction)):
 				#tout droit
-				if(self.vehicule_precedent.voie==self.voie):
+				if(self.vehicule_precedent.voie == self.voie):
 					#on suit le véhicule devant
 					self.suit_vehicule_devant()
 				elif(self.vehicule_precedent.voie!=None):
-					pass
 					#on arrête de suivre le précédent de l'arbre (il est parti)
 					self.decrochage_arbre()
 					precedent = self.voie.precedent(self)
@@ -75,7 +79,7 @@ class Vehicule:
 							self.avance_feu()
 					else:
 						self.greffe_arbre(precedent)
-						self.suit_vehicule_devant() #on ne code avec le rectum par nos contrées
+						self.suit_vehicule_devant()
 				else:
 					distance_faite = self.avance_feu()
 					if(self.verifie_feu()):
@@ -127,6 +131,20 @@ class Vehicule:
 			#faire transition
 		return
 		
+        def mettre_coordonees_a_jour(increment_temps, nb_ticks_sec, vitesse_precedent, position):
+            if self.intersection != None:
+                print('not implemented')
+            else:
+                dx = self.vitesse.x * increment_temps / nb_ticks_sec 
+                dy = self.vitesse.y * increment_temps / nb_ticks_sec
+
+                dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(1,0))
+                dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(0,1))
+
+                acceleration_libre_x = 1 - (self.vitesse.x/self.voie)**4
+                acceleration_libre_y = 1 - (self.vitesse.x/self.voie)**4
+                acceleration_approche_x = 
+
 	def calculer_trajet_max(self, coordonnees_destination):
 		distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
 		distance_normee = distance_vecteur.norme()
