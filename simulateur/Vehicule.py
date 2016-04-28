@@ -122,7 +122,7 @@ class Vehicule:
 		if(vehicule_blocant == "feu"):
 			mettre_coordonnees_a_jour(incr, nb_tick, (0,0), coordonnees_obstacle)
 		else:
-			mettre_coordonnees_a_jour(coordonnees_obstacle,vehicule_blocant.vitesse)
+			mettre_coordonnees_a_jour(incr, nb_tick,vehicule_blocant.vitesse,coordonnees_obstacle)
 		
 		
 		
