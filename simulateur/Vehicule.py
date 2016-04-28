@@ -286,9 +286,9 @@ class Vehicule:
         self.orientation_cible = orientation_cible
         self.destination = destination
         self.origine = self.coordonnees
-        self.orientation_origine = self.orientation
+        self.orientation_origine = self.direction
         self.repere_trajectoire_axe_x = self.destination - self.origine
-        self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
+        self.repere_trajectoire_axe_x = Coordonnees.normaliser(self.repere_trajectoire_axe_x)
         self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
 
         dest_nv_rep = Coordonnees.Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
