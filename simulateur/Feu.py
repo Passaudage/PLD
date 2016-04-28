@@ -56,6 +56,7 @@ class Feu():
             self.couleur_direction = Couleur.rouge
 
     def definit_couleur(self, couleur_direction, timestamp):
+        pass
 
     def est_passant(self):
         return self.couleur_direction == Couleur.vert

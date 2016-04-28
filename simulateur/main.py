@@ -1,23 +1,21 @@
-from Coordonnees import *
-from Feu import *
 from GenerateurEntrees import *
 from Intersection import *
 from SimulationManager import *
-from Troncon import *
 from Vehicule import *
 from Voie import *
 
 
 def main():
+    print("Salut ! ")
     longueur_troncon = 5000
     
     sm = SimulationManager(5)
-    gen_sud = GenerateurEntrees([1, 2, 3, 4, 5, 6, 7])
-    gen_ouest = GenerateurEntrees([1, 2, 3, 4, 5, 6, 7])
-    gen_est = GenerateurEntrees([1, 2, 3, 4, 5, 6, 7])
-    gen_nord = GenerateurEntrees([1, 2, 3, 4, 5, 6, 7])
+    gen_sud = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen_ouest = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen_est = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen_nord = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
 
-    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050))
+    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     
     t_sud = Troncon(i, None, Coordonnees.Coordonnees(6050, 0), Coordonnees.Coordonnees(6050, longueur_troncon),
                 {"G" : 0.2 , "TD" : 0.5 , "D": 0.3}, {"G": 0.3, "TD": 0.2, "D": 0.5})
@@ -62,33 +60,26 @@ def main():
     t_ouest.creer_voie(["TD"], "sens2", 50)
     t_ouest.creer_voie(["D"], "sens2", 50)
 
-    for voie in t_sud.voies_sens2:
-        gen_sud.ajoute_voie_entrante(voie)
-
-    for voie in t_est.voies_sens1:
-        gen_est.ajoute_voie_entrante(voie)
-
-    for voie in t_ouest.voies_sens2:
-        gen_ouest.ajoute_voie_entrante(voie)
-
-    for voie in t_nord.voies_sens1:
-        gen_nord.ajoute_voie_entrante(voie)
-
-    for voie in t_sud.voies_sens1:
-        gen_sud.ajoute_voie_sortante(voie)
-
-    for voie in t_est.voies_sens2:
-        gen_est.ajoute_voie_sortante(voie)
-
-    for voie in t_ouest.voies_sens1:
-        gen_ouest.ajoute_voie_sortante(voie)
-
-    for voie in t_nord.voies_sens2:
-        gen_nord.ajoute_voie_sortante(voie)
+    gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
+    gen_est.ajoute_voie_entrante(t_est.voies_sens1)
+    gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
+    gen_nord.ajoute_voie_entrante(t_nord.voies_sens1)
+    gen_sud.ajoute_voie_sortante(t_sud.voies_sens1)
+    gen_est.ajoute_voie_sortante(t_est.voies_sens2)
+    gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
+    gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
+    i.branche_troncon(t_sud, 'B')
+    i.branche_troncon(t_est, 'D')
+    i.branche_troncon(t_ouest, 'G')
+    i.branche_troncon(t_nord, 'H')
+
+    if(i.construire_chemins()):
+        print("ca marche ! :D")
+    else : print("Ca marche pas ! :'(")
+
     
-    
-    
+main()
     
     
     

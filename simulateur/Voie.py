@@ -16,7 +16,7 @@ class Voie:
 
     def creer_vehicule(self, discourtois, longueur):
         prochaine_direction = "droite"
-        clio = Vehicule.Vehicule(50, Coordonnees.Coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.trajectoire, None)
+        clio = Vehicule.Vehicule(50, Coordonnees.Coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.trajectoire, None)
         self.ajouter_vehicule(self)
         dernier_vehicule = self.dernier_vehicule()
         clio.greffe_arbre(dernier_vehicule)
