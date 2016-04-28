@@ -1,16 +1,17 @@
-import Coordonnees
+from Coordonnees import *
 import Feu
 import Voie
 
 class Troncon:
     const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
-    def __init__(self, tete, queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
-        self.tete = tete #en haut ou à droite
-        self.queue = queue #en bas ou à gauche
+
+    def __init__(self, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
+        self.intersection_tete = intersection_tete #en haut ou à droite
+        self.intersection_queue = intersection_queue #en bas ou à gauche
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
-        self.longueur = self.coordonnees_debut.norme(coordonnees_fin)
-        self.trajectoire = Coordonnees.Coordonnees((self.coordonnees_fin.x-self.coordonnees_debut.x)/self.longueur, (self.coordonnees_fin.y-self.coordonnees_debut.y)/self.longueur)
+        self.longueur = (self.coordonnees_fin.__sub__(coordonnees_debut)).__abs__()
+        self.trajectoire = (self.coordonnees_fin.__sub__(coordonnees_debut)).normaliser()
         self.proba_dir_sens1 = proba_dir_sens1
         self.proba_dir_sens2 = proba_dir_sens2
         self.directions_sens1 = self.proba_dir_sens1.keys()
@@ -19,21 +20,27 @@ class Troncon:
         self.voies_sens2 = []
         self.dir_voies_sens1 = {}
         self.dir_voies_sens2 = {}
-        self.dir_feu = {}
+        self.dir_feu_sens1 = {}
+        self.dir_feu_sens2 = {}
 
         for direction in self.directions_sens1 :
-            self.dir_feu[direction] = Feu.Feu(self.tete)
+            self.dir_feu_sens1[direction] = Feu.Feu(self.intersection_tete)
 
-    def creer_voie(self, directions, sens):  #on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
+        for direction in self.directions_sens2:
+            self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue)
+
+    # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
+    def creer_voie(self, directions, sens):
+
         coordonnees_debut = None
         coordonnees_fin = None
         if( sens == "sens1") :
             if(self.coordonnees_debut.x == self.coordonnees_fin.x):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_debut.y )
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_fin.y )
+                coordonnees_debut =Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_debut.y )
+                coordonnees_fin = Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0,5)*self.const_largeur_voie, self.coordonnees_fin.y )
             if (self.coordonnees_debut.y == self.coordonnees_fin.y):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0, 5)*self.const_largeur_voie)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0, 5)*self.const_largeur_voie)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0, 5)*self.const_largeur_voie)
+                coordonnees_fin = Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0, 5)*self.const_largeur_voie)
 
             proba_dir = {}
             proba_sum = 0
@@ -53,11 +60,11 @@ class Troncon:
 
         if (sens == "sens2"):
             if (self.coordonnees_debut.x == self.coordonnees_fin.x):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie, self.coordonnees_debut.y)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie, self.coordonnees_fin.y)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie, self.coordonnees_debut.y)
+                coordonnees_fin = Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie, self.coordonnees_fin.y)
             if (self.coordonnees_debut.y == self.coordonnees_fin.y):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie)
+                coordonnees_fin = Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0, 5)*self.const_largeur_voie)
 
             proba_dir = {}
             proba_sum = 0
@@ -70,9 +77,10 @@ class Troncon:
             for direction in directions:
                 proba_dir[direction] = proba_dir.get(direction)/proba_sum
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire, proba_entree, proba_dir)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, -self.trajectoire, proba_entree, proba_dir)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
+
 
     # end creer voie
 
@@ -91,13 +99,19 @@ class Troncon:
 
         return voies_possibles
 
-    def getFeu(self, direction):
-        if(direction in self.dir_feu.keys()):
-            return self.dir_feu.get(direction)
-        else:
-            self.dir_feu[direction] = Feu.Feu(self.tete)
-            return self.dir_feu.get(direction)
+    def get_feu(self, direction, sens):
+        if(sens == "sens1") :
+            return self.dir_feu_sens1[direction]
+        if (sens == "sens2"):
+            return self.dir_feu_sens2[direction]
 
+    def get_intersection(self, voie):
+        if(voie in self.voies_sens1):
+            return self.intersection_tete
+        else : return self.intersection_queue
+
+    def largeur_troncon(self):
+        return (len(self.voies.sens1) + len(self.voies.sens2))*self.const_largeur_voie
 
     """
     ainsi toujours poussé vers de nouveaux rivages
