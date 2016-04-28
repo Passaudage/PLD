@@ -1,8 +1,5 @@
 import Coordonnees
-import Voie
-import Troncon
 import Intersection
-import random
 from math import sqrt
 
 class Vehicule:
@@ -31,6 +28,7 @@ class Vehicule:
         self.direction = direction
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)
+        self.acceleration = Coordonnees.Coordonnees(0, 0)
 
         # non initialisés
         self.racine = None
@@ -250,13 +248,13 @@ class Vehicule:
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-        dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(1,0))
-        dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(0,1))
+        dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(1,0))
+        dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(0,1))
             
         vitesse_max = self.voie.vitesse_max
 
         if self.intersection != None:
-            Vehicule.vitesse_max = Intersection.vitesse_max
+            Vehicule.vitesse_max = Intersection.Intersection.vitesse_max
 
         acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
         acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
@@ -273,10 +271,10 @@ class Vehicule:
         acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - self.coordonnees.x))**2)
         acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - self.coordonnees.y))**2)
             
-        projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoir_axe_x)
+        projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
-        orientation = orientation / orientation.norm()
+        orientation = orientation.normaliser()
         self.orientation = orientation
            
         self.vitesse.x += dvx
@@ -295,7 +293,7 @@ class Vehicule:
 
         dest_nv_rep = Coordonnees.Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
             
-        orientation_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoir_axe_x)
+        orientation_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoire_axe_x)
             
         ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
 
