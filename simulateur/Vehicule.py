@@ -260,7 +260,7 @@ class Vehicule:
         vitesse_max = self.voie.vitesse_max
 
         if self.intersection != None:
-        Vehicule.vitesse_max = Intersection.vitesse_max
+            Vehicule.vitesse_max = Intersection.vitesse_max
 
             acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
             acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
