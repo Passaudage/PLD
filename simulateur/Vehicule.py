@@ -7,6 +7,7 @@ import Intersection
 class Vehicule:
     distance_minimale = 30  # cm
     proportion_discourtois = 0.8
+    nb_vehicules_total = 0
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
                  origine, destination, direction, vehicule_precedent):
@@ -37,6 +38,8 @@ class Vehicule:
             self.racine = self
             # se déclarer tête de liste 
             self.simulateur.add_listener(self)
+
+        Vehicule.nb_vehicules_total += 1
 
     def changeDirection(self, x, y):
         self.direction = Coordonnees.Coordonnees(x, y)
