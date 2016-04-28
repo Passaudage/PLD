@@ -66,7 +66,7 @@ class Intersection:
             self.troncon_gauche = troncon
             
             # Cree les feux et les donne aux voies
-            self.creer_feux(troncon, voies_entrantes, 2)
+            self.creer_feux(1,troncon, voies_entrantes, 2)
             
         elif(position=='B'):
             if(self.troncon_bas != None):
@@ -79,7 +79,7 @@ class Intersection:
             self.troncon_bas = troncon
             
             # Cree les feux et les donne aux voies
-            self.creer_feux(troncon, voies_entrantes, 3)
+            self.creer_feux(1,troncon, voies_entrantes, 3)
             
         elif(position=='D'):
             if(self.troncon_droite != None):
@@ -92,7 +92,7 @@ class Intersection:
             self.troncon_droite = troncon
             
             # Cree les feux et les donne aux voies
-            self.creer_feux(troncon, voies_entrantes, 0)
+            self.creer_feux(2,troncon, voies_entrantes, 0)
             
         elif(position=='H'):
             if(self.troncon_haut != None):
@@ -105,12 +105,12 @@ class Intersection:
             self.troncon_haut = troncon
             
             # Cree les feux et les donne aux voies
-            self.creer_feux(troncon, voies_entrantes, 1)
+            self.creer_feux(2, troncon, voies_entrantes, 1)
             
         else:
             raise Exception(position+" n'est pas une direction convenable.")
     
-    def creer_feux(troncon, voies_entrantes, offset):
+    def creer_feux(self, sens, troncon, voies_entrantes, offset):
         """
             Permet d'ajouter aux voies entrantes un feu
                 # voies_entrantes : les voies entrantes
@@ -136,8 +136,8 @@ class Intersection:
                 else:
                     feu = Feu(self,direction)
                     self.feux[index] = feu
-                # On ajoute le feu a cette voie
-                troncon.ajouter_feux(direction, feu)
+                # On ajoute le feu a ce troncon
+                troncon.ajouter_feux(sens,direction, feu)
                 
     def construire_chemins():
 		if (self.troncon_gauche == None || self.troncon_droite == None || self.troncon_haut == None || self.troncon_bas == None):
