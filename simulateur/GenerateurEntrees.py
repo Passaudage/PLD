@@ -65,7 +65,7 @@ class GenerateurEntrees:
             freq = freq_gauche + fact_prop * (freq_droite - freq_gauche)
         
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
-        
+        print("Nombre de voitures : "+str(nombre_voit_crees))
         for i in range(nombre_voit_crees):
             longueur = random.normalvariate(428, 50)
             aggressivite = (random.random() < Vehicule.proportion_discourtois)

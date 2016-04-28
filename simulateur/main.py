@@ -100,10 +100,11 @@ def main():
     
     print(sm.listeners)
     print()
-    sm.avance_temps()
-    print()
-    sm.avance_temps()
-    print()
+    for i in range(14):
+        sm.avance_temps()
+        print()
+
+
     
 
     
