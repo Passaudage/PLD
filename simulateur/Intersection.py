@@ -224,6 +224,32 @@ class Intersection:
 		self.vehicules.remove(vehicule)
 		
 	def verifie_place_vehicule(self, coordonnees, destination):
+		coordonnee_blocage = None
+		dist = 0
+		
 		a = (coordonnees.y-destination.y) / (coordonnees.x-destination.x)
+		b = coordonnees.y - a*coordonnees.x 
+		if (coordonnees.x < destination.x):
+			x1 = coordonnees.x
+			x2 = destination.x
+		else:
+			x1 = destination.x
+			x2 = coordonnees.x
+			
 		for vehicule in vehicules :
-			if (vehicule.coordonnees - vehicule.donner_arriere
+			ar = vehicule.donner_arriere()
+			av = vehicule.coordonnees
+			a2 = (av.y-ar.y) / (av.x-ar.x)
+			b2 = av.y - a*av.x 
+			x = (b - b2) / (a2 - a)
+			if ((x1<=x && x<=x2) && ((av.x<=x && x<=ar.x) || (ar.x<=x && x<=av.x))):
+				nouvelle_co = Coordonnees(x,a*x+b)
+				if (coordonnee_blocage == None):
+					coordonnee_blocage = nouvelle_co
+					dist = abs(nouvelle_co-coordonnees)
+				elif(dist > abs(nouvelle_co-coordonnees)):
+					coordonnee_blocage = nouvelle_co
+					dist = abs(nouvelle_co-coordonnees)
+			
+			
+			
