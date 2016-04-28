@@ -23,10 +23,6 @@ class Voie:
     def direction_possible(self, direction):
         return (direction in self.directions)
 
-    def mise_a_jour_controle_acces(self, temps, simulation_manager):
-         self.controleur_acces.notifie_temps(self, temps, simulation_manager)
-
-
     """set de direction et probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba """
 
     def ajouter_vehicule(self, vehicule):
@@ -57,3 +53,6 @@ class Voie:
 
     def get_proba_dir(self, direction):
         return self.proba_dir.get(direction)
+
+    def demander_intersection(self):
+        return self.troncon.get_intersection(self)
