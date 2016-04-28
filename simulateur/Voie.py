@@ -2,20 +2,22 @@ import Vehicule
 import Coordonnees
 
 class Voie:
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire, proba_entree, proba_dir):
+
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, vitesse_max):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
         self.vehicules = []
-        self.trajectoire = trajectoire
+        self.orientation = (coordonnees_fin-coordonnees_debut).normaliser()
         self.directions = directions
         self.proba_entree = proba_entree
         self.proba_dir = proba_dir
+        self.vitesse_max = vitesse_max
 
     def creer_vehicule(self, discourtois, longueur):
         prochaine_direction = "droite"
-        clio = Vehicule.Vehicule(50, Coordonnees.Coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.trajectoire, None)
+        clio = Vehicule.Vehicule(50, Coordonnees.Coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.trajectoire, None)
         self.ajouter_vehicule(self)
         dernier_vehicule = self.dernier_vehicule()
         clio.greffe_arbre(dernier_vehicule)

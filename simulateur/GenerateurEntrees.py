@@ -1,7 +1,8 @@
 from SimulationManager import *
 from math import *
-import random
+from random import *
 import Vehicule
+import numpy
 
 def proba_poisson(k, freq, temps_obs):
         #Calcul du lambda correspondant
@@ -13,7 +14,7 @@ def proba_poisson(k, freq, temps_obs):
         return p
 
 def var_poisson(freq, temps_obs):
-    proba_cumulee = random.random()
+    proba_cumulee = random()
     k = 0
     proba_cumul_iter = proba_poisson(0, freq, temps_obs)
     while proba_cumul_iter < proba_cumulee:
@@ -32,40 +33,45 @@ class GenerateurEntrees:
         self._heures_freqs = heures_freqs
         self._timestamp_max = heures_freqs[-1][0]
         self._timestamp_min = heures_freqs[0][0]
-        self._etendue = self.timestamp_max - self.timestamp_min
+        self._etendue = self._timestamp_max - self._timestamp_min
         self._voies_sortantes = []
         self._voies_entrantes = []
+        self._voies_sortantes_proba = {}
 
-    def ajoute_voie_entrante(self, voie):
-        self._voies_entrantes.append(voie);
+        for voie in self._voies_sortantes:
+            self._voies_sortantes_proba[voie] = voie.proba_entree
+
+    def ajoute_voie_entrante(self, voies):
+        self._voies_entrantes = voies
     
-    def ajoute_voie_sortante(self, voie):
-        self._voies_sortantes.append(voie);
+    def ajoute_voie_sortante(self, voies):
+        self._voies_sortantes = voies
 
     def notifie_temps(self, increment, moteur):
+        print("Le generateur a ete modifie.")
         freq = 0
-        if self.etendue == 0:
-            freq = self.heures_freqs[0][1]
+        if self._etendue == 0:
+            freq = self._heures_freqs[0][1]
         else:
-            timestamp = (moteur.temps % duree_journee) / duree_journee * etendue
+            timestamp = (moteur.temps % self.duree_journee) / self.duree_journee * self._etendue
             i = 0
-            while self.heures_freqs[i+1][0] < timestamp:
+            while self._heures_freqs[i+1][0] < timestamp:
                 i+=1
-            timestamp_gauche = self.heures_freqs[i][0]
-            timestamp_droite = self.heures_freqs[i+1][0]
+            timestamp_gauche = self._heures_freqs[i][0]
+            timestamp_droite = self._heures_freqs[i+1][0]
             fact_prop = (timestamp - timestamp_gauche) / (timestamp_droite - timestamp_gauche)
-            freq_gauche = self.heures_freqs[i][1]
-            freq_droite = self.heures_freqs[i+1][1]
+            freq_gauche = self._heures_freqs[i][1]
+            freq_droite = self._heures_freqs[i+1][1]
             freq = freq_gauche + fact_prop * (freq_droite - freq_gauche)
         
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
-        
-        for i in xrange(0, nombre_voit_crees):
-            longueur = random.normalvariate(428, 50)
-            aggressivite = (random.random() < Vehicule.Vehicule.proportion_discourtois)
-            voie = random.random() % len(self.voies_sortantes);
+        print("Nombre de voitures : "+str(nombre_voit_crees))
+        for i in range(nombre_voit_crees):
+            longueur = normalvariate(428, 50)
+            aggressivite = (random() < Vehicule.proportion_discourtois)
+            voie = numpy.random.choice(self._voies_sortantes_proba.keys(), 1, self._voies_sortantes_proba.values())
 
-            voie.creer_vehicule(discourtois, longueur);
+            voie[0].creer_vehicule(aggressivite, longueur)
 
 
 

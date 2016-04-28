@@ -16,49 +16,30 @@ class Feu():
     """
         Modélise un feu de signalisation.
             # intersection : Intersection sur laquelle agit le feu
-            # temps_vert : temps durant lequel l'axe passé en parametre reste vert en secondes
-            # temps_cycle : temps du cycle en secondes
+            # couleur_direction : La couleur initiale du feu
             # @author : Bonfante
     """
-    
-    def __init__(self, intersection, temps_vert = 10, couleur_direction = Couleur.vert):
+
+    def __init__(self, intersection, couleur_direction = Couleur.vert):
         # Intersection où se trouve le feu
         self.intersection = intersection
-        
-        # Direction que le feu reglemente
-        self.direction = direction
-        
-        # Temps que l'axe passé en parametre reste vert
-        self.temps_vert = temps_vert
-                
+
         # Couleur actuel de l'axe passé en parametre
         self.couleur_direction = couleur_direction
-        
-        # Timestamp de dernière modification
-        self.timestamp_derniere_modif = 0
 
     def notifie_temps(self, temps, simulation_manager):
         """
             Methode appelée lorsque le simulateur augmente le temps
         """
-        self.change_couleur(temps, simulation_manager)
-        
-    def change_couleur(self, temps, simulation_manager):
+        self.change_couleur()
+
+    def change_couleur(self):
         """
-            Change la couleur du feu en fonction du temps
+                    Change la couleur du feu
+
         """
-        # Recupere le temps absolu dans le simulation manager
-        temps_absolu = simulation_manager.temps 
-        # Choisir la bonne couleur du feu
-        temp = temps_absolu%self.temps_cycle
-        if(temp<self.temps_vert):
-            self.couleur_direction = Couleur.vert
-        else:
-            self.couleur_direction = Couleur.rouge
-    
-    def definit_couleur(self, couleur_direction, timestamp):
-        return
-    
+        self.couleur_direction = 1-self.couleur_direction
+
     def est_passant(self):
         return self.couleur_direction == Couleur.vert
-    
+
