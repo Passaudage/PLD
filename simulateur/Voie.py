@@ -1,5 +1,5 @@
-from Vehicule import *
-from Coordonnees import *
+import Vehicule
+import Coordonnees
 
 class Voie:
 
@@ -17,9 +17,9 @@ class Voie:
 
     def creer_vehicule(self, simulateur, discourtois, longueur):
         prochaine_direction = "droite"
-        clio = Vehicule.Vehicule(50, simulateur, Coordonees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, None)
+
+        clio = Vehicule.Vehicule(simulateur, discourtois, Coordonnees.Coordonnees(0,0), longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, None)
         self.ajouter_vehicule(clio)
-        Vehicule.tous_les_vehicules.append(clio)
         dernier_vehicule = self.dernier_vehicule()
         clio.greffe_arbre(dernier_vehicule)
 
