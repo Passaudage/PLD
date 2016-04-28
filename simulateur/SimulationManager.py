@@ -5,6 +5,8 @@ class SimulationManager:
         self.temps = 0
         self.listeners = []
 
+        self.lock_visualisateur = None
+
     def add_listener(self, listener):
         self.listeners.append(listener)
 

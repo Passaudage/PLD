@@ -2,10 +2,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-from SimulationManager import *
+import SimulationManager
 
-from Visualisateur import *
-
+import Visualisateur
 import main
 
 class Fenetre(Gtk.Window):
@@ -35,7 +34,7 @@ class Fenetre(Gtk.Window):
 
         self.sim = main.charger_simulateur()
 
-        self.visual = Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
+        self.visual = Visualisateur.Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
 
     def quit(self, a, b):
         # voir la doc, je ne sais pas à quoi correspondent ces deux arguments...

@@ -2,11 +2,12 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-from Coordonnees import *
-from Intersection import Intersection
+import Coordonnees
+import Intersection
 
 import Vehicule
 import Troncon
+import threading
 
 class Visualisateur: 
     """
@@ -18,11 +19,12 @@ class Visualisateur:
 
     def __init__(self, simulateur, taille_x, taille_y):
 
-        self.grain = 1 # en ticks
+        self.grain = 10 # en ticks
         self.simulateur = simulateur
         self.zone_dessin = Gtk.DrawingArea()
         self.taille_x = taille_x
         self.taille_y = taille_y
+        self.terminated = False
 
         self.zone_dessin.connect('draw', self.dessiner_tout)
 
@@ -45,12 +47,42 @@ class Visualisateur:
 
         self.definir_limite()
 
+    def notifier_fin(self):
+        self.terminated = True
+
+    def demarrer_simulation(self):
+        self.thread_sim = threading.Thread(None, boucle_simulation)
+        self.thread_sim.start()
+        
+        return
+
+        self.thread_sim = threading.Thread(None, boucle_simulation)
+        self.thread_sim.start()
+
+        self.thread_dessin = threading.Thread(None, boucle_dessiner)
+        self.thread_dessin.start()
+
+
+    def boucle_simulation(self):
+        
+        while not self.terminated:
+            for i in range(1):
+                self.simulateur.avance_temps()
+
+            self.dessiner_tout()
+            threading.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
+
+
+    def boucle_dessiner(self):
+
+        while True:
+            self.dessiner_tout()
 
     def dessiner_tout(self, widget, cairo_context):
         self.cairo_context = cairo_context
 
         self.dessiner_voirie()
-        #self.dessiner_voitures()
+        self.dessiner_voitures()
 
         widget.queue_draw()
 
@@ -61,23 +93,33 @@ class Visualisateur:
         # couleur d'une voiture
         self.cairo_context.set_source_rgba(0, 0, 70, 0.5)
 
-        coord_test = Coordonnees(100, 100)
+        coord_test = Coordonnees(6050, 7100)
         orientation = 0
-        longueur = 50
+        longueur = 350
 
         self.dessiner_voiture(coord_test, orientation, longueur);
-        self.dessiner_voiture(coord_test, orientation, longueur);
 
-    def dessiner_voiture(self, coord, orientation, longueur):
+        return
+
+        for voiture in liste_voitures:
+            dessiner_voiture()
+
+    def dessiner_voiture(self, voiture):
+        #coord, orientation, longueur):
+
+        coord = self.echelle(voiture.coordonnees)
+        longueur = self.fact_echelle * voiture.longueur
 
         self.cairo_context.save()
 
         print("dessin !")
-        #self.cairo_context.arc(0, 0, 50, 0, 0)
+        
         self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(orientation) # en degrés
 
         self.cairo_context.rectangle(0, 0, Vehicule.largeur, longueur)
+
+        #self.cairo_context.arc(0, 0, 50, 0, 0)
         self.cairo_context.fill()
 
         self.cairo_context.restore()
@@ -95,8 +137,6 @@ class Visualisateur:
         return
 
     def dessiner_troncon(self, troncon):
-
-        print("intersection")
 
         self.cairo_context.save()
 
