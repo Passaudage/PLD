@@ -1,7 +1,7 @@
 from Coordonnees import *
 import Feu
 import Voie
-from Vehicule import * 
+from Vehicule import *
 
 class Troncon:
     const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
