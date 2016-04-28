@@ -70,12 +70,9 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_gauche = troncon
             
-            # Cree les feux et les donne aux voies
-<<<<<<< HEAD
-            self.creer_feux(self.entrantes, 2)
-=======
+            # Cree les feux et les donne aux troncons
             self.creer_feux(1,troncon, voies_entrantes, 2)
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
+
             
         elif(position=='B'):
             if(self.troncon_bas != None):
@@ -87,12 +84,8 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_bas = troncon
             
-            # Cree les feux et les donne aux voies
-<<<<<<< HEAD
-            self.creer_feux(self.entrantes, 3)
-=======
+            # Cree les feux et les donne aux troncons
             self.creer_feux(1,troncon, voies_entrantes, 3)
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
             
         elif(position=='D'):
             if(self.troncon_droite != None):
@@ -104,12 +97,8 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_droite = troncon
             
-            # Cree les feux et les donne aux voies
-<<<<<<< HEAD
-            self.creer_feux(self.entrantes, 0)
-=======
+            # Cree les feux et les donne aux troncons
             self.creer_feux(2,troncon, voies_entrantes, 0)
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
             
         elif(position=='H'):
             if(self.troncon_haut != None):
@@ -121,21 +110,13 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_haut = troncon
             
-            # Cree les feux et les donne aux voies
-<<<<<<< HEAD
-            self.creer_feux(self.entrantes, 1)
-=======
+            # Cree les feux et les donne aux troncons
             self.creer_feux(2, troncon, voies_entrantes, 1)
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
             
         else:
             raise Exception(position+" n'est pas une direction convenable.")
     
-<<<<<<< HEAD
-    def creer_feux(self, voies_entrantes, offset):
-=======
     def creer_feux(self, sens, troncon, voies_entrantes, offset):
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
         """
             Permet d'ajouter aux voies entrantes un feu
                 # voies_entrantes : les voies entrantes
@@ -189,95 +170,6 @@ class Intersection:
     def lister_troncon(self):
         return [self.troncon_gauche,self.troncon_haut,self.troncon_droite,self.troncon_bas]
                 
-<<<<<<< HEAD
-    def demander_voies_sorties(self,voie_entree,direction,coordonnees):
-        """
-            Trouve les voies de sorties possibles si l'on
-            arrive sur la voie voie_entree en direction de
-            la direction passe en parametre
-                # voie_entree : voie d'origine
-                # direction : la direction ou l'on va
-                # @author : Bonfante
-        """
-
-        # Si la voie est dans le troncon gauche
-
-        troncon = voie_entree.troncon
-        if(troncon==self.troncon_bas):
-            index = self.troncon_bas.voies_sens1.index(voie_entree)
-            if(direction == 'D'):
-                return self.troncon_droite.voies_sens1[index]
-            elif(direction == 'G'):
-                return self.troncon_gauche.voies_sens2[index]
-            elif(direction == 'TD'):
-                return self.troncon_haut.voies_sens1[index]
-
-        elif(troncon==self.troncon_haut):
-            index = self.troncon_haut.voies_sens2.index(voie_entree)
-            if(direction == 'D'):
-                return self.troncon_gauche.voies_sens2[index]
-            elif(direction == 'G'):
-                return self.troncon_droite.voies_sens1[index]
-            elif(direction == 'TD'):
-                return self.troncon_bas.voies_sens2[index]
-
-
-        elif(troncon == self.troncon_droite):
-            index = self.troncon_droite.voies_sens2.index(voie_entree)
-            if(direction == 'D'):
-                return self.troncon_droite.voies_sens1[index]
-            elif(direction == 'G'):
-                return self.troncon_bas.voies_sens2[index]
-            elif(direction == 'TD'):
-                return self.troncon_gauche.voies_sens2[index]
-
-        elif(troncon == self.troncon_gauche):
-            index = self.troncon_gauche.voies_sens1.index(voie_entree)
-            if(direction == 'D'):
-                return self.troncon_bas.voies_sens2[index]
-            elif(direction == 'G'):
-                return self.troncon_haut.voies_sens1[index]
-            elif(direction == 'TD'):
-                return self.troncon_droite.voies_sens1[index]
-
-
-    def ajouter_vehicule(self, vehicule):
-        self.vehicules.ajouter_vehicule(vehicule)
-
-    def retirer_vehicule(self, vehicule):
-        self.vehicules.remove(vehicule)
-
-    def verifie_place_vehicule(self, coordonnees, destination):
-        coordonnee_blocage = None
-        dist = 0
-
-        a = (coordonnees.y-destination.y) / (coordonnees.x-destination.x)
-        b = coordonnees.y - a*coordonnees.x
-        if (coordonnees.x < destination.x):
-            x1 = coordonnees.x
-            x2 = destination.x
-        else:
-            x1 = destination.x
-            x2 = coordonnees.x
-
-        for vehicule in self.vehicules :
-            ar = vehicule.donner_arriere()
-            av = vehicule.coordonnees
-            a2 = (av.y-ar.y) / (av.x-ar.x)
-            b2 = av.y - a*av.x
-            x = (b - b2) / (a2 - a)
-            if ((x1<=x and x<=x2) and (av.x<=x and x<=ar.x) or (ar.x<=x and x<=av.x)):
-                nouvelle_co = Coordonnees.Coordonnees(x,a*x+b)
-                if (coordonnee_blocage == None):
-                    coordonnee_blocage = nouvelle_co
-                    dist = abs(nouvelle_co-coordonnees)
-                elif(dist > abs(nouvelle_co-coordonnees)):
-                    coordonnee_blocage = nouvelle_co
-                    dist = abs(nouvelle_co-coordonnees)
-
-
-
-=======
 	def demander_voies_sorties(self,voie_entree,direction):
 		"""
 			Trouve les voies de sorties possibles si l'on
@@ -359,7 +251,3 @@ class Intersection:
 					dist = abs(nouvelle_co-coordonnees)
 					
 		return (coordonnee_blocage,vehicule_blocant)
-			
-			
-			
->>>>>>> e131cdc8ff7c17cb59969db927629bc37a744ad9
