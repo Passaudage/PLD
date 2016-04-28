@@ -69,7 +69,11 @@ class GenerateurEntrees:
         for i in range(nombre_voit_crees):
             longueur = normalvariate(428, 50)
             aggressivite = (random() < Vehicule.proportion_discourtois)
-            voie = numpy.random.choice(self._voies_sortantes_proba.keys(), 1, self._voies_sortantes_proba.values())
+
+            probas = []
+            for key in self._voies_sortantes_proba.keys():
+                probas.append(self._voies_sortantes_proba.get(key))
+            voie = numpy.random.choice(self._voies_sortantes, 1, False, probas)
 
             voie[0].creer_vehicule(aggressivite, longueur)
 
