@@ -72,16 +72,24 @@ class Vehicule:
 							#passer le feu
 							pass
 						else:
-							self.avance_feu_rouge()
+							self.avance_feu()
 					else:
 						self.greffe_arbre(precedent)
 						self.suit_vehicule_devant() #on ne code avec le rectum par nos contrées
 				else:
+					distance_faite = self.avance_feu()
 					if(self.verifie_feu()):
 						#passer le feu, demander l'intersection, demander direction
-						pass
+						if(self.coordonnees == self.voie.coordonnees_fin):
+							self.intersection = self.voie.demander_intersection()
+							self.intersection.ajouter_vehicule(self)
+							self.destination = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction, self.coordonnees)
+							self.direction = (self.destination-self.coordonnees).normaliser()
+							#nouvelle destination et direction données par l'intersection
+							self.avancer_intersection(distance_faite)
 					else:
-						self.avance_feu_rouge()
+						pass
+						#feu rouge, on bouge pas
 			else:
 				if(self.vehicule_precedent.coordonnees==self.coordonnees):
 					pass
@@ -124,26 +132,32 @@ class Vehicule:
 		distance_normee = distance_vecteur.norme()
 		distance_possible = min (self.calculerVitesse() , distance_normee)
 		trajet = self.direction.mult(distance_possible)
-		return trajet
+		resultat = self.coordonnees.addition(trajet)
+		return resultat
 		
 	def suit_vehicule_devant(self):
 		marge = self.direction.mult(self.vehicule_precedent.longueur + distance_minimale) #longueur + distance minimale
 		distance = self.vehicule_precedent.coordonnees.soustraction(marge)
-		trajet = self.calculer_trajet_max(distance)
-		self.coordonnees = self.coordonnees.addition(trajet)
+		resultat = self.calculer_trajet_max(distance)
+		self.coordonnees = resultat
 		#on avance de ce que l'on peut
 		
 	def verifie_feu(self):
 		return self.voie.est_passant(self.prochaine_direction)
 
-	def avance_feu_rouge(self):
-		trajet = self.calculer_trajet_max(self.voie.coordonnees_fin)
-		self.coordonnees = self.coordonnees.addition(trajet)		
+	def avance_feu(self):
+		resultat = self.calculer_trajet_max(self.voie.coordonnees_fin)
+		distance_faite = abs(resultat - self.coordonnees)
+		self.coordonnees = resultat
+		return distance_faite
 		
 	def avance_change_voie(self):
 		trajet = self.calculer_trajet_max(self.destination.soustraction(self.direction.mult(30)))
 		self.coordonnees = self.coordonnees.addition(trajet)
 
+	def avancer_intersection(self, distance_faite):
+		trajet = self.calculer_trajet_max(self.destination)
+		
 
 	#S'ajouter en feuille sur un arbre
 	def greffe_arbre(self,vehicule_precedent):
@@ -181,6 +195,9 @@ class Vehicule:
 		if(len(self.vehicules_suivants)!=0):
 			for vehicule_suivant in self.vehicules_suivants:
 				vehicule_suivant.propager_racine(racine)
+				
+	def donner_arriere(self):
+		return (self.coordonnees - self.direction*longueur)
 
 
 		#suis je sur la bonne direction ?

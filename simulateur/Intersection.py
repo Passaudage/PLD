@@ -9,9 +9,11 @@ class Intersection:
             # @author : Bonfante
     """
         
-    def __init__(self, coordonnees):
+    def __init__(self, coordonnees, hauteur, largeur):
         # Position du point central de l'intersection
         self.coordonees = coordonees
+        self.hauteur = hauteur
+        self.largeur = largeur
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -30,6 +32,9 @@ class Intersection:
         
         # Voies sortantes
         self.sortantes = {}
+        
+        # Voitures
+        self.voitures = []
         
         # Chemins voitures
         # Map voiture/Liste de points restant à passer
@@ -134,7 +139,34 @@ class Intersection:
                 # On ajoute le feu a cette voie
                 voie.ajoute_feu(feu)
                 
-	def trouve_voies_sorties(self,voie_entree,direction):
+    def construire_chemins():
+		if (self.troncon_gauche == None || self.troncon_droite == None || self.troncon_haut == None || self.troncon_bas == None):
+			raise Exception("Tous les troncons ne sont pas initialisés")
+		else:
+			liste_troncon = lister_troncon()
+			for troncon in liste_troncon :
+				alignement = troncon.coordonnees_debut - self.coordonnees
+				if (alignement.x != 0 && alignement.y != 0):
+					raise Exception("Le troncon " + troncon + " n'est pas aligné correctement, il est bancale")
+					
+				demi_largeur = troncon.largeur()
+				co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
+				co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_debut
+				alignement1 = troncon.coordonnees_debut - c01
+				alignement2 = troncon.coordonnees_debut - c02
+				if (alignement1.x != 0 && alignement1.y != 0)
+					raise Exception("Le troncon " + troncon + " n'est pas ajusté correctement à gauche")
+				if (alignement2.x != 0 && alignement2.y != 0)
+					raise Exception("Le troncon " + troncon + " n'est pas ajusté correctement à droite")
+					
+					
+		
+			
+	
+	def lister_troncon(self):
+		return [self.troncon_gauche,self.troncon_haut,self.troncon_droite,self.troncon_bas]
+                
+	def demander_voies_sorties(self,voie_entree,direction,coordonnees):
 		"""
 			Trouve les voies de sorties possibles si l'on
 			arrive sur la voie voie_entree en direction de 
@@ -143,46 +175,81 @@ class Intersection:
 				# direction : la direction ou l'on va
 				# @author : Bonfante
 		"""
-		# Si la voie est dans le troncon gauche
-		voies = troncon_gauche.voies_sens1
-		for voie in voies:
-			if(voie == voie_entree):
-				if(direction == 'D'):
-					return troncon_bas.voies_sens2
-				elif(direction == 'G'):
-					return troncon_haut.voies_sens1
-				elif(direction == 'TD'):
-					return troncon_droite.voies_sens1
-				
-		# Si la voie est dans le troncon droit
-		voies = troncon_gauche.voies_sens2
-		for voie in voies:
-			if(voie == voie_entree):
-				if(direction == 'D'):
-					return troncon_haut.voies_sens1
-				elif(direction == 'G'):
-					return troncon_bas.voies_sens2
-				elif(direction == 'TD'):
-					return troncon_gauche.voies_sens2
 		
-		# Si la voie est dans le troncon haut
-		voies = troncon_gauche.voies_sens2
-		for voie in voies:
-			if(voie == voie_entree):
-				if(direction == 'D'):
-					return troncon_gauche.voies_sens2
-				elif(direction == 'G'):
-					return troncon_droite.voies_sens1
-				elif(direction == 'TD'):
-					return troncon_bas.voies_sens2
-		# Si la voie est dans le troncon bas
-		voies = troncon_gauche.voies_sens1
-		for voie in voies:
-			if(voie == voie_entree):
-				if(direction == 'D'):
-					return troncon_droite.voies_sens1
-				elif(direction == 'G'):
-					return troncon_gauche.voies_sens2
-				elif(direction == 'TD'):
-					return troncon_haut.voies_sens1
-				
+		# Si la voie est dans le troncon gauche
+		
+		troncon = voie_entree.troncon
+		if(troncon==self.troncon_bas):
+			num = troncon_bas.voies_sens1.index(voie_entree)
+			if(direction == 'D'):
+				return troncon_droite.voies_sens1[index]
+			elif(direction == 'G'):
+				return troncon_gauche.voies_sens2[index]
+			elif(direction == 'TD'):
+				return troncon_haut.voies_sens1[index]
+			
+		elif(troncon==self.troncon_haut):
+			num = troncon_haut.voies_sens2.index(voie_entree)
+			if(direction == 'D'):
+				return troncon_gauche.voies_sens2[index]
+			elif(direction == 'G'):
+				return troncon_droite.voies_sens1[index]
+			elif(direction == 'TD'):
+				return troncon_bas.voies_sens2[index]
+			
+			
+		elif(troncon == self.troncon_droite):
+			num = troncon_droite.voies_sens2.index(voie_entree)
+			if(direction == 'D'):
+				return troncon_haut.voies_sens1[index]
+			elif(direction == 'G'):
+				return troncon_bas.voies_sens2[index]
+			elif(direction == 'TD'):
+				return troncon_gauche.voies_sens2[index]
+			
+		elif(troncon == self.troncon_gauche):
+			num = troncon_gauche.voies_sens1.index(voie_entree)
+			if(direction == 'D'):
+				return troncon_bas.voies_sens2[index]
+			elif(direction == 'G'):
+				return troncon_haut.voies_sens1[index]
+			elif(direction == 'TD'):
+				return troncon_droite.voies_sens1[index]
+			
+	
+	def ajouter_vehicule(self, vehicule):
+		self.vehicules.ajouter_vehicule(vehicule)
+		
+	def retirer_vehicule(self, vehicule):
+		self.vehicules.remove(vehicule)
+		
+	def verifie_place_vehicule(self, coordonnees, destination):
+		coordonnee_blocage = None
+		dist = 0
+		
+		a = (coordonnees.y-destination.y) / (coordonnees.x-destination.x)
+		b = coordonnees.y - a*coordonnees.x 
+		if (coordonnees.x < destination.x):
+			x1 = coordonnees.x
+			x2 = destination.x
+		else:
+			x1 = destination.x
+			x2 = coordonnees.x
+			
+		for vehicule in vehicules :
+			ar = vehicule.donner_arriere()
+			av = vehicule.coordonnees
+			a2 = (av.y-ar.y) / (av.x-ar.x)
+			b2 = av.y - a*av.x 
+			x = (b - b2) / (a2 - a)
+			if ((x1<=x && x<=x2) && ((av.x<=x && x<=ar.x) || (ar.x<=x && x<=av.x))):
+				nouvelle_co = Coordonnees(x,a*x+b)
+				if (coordonnee_blocage == None):
+					coordonnee_blocage = nouvelle_co
+					dist = abs(nouvelle_co-coordonnees)
+				elif(dist > abs(nouvelle_co-coordonnees)):
+					coordonnee_blocage = nouvelle_co
+					dist = abs(nouvelle_co-coordonnees)
+			
+			
+			
