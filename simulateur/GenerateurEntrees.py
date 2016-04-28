@@ -7,7 +7,7 @@ import numpy
 def proba_poisson(k, freq, temps_obs):
     #Calcul du lambda correspondant
     l = freq * temps_obs
-    p = e ** (-l)
+    p = math.e ** (-l)
     for i in range(0, k):
         p *= l/k
         k = k-1
@@ -68,8 +68,8 @@ class GenerateurEntrees:
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
         #~ print("Nombre de voitures : "+str(nombre_voit_crees))
         for i in range(nombre_voit_crees):
-            longueur = normalvariate(428, 50)
-            aggressivite = (random.random() < Vehicule.proportion_discourtois)
+            longueur = random.normalvariate(428, 50)
+            aggressivite = (random.random() < Vehicule.Vehicule.proportion_discourtois)
 
             probas = []
             for key in self._voies_sortantes_proba.keys():
