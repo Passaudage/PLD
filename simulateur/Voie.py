@@ -2,13 +2,13 @@ import Vehicule
 import Coordonnees
 
 class Voie:
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire, proba_entree, proba_dir):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
         self.vehicules = []
-        self.trajectoire = trajectoire
+        self.orientation = (coordonnees_fin-coordonnees_debut).normaliser()
         self.directions = directions
         self.proba_entree = proba_entree
         self.proba_dir = proba_dir

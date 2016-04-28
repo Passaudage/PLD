@@ -166,7 +166,7 @@ class Intersection:
 	def lister_troncon(self):
 		return [self.troncon_gauche,self.troncon_haut,self.troncon_droite,self.troncon_bas]
                 
-	def demander_voies_sorties(self,voie_entree,direction,coordonnees):
+	def demander_voies_sorties(self,voie_entree,direction):
 		"""
 			Trouve les voies de sorties possibles si l'on
 			arrive sur la voie voie_entree en direction de 
