@@ -4,20 +4,19 @@ from Troncon import *
 import Intersection
 import random
 from math import sqrt
-from Vehicule import *
 
 count = 0
 tous_les_vehicules = []
 
 class Vehicule:
-    Vehicule.distance_minimale_roulant = 150 #cm
-    Vehicule.distance_minimale = 30 #cm
-    Vehicule.proportion_discourtois = 0.8
-    Vehicule.acceleration_max = 100 # cm.s^(-2)
-    Vehicule.deceleration_conf = 300 # cm.s^{-2}
-    Vehicule.temps_reaction = 1.5 # secondes
-    Vehicule.count = 0
-    Vehicule.v_max = 50
+    distance_minimale_roulant = 150 #cm
+    distance_minimale = 30 #cm
+    proportion_discourtois = 0.8
+    acceleration_max = 100 # cm.s^(-2)
+    deceleration_conf = 300 # cm.s^{-2}
+    temps_reaction = 1.5 # secondes
+    count = 0
+    v_max = 50
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1

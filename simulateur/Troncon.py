@@ -1,7 +1,7 @@
-from Coordonnees import *
+from Coordonnees import Coordonnees 
 import Feu
 import Voie
-from Vehicule import *
+from Vehicule import Vehicule
 
 class Troncon:
     const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
@@ -59,11 +59,11 @@ class Troncon:
         coordonnees_fin = None
         if (sens == "sens1") :
             if (self.coordonnees_debut.x == self.coordonnees_fin.x) :
-                coordonnees_debut =Coordonnees.Coordonnees(self.coordonnees_debut.x + ((len(self.voies_sens1)) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y )
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0.5)*self.const_largeur_voie, self.coordonnees_fin.y )
+                coordonnees_debut =Coordonnees(self.coordonnees_debut.x + ((len(self.voies_sens1)) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y )
+                coordonnees_fin = Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0.5)*self.const_largeur_voie, self.coordonnees_fin.y )
             if (self.coordonnees_debut.y == self.coordonnees_fin.y):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
+                coordonnees_fin = Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
 
             proba_dir = {}
             proba_sum = 0
@@ -83,11 +83,11 @@ class Troncon:
 
         if (sens == "sens2"):
             if (self.coordonnees_debut.x == self.coordonnees_fin.x):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0.5)*self.const_largeur_voie, self.coordonnees_fin.y)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y)
+                coordonnees_fin = Coordonnees(self.coordonnees_debut.x - (len(self.voies_sens2) + 0.5)*self.const_largeur_voie, self.coordonnees_fin.y)
             if (self.coordonnees_debut.y == self.coordonnees_fin.y):
-                coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
-                coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
+                coordonnees_fin = Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
 
             proba_dir = {}
             proba_sum = 0
