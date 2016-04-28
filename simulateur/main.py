@@ -6,16 +6,20 @@ from Voie import *
 
 
 def main():
-    print("Salut ! ")
     longueur_troncon = 5000
     
     sm = SimulationManager(5)
     gen_sud = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen_sud)
     gen_ouest = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen_ouest)
     gen_est = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen_est)
     gen_nord = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
+    sm.add_listener(i)
     
     t_sud = Troncon(i, None, Coordonnees.Coordonnees(6050, 0), Coordonnees.Coordonnees(6050, longueur_troncon),
                 {"G" : 0.2 , "TD" : 0.5 , "D": 0.3}, {"G": 0.3, "TD": 0.2, "D": 0.5})
@@ -60,7 +64,7 @@ def main():
     t_ouest.creer_voie(["TD"], "sens2", 50)
     t_ouest.creer_voie(["D"], "sens2", 50)
 
-	
+    
     gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
     gen_est.ajoute_voie_entrante(t_est.voies_sens1)
     gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
@@ -74,10 +78,33 @@ def main():
     i.branche_troncon(t_est, 'D')
     i.branche_troncon(t_ouest, 'G')
     i.branche_troncon(t_nord, 'H')
- 
-    if(i.construire_chemins()):
-        print("ca marche ! :D")
-    else : print("Ca marche pas ! :'(")
+
+    #~ print("Intersection")
+    #~ print(i.coordonnees)
+    #~ print("Troncon bas")
+    #~ print(i.troncon_bas.coordonnees_debut)
+    #~ print(i.troncon_bas.coordonnees_fin)
+    #~ print("Troncon haut")
+    #~ print(i.troncon_haut.coordonnees_debut)
+    #~ print(i.troncon_haut.coordonnees_fin)
+    #~ print("Troncon droite")
+    #~ print(i.troncon_droite.coordonnees_debut)
+    #~ print(i.troncon_droite.coordonnees_fin)
+    #~ print("Troncon gauche")
+    #~ print(i.troncon_gauche.coordonnees_debut)
+    #~ print(i.troncon_gauche.coordonnees_fin)
+    #~ 
+    #~ if(i.construire_chemins()):
+        #~ print("ca marche ! :D")
+    #~ else : print("Ca marche pas ! :'(")
+    
+    print(sm.listeners)
+    print()
+    sm.avance_temps()
+    print()
+    sm.avance_temps()
+    print()
+    
 
     
 main()
