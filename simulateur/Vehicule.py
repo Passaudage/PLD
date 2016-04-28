@@ -262,46 +262,46 @@ class Vehicule:
         if self.intersection != None:
         Vehicule.vitesse_max = Intersection.vitesse_max
 
-            acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
-            acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
-            acceleration_approche_x =  Vehicule.distance_minimale * direction.x 
-            acceleration_approche_x += self.vitesse.x * Vehicule.temps_reaction
-            acceleration_approche_x += (self.vitesse.x * (vitesse_obstacle.x - self.vitesse.x))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-            acceleration_approche_x **= 2
+        acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
+        acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
+        acceleration_approche_x =  Vehicule.distance_minimale * direction.x
+        acceleration_approche_x += self.vitesse.x * Vehicule.temps_reaction
+        acceleration_approche_x += (self.vitesse.x * (vitesse_obstacle.x - self.vitesse.x))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche_x **= 2
 
-            acceleration_approche_y =  Vehicule.distance_minimale * direction.y 
-            acceleration_approche_y += self.vitesse.y * Vehicule.temps_reaction
-            acceleration_approche_y += (self.vitesse.y * (vitesse_obstacle.y - self.vitesse.y))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-            acceleration_approche_y **= 2
+        acceleration_approche_y =  Vehicule.distance_minimale * direction.y
+        acceleration_approche_y += self.vitesse.y * Vehicule.temps_reaction
+        acceleration_approche_y += (self.vitesse.y * (vitesse_obstacle.y - self.vitesse.y))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche_y **= 2
             
-            acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - position.x))**2)
-            acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - position.y))**2)
+        acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - position.x))**2)
+        acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - position.y))**2)
             
-            projection = changer_repere(self.position, self.origine, self.repere_trajectoir_axe_x)
-            coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
-            orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
-            orientation = orientation / orientation.norm()
-            self.orientation = orientation
+        projection = Coordonnees.changer_repere(self.position, self.origine, self.repere_trajectoir_axe_x)
+        coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
+        orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
+        orientation = orientation / orientation.norm()
+        self.orientation = orientation
            
-            self.vitesse.x += dvx
-            self.vitesse.y += dvy
-            self.coordonnees.x += dx
-            self.coordonnees.y += dy
+        self.vitesse.x += dvx
+        self.vitesse.y += dvy
+        self.coordonnees.x += dx
+        self.coordonnees.y += dy
 
-        def changer_trajectoire(self, destination, orientation_cible):
-            self.orientation_cible = orientation_cible
-            self.destination = destination
-            self.origine = self.position
-            self.orientation_origine = self.orientation
-            self.repere_trajectoire_axe_x = self.destination - self.origine
-            self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
-            self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
+    def changer_trajectoire(self, destination, orientation_cible):
+        self.orientation_cible = orientation_cible
+        self.destination = destination
+        self.origine = self.position
+        self.orientation_origine = self.orientation
+        self.repere_trajectoire_axe_x = self.destination - self.origine
+        self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
+        self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
 
-            dest_nv_rep = Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
+        dest_nv_rep = Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
             
-            orientation_nv_rep = Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoir_axe_x)
+        orientation_nv_rep = Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoir_axe_x)
             
-            ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
+        ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
 
-            self.poly_a = ratio / dest_nv_rep.x
-            self.poly_b = orientation_nv_rep.y - 2 * ratio
+        self.poly_a = ratio / dest_nv_rep.x
+        self.poly_b = orientation_nv_rep.y - 2 * ratio
