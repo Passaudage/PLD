@@ -75,8 +75,13 @@ class GenerateurEntrees:
             for key in self._voies_sortantes_proba.keys():
                 probas.append(self._voies_sortantes_proba.get(key))
             print(probas)
-            nb_voie = numpy.random.choice(len(self._voies_sortantes), 1, False, probas)
-            voie = self._voies_sortantes[nb_voie]
+            k = 0
+            pc = probas[k]
+            p = random.random()
+            while pc < p:
+                k += 1
+                pc += probas[k]
+            voie = self._voies_sortantes[k]
             voie.creer_vehicule(moteur, aggressivite, longueur)
 
 
