@@ -1,7 +1,7 @@
-from Coordonnees import Coordonnees 
+from Coordonnees import *
 import Feu
 import Voie
-from Vehicule import Vehicule
+from Vehicule import * 
 
 class Troncon:
     const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
@@ -59,7 +59,7 @@ class Troncon:
         coordonnees_fin = None
         if (sens == "sens1") :
             if (self.coordonnees_debut.x == self.coordonnees_fin.x) :
-                coordonnees_debut =Coordonnees(self.coordonnees_debut.x + ((len(self.voies_sens1)) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y )
+                coordonnees_debut = Coordonnees(self.coordonnees_debut.x + ((len(self.voies_sens1)) + 0.5)*self.const_largeur_voie, self.coordonnees_debut.y )
                 coordonnees_fin = Coordonnees(self.coordonnees_debut.x + (len(self.voies_sens1) + 0.5)*self.const_largeur_voie, self.coordonnees_fin.y )
             if (self.coordonnees_debut.y == self.coordonnees_fin.y):
                 coordonnees_debut = Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)

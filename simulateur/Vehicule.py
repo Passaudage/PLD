@@ -14,8 +14,8 @@ class Vehicule:
     acceleration_max = 100 # cm.s^(-2)
     deceleration_conf = 300 # cm.s^{-2}
     temps_reaction = 1.5 # secondes
-    Vehicule.count = 0
-    Vehicule.v_max = 50
+    count = 0
+    v_max = 50
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
