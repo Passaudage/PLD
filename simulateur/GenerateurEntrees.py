@@ -45,9 +45,11 @@ class GenerateurEntrees:
         self._voies_sortantes = voies
         for voie in self._voies_sortantes:
             self._voies_sortantes_proba[voie] = voie.proba_entree
+            print(voie)
+            print(voie.proba_entree)
 
     def notifie_temps(self, increment, moteur):
-        print("Le generateur a ete modifie.")
+        #~ print("Le generateur a ete modifie.")
         freq = 0
         if self._etendue == 0:
             freq = self._heures_freqs[0][1]
@@ -64,7 +66,7 @@ class GenerateurEntrees:
             freq = freq_gauche + fact_prop * (freq_droite - freq_gauche)
         
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
-        print("Nombre de voitures : "+str(nombre_voit_crees))
+        #~ print("Nombre de voitures : "+str(nombre_voit_crees))
         for i in range(nombre_voit_crees):
             longueur = normalvariate(428, 50)
             aggressivite = (random() < Vehicule.proportion_discourtois)
@@ -72,6 +74,7 @@ class GenerateurEntrees:
             probas = []
             for key in self._voies_sortantes_proba.keys():
                 probas.append(self._voies_sortantes_proba.get(key))
+            print(probas)
             nb_voie = numpy.random.choice(len(self._voies_sortantes), 1, False, probas)
             voie = self._voies_sortantes[nb_voie]
             voie[0].creer_vehicule(aggressivite, longueur)

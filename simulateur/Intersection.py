@@ -277,5 +277,5 @@ class Intersection:
         return (coordonnee_blocage,vehicule_blocant)
 
     def notifie_temps(self, increment, moteur):
-        print("L'intersection a été notifié.")
+        #~ print("L'intersection a été notifié.")
         pass

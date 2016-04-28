@@ -102,9 +102,9 @@ def main():
     print()
     for i in range(15000):
         sm.avance_temps()
-        print()
+        #~ print()
         
-    print(Vehicule.count)
+    #~ print(Vehicule.count)
 
 
     

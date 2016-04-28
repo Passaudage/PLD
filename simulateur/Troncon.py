@@ -1,6 +1,7 @@
 from Coordonnees import *
 import Feu
 import Voie
+from Vehicule import *
 
 class Troncon:
     const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
@@ -75,8 +76,8 @@ class Troncon:
 
             for direction in directions :
                 proba_dir[direction] = proba_dir.get(direction)/proba_sum
-
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire, proba_entree, proba_dir)
+				#self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, vitesse_max):
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir,Vehicule.v_max)
             self.voies_sens1.append(v)
             for direction in directions:
                 self.dir_voies_sens1[direction] = [self.dir_voies_sens1.get(direction)] + [v]
