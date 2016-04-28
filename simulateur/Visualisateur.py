@@ -3,9 +3,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 from Coordonnees import *
-import Intersection
+from Intersection import Intersection
 
 import Vehicule
+import Troncon
 
 class Visualisateur: 
     """
@@ -32,7 +33,7 @@ class Visualisateur:
         for listener in self.simulateur.listeners:
             if type(listener) is Intersection:
                 self.intersections.append(listener)
-
+                
                 if listener.troncon_gauche is not None:
                     self.troncons.append(listener.troncon_gauche)
                 if listener.troncon_droite is not None:
@@ -88,6 +89,7 @@ class Visualisateur:
 
         for troncon in self.troncons:
             self.dessiner_troncon(troncon)
+        
 
     def dessiner_intersection(self, intersection):
         return
@@ -98,16 +100,29 @@ class Visualisateur:
 
         self.cairo_context.save()
 
-        self.cairo_context.move_to( troncon.coordonnees_debut.x,
-                                    troncon.coordonnees_debut.y)
+        print(troncon.coordonnees_debut)
+        print(troncon.coordonnees_fin)
 
-        self.cairo_context.rel_line_to( troncon.coordonnees_fin.x,
-                                        troncon.coordonnees_fin.y)
+        vec_debut = self.echelle(troncon.coordonnees_debut)
+        vec_fin = self.echelle(troncon.coordonnees_fin)
+        largeur_voie = self.fact_echelle * Troncon.Troncon.const_largeur_voie
+        largeur_voie *= len(troncon.voies_sens1) + len(troncon.voies_sens2)
 
+        self.cairo_context.set_source_rgba(0, 0, 0, 0.6)
+
+        self.cairo_context.move_to( vec_debut.x,
+                                    vec_debut.y)
+
+        self.cairo_context.rel_line_to( vec_fin.x - vec_debut.x,
+                                        vec_fin.y - vec_debut.y)
+
+        self.cairo_context.set_line_width(largeur_voie)
+        self.cairo_context.stroke()
 
         self.cairo_context.restore()
 
-        return
+    def echelle(self, vec):
+        return (vec - self.min) * self.fact_echelle
 
     def definir_limite(self):
         """
@@ -119,9 +134,9 @@ class Visualisateur:
 
         for troncon in self.troncons:
             if self.min is None:
-                troncon.coordonnees_debut
+                self.min = troncon.coordonnees_debut
             if self.max is None:
-                troncon.coordonnees_fin
+                self.max = troncon.coordonnees_debut
 
             self.min = Coordonnees.apply(self.min, troncon.coordonnees_debut, min)
             self.max = Coordonnees.apply(self.max, troncon.coordonnees_debut, max)
@@ -129,4 +144,14 @@ class Visualisateur:
             self.max = Coordonnees.apply(self.max, troncon.coordonnees_fin, max)
 
         print(self.min)
-        exit(0)
+        print(self.max)
+
+        diff_x = self.max.x - self.min.x
+        diff_y = self.max.y - self.min.y
+
+
+
+        self.fact_echelle = self.taille_x / diff_x if diff_x > diff_y else self.taille_y / diff_y
+
+
+        print(self.fact_echelle)

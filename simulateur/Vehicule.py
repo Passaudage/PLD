@@ -2,18 +2,23 @@ import Coordonnees
 from Voie import *
 from Troncon import *
 import Intersection
+from Vehicule import *
 
+count = 0
+tous_les_vehicules = []
 
 class Vehicule:
     Vehicule.distance_minimale = 30  # cm
     Vehicule.proportion_discourtois = 0.8
     Vehicule.count = 0
     Vehicule.largeur = 170 # cm
+    Vehicule.v_max = 50
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
                  origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
-        print(Vehicule.count)
+
+        #~ print(Vehicule.count)
         self.simulateur = simulateur
         self.coordonnees = coordonnees
         self.max_acceleration = max_acceleration

@@ -48,6 +48,7 @@ class Coordonnees:
         """
             Retourne le vecteur ayant subi une division scalaire.
         """
+
         return Coordonnees(self.x/c, self.y/c)
         
     def __abs__(self): 
@@ -66,6 +67,6 @@ class Coordonnees:
         """
         return '('+str(self.x)+','+str(self.y)+')'
 
-    def apply(self, vec_a, vec_b, fonction):
+    def apply(vec_a, vec_b, fonction):
         return Coordonnees( fonction(vec_a.x, vec_b.x),
                             fonction(vec_a.y, vec_b.y))
