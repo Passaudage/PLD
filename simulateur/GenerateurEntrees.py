@@ -48,6 +48,7 @@ class GenerateurEntrees:
         self._voies_sortantes = voies
 
     def notifie_temps(self, increment, moteur):
+        print("Le generateur a ete modifie.")
         freq = 0
         if self._etendue == 0:
             freq = self._heures_freqs[0][1]

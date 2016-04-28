@@ -53,7 +53,7 @@ class Vehicule:
 			return
 		else:
 			for vehicule_suivant in self.vehicules_suivants:
-				vehicule_suivant.notifie_temps
+				vehicule_suivant.notifie_temps()
 				
 	def mettre_coordonnees_a_jour(incr,nb,vit,pos):
 		return
