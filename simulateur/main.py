@@ -100,9 +100,11 @@ def main():
     
     print(sm.listeners)
     print()
-    for i in range(14):
+    for i in range(15000):
         sm.avance_temps()
         print()
+        
+    print(Vehicule.count)
 
 
     

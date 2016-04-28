@@ -2,16 +2,17 @@ import Coordonnees
 from Voie import *
 from Troncon import *
 import Intersection
-import Vehicule
 
 
 class Vehicule:
     distance_minimale = 30  # cm
     proportion_discourtois = 0.8
-    count = 0
+    Vehicule.count = 0
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
                  origine, destination, direction, vehicule_precedent):
+        Vehicule.count += 1
+        print(Vehicule.count)
         self.simulateur = simulateur
         self.coordonnees = coordonnees
         self.max_acceleration = max_acceleration
@@ -39,8 +40,6 @@ class Vehicule:
             self.racine = self
             # se déclarer tête de liste 
             self.simulateur.add_listener(self)
-        self.__class__.count += 1
-        print(self.__class__.count)
 
 
     def changeDirection(self, x, y):
