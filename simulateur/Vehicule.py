@@ -16,9 +16,11 @@ class Vehicule:
     temps_reaction = 1.5 # secondes
     count = 0
     v_max = 50
+    liste_voitures = []
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
+        Vehicule.liste_voitures.append(self)
 
         #~ print(Vehicule.count)
         self.simulateur = simulateur
