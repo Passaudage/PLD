@@ -25,6 +25,9 @@ class Feu():
 		# Intersection où se trouve le feu
 		self.intersection = intersection
 		
+		# Direction que le feu reglemente
+		self.direction = direction
+		
 		# Temps que l'axe passé en parametre reste vert
 		self.temps_vert = temps_vert
 				
@@ -57,3 +60,4 @@ class Feu():
 	
 	def est_passant(self):
 		return self.couleur_direction == Couleur.vert
+	
