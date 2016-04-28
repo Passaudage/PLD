@@ -2,7 +2,7 @@ import Vehicule
 import Coordonnees
 
 class Voie:
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire, proba_entree, proba_dir):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, trajectoire, proba_entree, proba_dir, vitesse_max):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
@@ -12,6 +12,7 @@ class Voie:
         self.directions = directions
         self.proba_entree = proba_entree
         self.proba_dir = proba_dir
+        self.vitesse_max = vitesse_max
 
     def creer_vehicule(self, discourtois, longueur):
         prochaine_direction = "droite"
