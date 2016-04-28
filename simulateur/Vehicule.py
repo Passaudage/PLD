@@ -1,22 +1,27 @@
-import Coordonnees
+from Coordonnees import *
 from Voie import *
 from Troncon import *
 import Intersection
-from Vehicule import *
+import random
+from math import sqrt
 
-count = 0
 tous_les_vehicules = []
 
 class Vehicule:
-    Vehicule.distance_minimale = 30  # cm
-    Vehicule.proportion_discourtois = 0.8
-    Vehicule.count = 0
-    Vehicule.largeur = 170 # cm
-    Vehicule.v_max = 50
+    distance_minimale_roulant = 150 #cm
+    distance_minimale = 30 #cm
+    proportion_discourtois = 0.8
+    acceleration_max = 100 # cm.s^(-2)
+    deceleration_conf = 300 # cm.s^{-2}
+    temps_reaction = 1.5 # secondes
+    largeur = 170 # cm
+    count = 0
+    v_max = 50
+    liste_voitures = []
 
-    def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
-                 origine, destination, direction, vehicule_precedent):
+    def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
+        Vehicule.liste_voitures.append(self)
 
         #~ print(Vehicule.count)
         self.simulateur = simulateur
@@ -26,10 +31,8 @@ class Vehicule:
         self.prochaine_direction = prochaine_direction
         self.voie = voie
         self.origine = origine
-        self.destination = destination
-        self.orientation_cible = direction
-        self.orientation_origine = self.voie.trajectoire
         self.direction = direction
+        self.changer_trajectoire(destination, direction)
         self.vitesse = (0, 0)
 
         # non initialisés
@@ -248,8 +251,59 @@ class Vehicule:
     def donner_arriere(self):
         return (self.coordonnees - self.direction * self.longueur)
 
-    def changer_trajectoire(self, destination, orientation_cible):
-        pass
-        # suis je sur la bonne direction ?
+		
+        def mettre_coordonnees_a_jour(increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
+            dx = self.vitesse.x * increment_temps / nb_ticks_sec 
+            dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-        # Quel monde cruel ai-je mis au monde ?
+            dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(1,0))
+            dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(0,1))
+            
+            vitesse_max = self.voie.vitesse_max 
+
+            if self.intersection != None:
+                vitesse_max = Intersection.vitesse_max
+
+            acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
+            acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
+            acceleration_approche_x =  Vehicule.distance_minimale * direction.x 
+            acceleration_approche_x += self.vitesse.x * Vehicule.temps_reaction
+            acceleration_approche_x += (self.vitesse.x * (vitesse_obstacle.x - self.vitesse.x))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+            acceleration_approche_x **= 2
+
+            acceleration_approche_y =  Vehicule.distance_minimale * direction.y 
+            acceleration_approche_y += self.vitesse.y * Vehicule.temps_reaction
+            acceleration_approche_y += (self.vitesse.y * (vitesse_obstacle.y - self.vitesse.y))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+            acceleration_approche_y **= 2
+            
+            acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - position.x))**2)
+            acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - position.y))**2)
+            
+            projection = changer_repere(self.position, self.origine, self.repere_trajectoir_axe_x)
+            coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
+            orientation = Coordonnees(1, coeff_tangeante)
+            orientation = orientation / orientation.norm()
+            self.orientation = orientation
+           
+            self.vitesse.x += dvx
+            self.vitesse.y += dvy
+            self.coordonnees.x += dx
+            self.coordonnees.y += dy
+
+        def changer_trajectoire(self, destination, orientation_cible):
+            self.orientation_cible = orientation_cible
+            self.destination = destination
+            self.origine = self.position
+            self.orientation_origine = self.orientation
+            self.repere_trajectoire_axe_x = self.destination - self.origine
+            self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
+            self.repere_trajectoire_axe_y = Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
+
+            dest_nv_rep = Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
+            
+            orientation_nv_rep = Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoir_axe_x)
+            
+            ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
+
+            self.poly_a = ratio / dest_nv_rep.x
+            self.poly_b = orientation_nv_rep.y - 2 * ratio

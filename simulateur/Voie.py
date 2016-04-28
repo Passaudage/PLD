@@ -1,5 +1,5 @@
-import Vehicule
-import Coordonnees
+from Vehicule import *
+from Coordonnees import *
 
 class Voie:
 
@@ -15,9 +15,9 @@ class Voie:
         self.proba_dir = proba_dir
         self.vitesse_max = vitesse_max
 
-    def creer_vehicule(self, discourtois, longueur):
+    def creer_vehicule(self, simulateur, discourtois, longueur):
         prochaine_direction = "droite"
-        clio = Vehicule.Vehicule(50, Coordonnees.Coordonnees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.trajectoire, None)
+        clio = Vehicule.Vehicule(50, simulateur, Coordonees(0,0), discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, None)
         self.ajouter_vehicule(clio)
         Vehicule.tous_les_vehicules.append(clio)
         dernier_vehicule = self.dernier_vehicule()

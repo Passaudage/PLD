@@ -18,21 +18,25 @@ def charger_simulateur():
     gen_nord = GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen_nord)
 
-    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
+    i = Intersection.Intersection(Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
     
-    t_sud = Troncon(i, None, Coordonnees.Coordonnees(6050, 0), Coordonnees.Coordonnees(6050, longueur_troncon),
-                {"G" : 0.2 , "TD" : 0.5 , "D": 0.3}, {"G": 0.3, "TD": 0.2, "D": 0.5})
+    t_sud = Troncon(i, 
+            None, 
+            Coordonnees(6050, 0), 
+            Coordonnees(6050, longueur_troncon),
+                {"G" : 0.2 , "TD" : 0.5 , "D": 0.3},
+                {"G": 0.3, "TD": 0.2, "D": 0.5})
     
-    t_est = Troncon(None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
+    t_est = Troncon(None, i, Coordonnees(7100, 6050), Coordonnees(7100+longueur_troncon, 6050),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},
                     {"G": 0.3, "TD": 0.2, "D": 0.5})
     
-    t_ouest = Troncon(i, None, Coordonnees.Coordonnees(0, 6050), Coordonnees.Coordonnees(longueur_troncon, 6050),
+    t_ouest = Troncon(i, None, Coordonnees(0, 6050), Coordonnees(longueur_troncon, 6050),
                     {"G": 0.5, "TD": 0.2, "D": 0.3},
                     {"G": 0.1, "TD": 0.7, "D": 0.2})
 
-    t_nord = Troncon(None, i, Coordonnees.Coordonnees(6050, 7100), Coordonnees.Coordonnees(6050, longueur_troncon+7100),
+    t_nord = Troncon(None, i, Coordonnees(6050, 7100), Coordonnees(6050, longueur_troncon+7100),
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
  
@@ -111,4 +115,3 @@ def main():
         #~ print()
         
     #~ print(Vehicule.count)
-
