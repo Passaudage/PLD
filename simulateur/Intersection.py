@@ -156,8 +156,11 @@ class Intersection:
                     raise Exception("Le troncon " + troncon + " n'est pas aligné correctement, il est bancale : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
                 demi_largeur = troncon.largeur()/2
-                co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
-                co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_debut
+                co1 =None
+                if(liste_troncon.index(troncon)+1==len(liste_troncon)):
+                    co1= liste_troncon[0].coordonnees_debut
+                else: co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
+                co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_fin
                 alignement1 = troncon.coordonnees_debut - co1 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
                 alignement2 = troncon.coordonnees_debut - co2 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
                 alignement3 = troncon.coordonnees_debut - co1 - Coordonnees.Coordonnees(demi_largeur, demi_largeur)
