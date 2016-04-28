@@ -22,6 +22,7 @@ class Troncon:
         self.dir_voies_sens2 = {}
         self.dir_feu_sens1 = {}
         self.dir_feu_sens2 = {}
+        self.feux = {}
 
         for direction in self.directions_sens1 :
             self.dir_feu_sens1[direction] = Feu.Feu(self.intersection_tete)
@@ -29,6 +30,16 @@ class Troncon:
         for direction in self.directions_sens2:
             self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue)
 
+	def ajouter_feux(self, direction, feu):
+		if(direction == 'D'):
+			self.feux['D'] = feu
+		elif(direction == 'G'):
+			self.feux['G'] = feu
+		elif(direction == 'TD'):
+			self.feux['TD'] = feu
+		else:
+			raise Exception("Mauvaise destination.")
+		
     # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
     def creer_voie(self, directions, sens, vitesse_max):
 
