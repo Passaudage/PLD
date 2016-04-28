@@ -5,7 +5,7 @@ from Vehicule import *
 from Voie import *
 
 
-def main():
+def charger_simulateur():
     longueur_troncon = 5000
     
     sm = SimulationManager(5)
@@ -98,6 +98,12 @@ def main():
         #~ print("ca marche ! :D")
     #~ else : print("Ca marche pas ! :'(")
     
+    return sm
+
+def main():
+
+    sm = charger_simulateur()
+
     print(sm.listeners)
     print()
     for i in range(15000):
@@ -106,11 +112,3 @@ def main():
         
     print(Vehicule.count)
 
-
-    
-
-    
-main()
-    
-    
-    

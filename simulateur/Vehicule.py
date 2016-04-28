@@ -8,6 +8,7 @@ class Vehicule:
     Vehicule.distance_minimale = 30  # cm
     Vehicule.proportion_discourtois = 0.8
     Vehicule.count = 0
+    Vehicule.largeur = 170 # cm
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
                  origine, destination, direction, vehicule_precedent):

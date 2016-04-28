@@ -3,7 +3,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 from SimulationManager import *
+
 from Visualisateur import *
+
+import main
 
 class Fenetre(Gtk.Window):
     """
@@ -11,10 +14,13 @@ class Fenetre(Gtk.Window):
             # @author : Quentin
     """
 
+    taille_x = 800
+    taille_y = 600
+
     def __init__(self):
         Gtk.Window.__init__(self)
         self.set_title("Visualisation")
-        self.set_default_size(800,600)
+        self.set_default_size(Fenetre.taille_x, Fenetre.taille_y)
 
         self.connect('delete-event', self.quit)
         
@@ -27,8 +33,9 @@ class Fenetre(Gtk.Window):
 
         grain = 100
 
-        self.sim = SimulationManager(grain)
-        self.visual = Visualisateur(self.sim)
+        self.sim = main.charger_simulateur()
+
+        self.visual = Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
 
     def quit(self, a, b):
         # voir la doc, je ne sais pas à quoi correspondent ces deux arguments...
