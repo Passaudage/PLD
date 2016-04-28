@@ -2,7 +2,7 @@ from SimulationManager import *
 from math import *
 import random
 import Vehicule
-from ,p
+from numpy import random
 
 def proba_poisson(k, freq, temps_obs):
         #Calcul du lambda correspondant
@@ -68,9 +68,9 @@ class GenerateurEntrees:
         for i in range(nombre_voit_crees):
             longueur = random.normalvariate(428, 50)
             aggressivite = (random.random() < Vehicule.proportion_discourtois)
-            voie = random.random() % len(self._voies_sortantes)
+            voie = random.choice(self._voies_sortantes_proba.keys(), 1, self._voies_sortantes_proba.values())
 
-            voie.creer_vehicule(discourtois, longueur)
+            voie[0].creer_vehicule(aggressivite, longueur)
 
 
 

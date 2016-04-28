@@ -3,6 +3,7 @@ from Voie import *
 from Troncon import *
 import Intersection
 import random
+from math import sqrt
 
 
 class Vehicule:
@@ -10,15 +11,19 @@ class Vehicule:
 	distance_minimale = 30 #cm
 	proportion_discourtois = 0.8
         acceleration_max = 100 # cm.s^(-2)
+        deceleration_conf = 300 # cm.s^{-2}
+        temps_reaction = 1.5 # secondes
 
-	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, destination, direction, vehicule_precedent):
+	def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
 		self.coordonnees = coordonnees
 		self.max_acceleration = max_acceleration
 		self.longueur = longueur
 		self.prochaine_direction = prochaine_direction
 		self.voie = voie
-		self.destination = destination	
+		self.origine = origine
+                self.orientation_origine = direction
 		self.direction = direction
+		self.changer_trajectoire(destination, direction)
 		self.simulateur = simulateur
                 self.vitesse = Coordonnees()
                 self.acceleration = Coordonnees()
@@ -51,103 +56,187 @@ class Vehicule:
 
 
 	def notifie_temps(self, nb_increment, simulateur):
-		self.increment_temps = nb_increment / (simulateur.nombre_ticks_seconde)
-		self.avance_vehicule()
+		self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
 		if (len(self.vehicules_suivants) == 0):
 			return
 		else:
 			for vehicule_suivant in self.vehicules_suivants:
 				vehicule_suivant.notifie_temps
-
-
-	def avance_vehicule(self):
-		if(self.voie!=None):
-			if(self.voie.direction_possible(self.prochaine_direction)):
-				#tout droit
-				if(self.vehicule_precedent.voie == self.voie):
-					#on suit le véhicule devant
-					self.suit_vehicule_devant()
-				elif(self.vehicule_precedent.voie!=None):
-					#on arrête de suivre le précédent de l'arbre (il est parti)
-					self.decrochage_arbre()
-					precedent = self.voie.precedent(self)
-					if(precedent==None):
-						if(self.verifie_feu()):
-							#passer le feu
-							pass
-						else:
-							self.avance_feu()
-					else:
-						self.greffe_arbre(precedent)
-						self.suit_vehicule_devant()
-				else:
-					distance_faite = self.avance_feu()
-					if(self.verifie_feu()):
-						#passer le feu, demander l'intersection, demander direction
-						if(self.coordonnees == self.voie.coordonnees_fin):
-							self.intersection = self.voie.demander_intersection()
-							self.intersection.ajouter_vehicule(self)
-							self.destination = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction, self.coordonnees)
-							self.direction = (self.destination-self.coordonnees).normaliser()
-							#nouvelle destination et direction données par l'intersection
-							self.avancer_intersection(distance_faite)
-					else:
-						pass
-						#feu rouge, on bouge pas
-			else:
-				if(self.vehicule_precedent.coordonnees==self.coordonnees):
-					pass
-					#pas encore dans le carrefour
-				else:
-					#changer de voie, demander bonne voie au tronçon, demander liste vehicules des voies d'à côté.
-					self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(prochaine_direction)[0]
-					direction_virage = self.nouvelle_voie.coordonnees_debut.soustraction(self.voie.coordonnees_debut)
-					distance_avant = self.direction.mult(2)
-					direction_non_normalisee = direction_virage.addition(distance_avant)
-					self.destination = direction_non_normalisee + self.coordonnees
-					self.direction = direction_non_normalisee.normaliser()
-					
-					for vehicule in self.voie.vehicules:
-						if((vehicule.coordonnees - vehicule.voie.direction.mult(vehicule.longueur) - vehicule.voie.coordonnees_debut).norme() < (self.coordonnees.addition(self.direction).soustraction(vehicule.voie.coordonnees_debut)).norme()): #direction dans voie
-							pass
-						elif((vehicule.coordonnees - vehicule.voie.coordonnees_debut).norme() > (self.coordonnees.addition(self.direction).soustraction(vehicule.voie.coordonnees_debut)).norme()): #direction dans voie
-							self.decrochage_arbre()
-							self.greffe_arbre(vehicule)
-							self.avance_change_voie()
-						else: 
-							self.decrochage_arbre()
-							self.avance_change_voie()
-							self.greffe_arbre(vehicule.vehicule_precedent)
-					if(self.coordonnees == self.destination) :#changement de voie termine
-						self.voie = self.nouvelle_voie
-						self.nouvelle_voie = None
-						self.destination = self.voie.coordonnees_fin
-						self.direction = self.voie.direction
-						self.voie.insertion_dans_liste(self,self.vehicule_precedent)
-						
 				
-		elif(self.intersection!=None):
-			pass
-			#faire transition
+	def mettre_coordonnees_a_jour(incr,nb,vit,pos):
 		return
+
+
+	def avance_vehicule(self, incr, nb_tick):
+		#si on existe pas encore
+		if(self.vehicule_precedent.coordonnees==self.coordonnees): 
+			return
+			
+		#Si il faut changer de voie
+		if(not self.voie.direction_possible(self.prochaine_direction)):
+			self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction)[0]
+			direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
+			distance_avant = self.direction*2
+			trajet = direction_virage + distance_avant
+			self.destination = trajet + self.coordonnees
+			
+		#Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
+		if ((coordonnees-destination)*direction >= 0):	
+			
+			#sortie de l'intersection
+			if (self.intersection is not None):
+				self.origine = self.coordonnees
+				self.voie = self.nouvelle_voie
+				self.nouvelle_voie = None
+				self.voie.ajouter_vehicule(self)
+				self.intersection.retirer_vehicule(self)
+				self.intersection = None
+				
+				self.prochaine_direction = "D"
+				self.destination = self.voie.coordonnees_fin
+				self.direction = self.voie.direction
+			
+			#arrivée sur intersection
+			elif(self.nouvelle_voie is None):				
+				self.origine = self.coordonnees
+				self.intersection = self.voie.demander_intersection()
+				self.intersection.ajouter_vehicule(self)
+				self.voie.supprimer_vehicule(self)
+				
+				self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
+				self.destination = self.nouvelle_voie.coordonnees_debut
+				self.orientation_cible = self.nouvelle_voie.orientation
+			
+			#fin de changement de voie
+			else:
+				self.origine = self.coordonnees
+				self.voie.supprimer_vehicule(self)
+				self.nouvelle_voie.ajouter_vehicule_avant(self,self.vehicule_precedent)
+				self.voie = self.nouvelle_voie
+				self.nouvelle_voie = None
+				
+				self.destination = self.voie.coordonnees_fin
+				self.direction = self.voie.direction
+				
+			
+		(coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
+		
+		#Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
+		if (self.vehicule_precedent != vehicule_blocant):
+			self.decrochage_arbre()
+			self.greffe_arbre(vehicule_blocant)
+		
+		#si l'obstacle est un feu rouge
+		if(vehicule_blocant == "feu"):
+			mettre_coordonnees_a_jour(incr, nb_tick, (0,0), coordonnees_obstacle)
+		else:
+			mettre_coordonnees_a_jour(coordonnees_obstacle,vehicule_blocant.vitesse)
+		
+		
+		
+	def trouver_obstacle(self):
+		#si on est sur une intersection
+		if(self.intersection is not None):
+			return self.intersection.donner_obstacle(self.coordonnees, self.direction)
+						
+		#si on est en changement de voie	
+		elif(not self.voie.direction_possible(self.prochaine_direction)):
+				av = self.coordonnees.y / self.coordonnees.x
+				bv = self.coordonnees.y - av*self.coordonnees.x
+				for vehicule in self.nouvelle_voie.vehicules:
+					ac = self.nouvelle_voie.coordonnees_debut.y / self.nouvelle_voie.coordonnees_debut.x
+					bc = self.nouvelle_voie.coordonnees_debut.y - ac*self.nouvelle_voie.coordonnees_debut.x
+					x = (bv - bc) / (ac - av)
+					y = ac*x + bc
+					p = Coordonnees(x,y)
+					#si l'arrière du véhicule est devant le point d'insertion voulu, on passe
+					if(abs(vehicule.coordonnees - self.nouvelle_voie.direction*vehicule.longueur - self.nouvelle_voie.coordonnees_debut)
+					 > abs(p - self.nouvelle_voie.coordonnees_debut)): 
+						pass
+						
+					#si un véhicule gêne
+					elif(abs(vehicule.coordonnees - vehicule.voie.coordonnees_debut) 
+					> abs(p - self.nouvelle_voie.coordonnees_debut)): 
+						return (p,vehicule)
+						
+					else: 						
+						return (None,None)
+			
+		#s'il y a qqun devant sur la voie
+		elif(self.voie.precedent(self) is not None):
+			vehicule_devant = self.voie.precedent(self)
+			arriere_vehicule = (vehicule_devant.coordonnees - self.direction*longueur)
+			return (arriere_vehicule, vehicule_devant)
+			
+		#si on est devant
+		else:
+			#feu_vert
+			if(self.voie.est_passant(self.prochaine_direction)):
+				intersection = self.voie.demander_intersection()
+				return intersection.donner_obstacle(self.coordonnees, self.direction)
+			#feu_rouge
+			else:
+				return (self.destination, "feu")
+			
+
+		
 		
         def mettre_coordonnees_a_jour(increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
-                dx = self.vitesse.x * increment_temps / nb_ticks_sec 
-                dy = self.vitesse.y * increment_temps / nb_ticks_sec
+            dx = self.vitesse.x * increment_temps / nb_ticks_sec 
+            dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-                dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(1,0))
-                dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(0,1))
-                
-                vitesse_max = self.voie.vitesse_max 
+            dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(1,0))
+            dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(0,1))
+            
+            vitesse_max = self.voie.vitesse_max 
 
-                if self.intersection != None:
-                    vitesse_max = Intersection.vitesse_max
-                    
+            if self.intersection != None:
+                vitesse_max = Intersection.vitesse_max
 
+            acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
+            acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
+            acceleration_approche_x =  Vehicule.distance_minimale * direction.x 
+            acceleration_approche_x += self.vitesse.x * Vehicule.temps_reaction
+            acceleration_approche_x += (self.vitesse.x * (vitesse_obstacle.x - self.vitesse.x))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+            acceleration_approche_x **= 2
 
-                acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
-                acceleration_libre_y = 1 - (self.vitesse.x/self.voie)**4
-                acceleration_approche_x = 
+            acceleration_approche_y =  Vehicule.distance_minimale * direction.y 
+            acceleration_approche_y += self.vitesse.y * Vehicule.temps_reaction
+            acceleration_approche_y += (self.vitesse.y * (vitesse_obstacle.y - self.vitesse.y))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+            acceleration_approche_y **= 2
+            
+            acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - position.x))**2)
+            acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - position.y))**2)
+            
+            projection = changer_repere(self.position, self.origine, self.repere_trajectoir_axe_x)
+            coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
+            orientation = Coordonnees(1, coeff_tangeante)
+            orientation = orientation / orientation.norm()
+            self.orientation = orientation
+           
+            self.vitesse.x += dvx
+            self.vitesse.y += dvy
+            self.position.x += dx
+            self.position.y += dy
+
+        def changer_trajectoire(self, destination, orientation_cible):
+            self.orientation_cible = orientation_cible
+            self.destination = destination
+            self.origine = self.position
+            self.orientation_origine = self.orientation
+            self.repere_trajectoire_axe_x = self.destination - self.origine
+            self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
+            self.repere_trajectoire_axe_y = Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
+
+            dest_nv_rep = Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
+            
+            orientation_nv_rep = Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoir_axe_x)
+            
+            ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
+
+            self.poly_a = ratio / dest_nv_rep.x)
+            self.poly_b = orientation_nv_rep.y - 2 * ratio
+
 
 	def calculer_trajet_max(self, coordonnees_destination):
 		distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
@@ -183,6 +272,8 @@ class Vehicule:
 
 	#S'ajouter en feuille sur un arbre
 	def greffe_arbre(self,vehicule_precedent):
+		if(vehicule_precedent.racine == self.racine):
+			return
 		self.set_vehicule_precedent(vehicule_precedent)
 		vehicule_precedent.set_vehicules_suivants(self)
 		self.propager_racine(vehicule_precedent.racine)
@@ -208,6 +299,8 @@ class Vehicule:
 		self.vehicule_suivants.remove(vehicule)
 
 	def decrochage_arbre(self):
+		if(self.vehicule_precedent is None):
+			return
 		self.vehicule_precedent.supp_vehicule_suivant(self)
 		self.vehicule_precedent = None
 		self.propager_racine(self)
