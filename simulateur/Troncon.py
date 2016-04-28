@@ -31,27 +31,27 @@ class Troncon:
         for direction in self.directions_sens2:
             self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue, 20)
 
-	def ajouter_feux(self, sens, direction, feu):
-		if(sens==1):
-			if(direction == 'D'):
-				self.feux_sens1['D'] = feu
-			elif(direction == 'G'):
-				self.feux_sens1['G'] = feu
-			elif(direction == 'TD'):
-				self.feux_sens1['TD'] = feu
-			else:
-				raise Exception("Mauvaise destination.")
-		
-		elif(sens==2):
-			if(direction == 'D'):
-				self.feux_sens2['D'] = feu
-			elif(direction == 'G'):
-				self.feux_sens2['G'] = feu
-			elif(direction == 'TD'):
-				self.feux_sens2['TD'] = feu
-			else:
-				raise Exception("Mauvaise destination.")
-		
+    def ajouter_feux(self, sens, direction, feu):
+        if(sens==1):
+            if(direction == 'D'):
+                self.feux_sens1['D'] = feu
+            elif(direction == 'G'):
+                self.feux_sens1['G'] = feu
+            elif(direction == 'TD'):
+                self.feux_sens1['TD'] = feu
+            else:
+                raise Exception("Mauvaise destination.")
+
+        elif(sens==2):
+            if(direction == 'D'):
+                self.feux_sens2['D'] = feu
+            elif(direction == 'G'):
+                self.feux_sens2['G'] = feu
+            elif(direction == 'TD'):
+                self.feux_sens2['TD'] = feu
+            else:
+                raise Exception("Mauvaise destination.")
+
     # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
     def creer_voie(self, directions, sens, vitesse_max):
 
@@ -76,7 +76,7 @@ class Troncon:
             for direction in directions :
                 proba_dir[direction] = proba_dir.get(direction)/proba_sum
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire, proba_entree, proba_dir, vitesse_max)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, self.trajectoire, proba_entree, proba_dir)
 
             for direction in directions:
                 self.dir_voies_sens1[direction] = [self.dir_voies_sens1.get(direction)] + [v]

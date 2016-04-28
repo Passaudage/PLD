@@ -71,7 +71,7 @@ class Intersection:
             self.troncon_gauche = troncon
             
             # Cree les feux et les donne aux troncons
-            self.creer_feux(1,troncon, voies_entrantes, 2)
+            self.creer_feux(1,troncon, self.entrantes, 2)
 
             
         elif(position=='B'):
@@ -85,7 +85,7 @@ class Intersection:
             self.troncon_bas = troncon
             
             # Cree les feux et les donne aux troncons
-            self.creer_feux(1,troncon, voies_entrantes, 3)
+            self.creer_feux(1,troncon, self.entrantes, 3)
             
         elif(position=='D'):
             if(self.troncon_droite != None):
@@ -98,7 +98,7 @@ class Intersection:
             self.troncon_droite = troncon
             
             # Cree les feux et les donne aux troncons
-            self.creer_feux(2,troncon, voies_entrantes, 0)
+            self.creer_feux(2,troncon, self.entrantes, 0)
             
         elif(position=='H'):
             if(self.troncon_haut != None):
@@ -111,7 +111,7 @@ class Intersection:
             self.troncon_haut = troncon
             
             # Cree les feux et les donne aux troncons
-            self.creer_feux(2, troncon, voies_entrantes, 1)
+            self.creer_feux(2, troncon, self.entrantes, 1)
             
         else:
             raise Exception(position+" n'est pas une direction convenable.")
@@ -170,84 +170,84 @@ class Intersection:
     def lister_troncon(self):
         return [self.troncon_gauche,self.troncon_haut,self.troncon_droite,self.troncon_bas]
                 
-	def demander_voies_sorties(self,voie_entree,direction):
-		"""
-			Trouve les voies de sorties possibles si l'on
-			arrive sur la voie voie_entree en direction de 
-			la direction passe en parametre
-				# voie_entree : voie d'origine
-				# direction : la direction ou l'on va
-				# @author : Bonfante
-		"""
-		
-		# Si la voie est dans le troncon gauche
-		
-		troncon = voie_entree.troncon
-		if(troncon==self.troncon_bas):
-			num = troncon_bas.voies_sens1.index(voie_entree)
-			if(direction == 'D'):
-				return troncon_droite.voies_sens1[index]
-			elif(direction == 'G'):
-				return troncon_gauche.voies_sens2[index]
-			elif(direction == 'TD'):
-				return troncon_haut.voies_sens1[index]
-			
-		elif(troncon==self.troncon_haut):
-			num = troncon_haut.voies_sens2.index(voie_entree)
-			if(direction == 'D'):
-				return troncon_gauche.voies_sens2[index]
-			elif(direction == 'G'):
-				return troncon_droite.voies_sens1[index]
-			elif(direction == 'TD'):
-				return troncon_bas.voies_sens2[index]
-			
-			
-		elif(troncon == self.troncon_droite):
-			num = troncon_droite.voies_sens2.index(voie_entree)
-			if(direction == 'D'):
-				return troncon_haut.voies_sens1[index]
-			elif(direction == 'G'):
-				return troncon_bas.voies_sens2[index]
-			elif(direction == 'TD'):
-				return troncon_gauche.voies_sens2[index]
-			
-		elif(troncon == self.troncon_gauche):
-			num = troncon_gauche.voies_sens1.index(voie_entree)
-			if(direction == 'D'):
-				return troncon_bas.voies_sens2[index]
-			elif(direction == 'G'):
-				return troncon_haut.voies_sens1[index]
-			elif(direction == 'TD'):
-				return troncon_droite.voies_sens1[index]
-			
-	
-	def ajouter_vehicule(self, vehicule):
-		self.vehicules.ajouter_vehicule(vehicule)
-		
-	def retirer_vehicule(self, vehicule):
-		self.vehicules.remove(vehicule)
-		
-	def donner_obstacle(self, coordonnees, direction):
-		coordonnee_blocage = None
-		dist = 0
-		
-		a = direction.y / direction.x
-		b = coordonnees.y - a*coordonnees.x 
-		
-		#vrai si direction va vers la droite
-		droite = (1,0)*direction > 0
-			
-		for vehicule in vehicules :
-			ar = vehicule.donner_arriere()
-			av = vehicule.coordonnees
-			a2 = (av.y-ar.y) / (av.x-ar.x)
-			b2 = av.y - a*av.x 
-			x = (b - b2) / (a2 - a)
-			if (((droite && direction.x<=x)or(!droite && x<=direction.x)) and ((av.x<=x && x<=ar.x) || (ar.x<=x && x<=av.x))):
-				nouvelle_co = Coordonnees(x,a*x+b)
-				if (coordonnee_blocage == None or dist > abs(nouvelle_co-coordonnees)):
-					vehicule_blocant = vehicule
-					coordonnee_blocage = nouvelle_co
-					dist = abs(nouvelle_co-coordonnees)
-					
-		return (coordonnee_blocage,vehicule_blocant)
+    def demander_voies_sorties(self,voie_entree,direction):
+        """
+            Trouve les voies de sorties possibles si l'on
+            arrive sur la voie voie_entree en direction de
+            la direction passe en parametre
+                # voie_entree : voie d'origine
+                # direction : la direction ou l'on va
+                # @author : Bonfante
+        """
+
+        # Si la voie est dans le troncon gauche
+
+        troncon = voie_entree.troncon
+        if(troncon==self.troncon_bas):
+            index= self.troncon_bas.voies_sens1.index(voie_entree)
+            if(direction == 'D'):
+                return self.troncon_droite.voies_sens1[index]
+            elif(direction == 'G'):
+                return self.troncon_gauche.voies_sens2[index]
+            elif(direction == 'TD'):
+                return self.troncon_haut.voies_sens1[index]
+
+        elif(troncon==self.troncon_haut):
+            index = self.troncon_haut.voies_sens2.index(voie_entree)
+            if(direction == 'D'):
+                return self.troncon_gauche.voies_sens2[index]
+            elif(direction == 'G'):
+                return self.troncon_droite.voies_sens1[index]
+            elif(direction == 'TD'):
+                return self.troncon_bas.voies_sens2[index]
+
+
+        elif(troncon == self.troncon_droite):
+            index = self.troncon_droite.voies_sens2.index(voie_entree)
+            if(direction == 'D'):
+                return self.troncon_haut.voies_sens1[index]
+            elif(direction == 'G'):
+                return self.troncon_bas.voies_sens2[index]
+            elif(direction == 'TD'):
+                return self.troncon_gauche.voies_sens2[index]
+
+        elif(troncon == self.troncon_gauche):
+            index = self.troncon_gauche.voies_sens1.index(voie_entree)
+            if(direction == 'D'):
+                return self.troncon_bas.voies_sens2[index]
+            elif(direction == 'G'):
+                return self.troncon_haut.voies_sens1[index]
+            elif(direction == 'TD'):
+                return self.troncon_droite.voies_sens1[index]
+
+
+    def ajouter_vehicule(self, vehicule):
+        self.vehicules.append(vehicule)
+
+    def retirer_vehicule(self, vehicule):
+        self.vehicules.remove(vehicule)
+
+    def donner_obstacle(self, coordonnees, direction):
+        coordonnee_blocage = None
+        dist = 0
+        vehicule_blocant = None
+        a = direction.y / direction.x
+        b = coordonnees.y - a*coordonnees.x
+
+        #vrai si direction va vers la droite
+        droite = (1,0)*direction > 0
+
+        for vehicule in self.vehicules :
+            ar = vehicule.donner_arriere()
+            av = vehicule.coordonnees
+            a2 = (av.y-ar.y) / (av.x-ar.x)
+            b2 = av.y - a*av.x
+            x = (b - b2) / (a2 - a)
+            if (((droite and direction.x<=x)or(not droite and x<=direction.x)) and ((av.x<=x and x<=ar.x) or (ar.x<=x and x<=av.x))):
+                nouvelle_co = Coordonnees.Coordonnees(x,a*x+b)
+                if (coordonnee_blocage == None or dist > abs(nouvelle_co-coordonnees)):
+                    vehicule_blocant = vehicule
+                    coordonnee_blocage = nouvelle_co
+                    dist = abs(nouvelle_co-coordonnees)
+
+        return (coordonnee_blocage,vehicule_blocant)
