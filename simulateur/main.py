@@ -21,8 +21,12 @@ def main():
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
     
-    t_sud = Troncon(i, None, Coordonnees.Coordonnees(6050, 0), Coordonnees.Coordonnees(6050, longueur_troncon),
-                {"G" : 0.2 , "TD" : 0.5 , "D": 0.3}, {"G": 0.3, "TD": 0.2, "D": 0.5})
+    t_sud = Troncon(i, 
+            None, 
+            Coordonnees.Coordonnees(6050, 0), 
+            Coordonnees.Coordonnees(6050, longueur_troncon),
+                {"G" : 0.2 , "TD" : 0.5 , "D": 0.3},
+                {"G": 0.3, "TD": 0.2, "D": 0.5})
     
     t_est = Troncon(None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},

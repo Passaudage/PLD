@@ -5,13 +5,13 @@ import Vehicule
 import numpy
 
 def proba_poisson(k, freq, temps_obs):
-        #Calcul du lambda correspondant
-        l = freq * temps_obs
-        p = e ** (-l)
-        for i in range(0, k):
-            p *= l/k
-            k = k-1
-        return p
+    #Calcul du lambda correspondant
+    l = freq * temps_obs
+    p = e ** (-l)
+    for i in range(0, k):
+        p *= l/k
+        k = k-1
+    return p
 
 def var_poisson(freq, temps_obs):
     proba_cumulee = random()

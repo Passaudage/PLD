@@ -300,5 +300,5 @@ class Vehicule:
             
             ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
 
-            self.poly_a = ratio / dest_nv_rep.x)
+            self.poly_a = ratio / dest_nv_rep.x
             self.poly_b = orientation_nv_rep.y - 2 * ratio
