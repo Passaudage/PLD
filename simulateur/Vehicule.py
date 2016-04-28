@@ -112,11 +112,14 @@ class Vehicule:
 					self.intersection = self.voie.demander_intersection()
 					self.intersection.ajouter_vehicule(self)
 					self.voie.supprimer_vehicule(self)
+					
 					self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
 					self.destination = self.nouvelle_voie.coordonnees_debut
-					self.orientation_cible = self.nouvelle_voie.trajectoire
-					#nouvelle destination et direction données par l'intersection
-					self.avancer_intersection(distance_faite)
+					self.orientation_cible = self.nouvelle_voie.orientation
+					
+					
+					
+					self.mettre_coordonnees_a_jour(incr, nb_tick, 
 				
 				#si le précédent a passé l'intersection et que l'on est encore sur la voie
 				else:

@@ -223,18 +223,15 @@ class Intersection:
 	def retirer_vehicule(self, vehicule):
 		self.vehicules.remove(vehicule)
 		
-	def verifie_place_vehicule(self, coordonnees, destination):
+	def donner_obstacle(self, coordonnees, direction):
 		coordonnee_blocage = None
 		dist = 0
 		
-		a = (coordonnees.y-destination.y) / (coordonnees.x-destination.x)
+		a = direction.y / direction.x
 		b = coordonnees.y - a*coordonnees.x 
-		if (coordonnees.x < destination.x):
-			x1 = coordonnees.x
-			x2 = destination.x
-		else:
-			x1 = destination.x
-			x2 = coordonnees.x
+		
+		#vrai si direction va vers la droite
+		droite = (1,0)*direction > 0
 			
 		for vehicule in vehicules :
 			ar = vehicule.donner_arriere()
@@ -242,14 +239,14 @@ class Intersection:
 			a2 = (av.y-ar.y) / (av.x-ar.x)
 			b2 = av.y - a*av.x 
 			x = (b - b2) / (a2 - a)
-			if ((x1<=x && x<=x2) && ((av.x<=x && x<=ar.x) || (ar.x<=x && x<=av.x))):
+			if (((droite && direction.x<=x)or(!droite && x<=direction.x)) and ((av.x<=x && x<=ar.x) || (ar.x<=x && x<=av.x))):
 				nouvelle_co = Coordonnees(x,a*x+b)
-				if (coordonnee_blocage == None):
+				if (coordonnee_blocage == None or dist > abs(nouvelle_co-coordonnees)):
+					vehicule_blocant = vehicule
 					coordonnee_blocage = nouvelle_co
 					dist = abs(nouvelle_co-coordonnees)
-				elif(dist > abs(nouvelle_co-coordonnees)):
-					coordonnee_blocage = nouvelle_co
-					dist = abs(nouvelle_co-coordonnees)
+					
+		return (coordonnee_blocage,vehicule_blocant)
 			
 			
 			
