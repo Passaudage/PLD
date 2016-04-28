@@ -131,17 +131,21 @@ class Vehicule:
 			#faire transition
 		return
 		
-        def mettre_coordonees_a_jour(increment_temps, nb_ticks_sec, vitesse_precedent, position):
-            if self.intersection != None:
-                print('not implemented')
-            else:
+        def mettre_coordonnees_a_jour(increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
                 dx = self.vitesse.x * increment_temps / nb_ticks_sec 
                 dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
                 dvx = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(1,0))
                 dvy = self.acceleration.norm() * increment_temps / nb_ticks_sec * (self.direction * Coordonnees(0,1))
+                
+                vitesse_max = self.voie.vitesse_max 
 
-                acceleration_libre_x = 1 - (self.vitesse.x/self.voie)**4
+                if self.intersection != None:
+                    vitesse_max = Intersection.vitesse_max
+                    
+
+
+                acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
                 acceleration_libre_y = 1 - (self.vitesse.x/self.voie)**4
                 acceleration_approche_x = 
 
