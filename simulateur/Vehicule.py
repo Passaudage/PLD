@@ -5,8 +5,8 @@ import Intersection
 
 
 class Vehicule:
-    distance_minimale = 30  # cm
-    proportion_discourtois = 0.8
+    Vehicule.distance_minimale = 30  # cm
+    Vehicule.proportion_discourtois = 0.8
     Vehicule.count = 0
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
