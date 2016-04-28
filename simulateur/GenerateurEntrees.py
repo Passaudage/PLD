@@ -38,14 +38,13 @@ class GenerateurEntrees:
         self._voies_entrantes = []
         self._voies_sortantes_proba = {}
 
-        for voie in self._voies_sortantes:
-            self._voies_sortantes_proba[voie] = voie.proba_entree
-
     def ajoute_voie_entrante(self, voies):
         self._voies_entrantes = voies
     
     def ajoute_voie_sortante(self, voies):
         self._voies_sortantes = voies
+        for voie in self._voies_sortantes:
+            self._voies_sortantes_proba[voie] = voie.proba_entree
 
     def notifie_temps(self, increment, moteur):
         print("Le generateur a ete modifie.")
