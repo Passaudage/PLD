@@ -4,6 +4,10 @@ from Troncon import *
 import Intersection
 import random
 from math import sqrt
+from Vehicule import *
+
+count = 0
+tous_les_vehicules = []
 
 class Vehicule:
     Vehicule.distance_minimale_roulant = 150 #cm
@@ -15,9 +19,9 @@ class Vehicule:
     Vehicule.count = 0
     Vehicule.v_max = 50
 
-    def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
-                 origine, destination, direction, vehicule_precedent):
+    def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
+
         #~ print(Vehicule.count)
         self.simulateur = simulateur
         self.coordonnees = coordonnees
