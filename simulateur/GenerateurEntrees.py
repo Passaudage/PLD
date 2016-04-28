@@ -1,8 +1,8 @@
 from SimulationManager import *
 from math import *
-import random
+from random import *
 import Vehicule
-from numpy import random
+import numpy
 
 def proba_poisson(k, freq, temps_obs):
         #Calcul du lambda correspondant
@@ -14,7 +14,7 @@ def proba_poisson(k, freq, temps_obs):
         return p
 
 def var_poisson(freq, temps_obs):
-    proba_cumulee = random.random()
+    proba_cumulee = random()
     k = 0
     proba_cumul_iter = proba_poisson(0, freq, temps_obs)
     while proba_cumul_iter < proba_cumulee:
@@ -38,16 +38,18 @@ class GenerateurEntrees:
         self._voies_entrantes = []
         self._voies_sortantes_proba = {}
 
-        for voie in self._voies_sortantes:
-            self._voies_sortantes_proba[voie] = voie.proba_entree
-
     def ajoute_voie_entrante(self, voies):
         self._voies_entrantes = voies
     
     def ajoute_voie_sortante(self, voies):
         self._voies_sortantes = voies
+        for voie in self._voies_sortantes:
+            self._voies_sortantes_proba[voie] = voie.proba_entree
+            print(voie)
+            print(voie.proba_entree)
 
     def notifie_temps(self, increment, moteur):
+        #~ print("Le generateur a ete modifie.")
         freq = 0
         if self._etendue == 0:
             freq = self._heures_freqs[0][1]
@@ -64,12 +66,17 @@ class GenerateurEntrees:
             freq = freq_gauche + fact_prop * (freq_droite - freq_gauche)
         
         nombre_voit_crees = var_poisson(freq/(60*moteur.nombre_ticks_seconde), increment)
-        
+        #~ print("Nombre de voitures : "+str(nombre_voit_crees))
         for i in range(nombre_voit_crees):
-            longueur = random.normalvariate(428, 50)
-            aggressivite = (random.random() < Vehicule.proportion_discourtois)
-            voie = random.choice(self._voies_sortantes_proba.keys(), 1, self._voies_sortantes_proba.values())
+            longueur = normalvariate(428, 50)
+            aggressivite = (random() < Vehicule.proportion_discourtois)
 
+            probas = []
+            for key in self._voies_sortantes_proba.keys():
+                probas.append(self._voies_sortantes_proba.get(key))
+            print(probas)
+            nb_voie = numpy.random.choice(len(self._voies_sortantes), 1, False, probas)
+            voie = self._voies_sortantes[nb_voie]
             voie[0].creer_vehicule(aggressivite, longueur)
 
 

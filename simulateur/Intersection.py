@@ -145,7 +145,7 @@ class Intersection:
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)
                 
-    def construire_chemins(self):
+    def construire_chemins(self): #TODO : A corriger
         if (self.troncon_gauche == None or self.troncon_droite == None or self.troncon_haut == None or self.troncon_bas == None):
             raise Exception("Tous les troncons ne sont pas initialisés")
         else:
@@ -156,16 +156,40 @@ class Intersection:
                     raise Exception("Le troncon " + troncon + " n'est pas aligné correctement, il est bancale : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
                 demi_largeur = troncon.largeur()/2
-                co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
-                co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_debut
-                alignement1 = troncon.coordonnees_debut - co1 + demi_largeur
-                alignement2 = troncon.coordonnees_debut - co2 + demi_largeur
-                alignement3 = troncon.coordonnees_debut - co1 - demi_largeur
-                alignement4 = troncon.coordonnees_debut - co2 - demi_largeur
-                if (alignement1.x != 0 and alignement1.y != 0):
-                    raise Exception("Le troncon n'est pas ajusté correctement à gauche : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
-                if (alignement2.x != 0 and alignement2.y != 0):
-                    raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
+                
+                point_tr_gauche = troncon.coordonnees_debut - Coordonnees.Coordonnees(demi_largeur,demi_largeur)
+                point_tr_droite = troncon.coordonnees_debut + Coordonnees.Coordonnees(demi_largeur,demi_largeur)
+                adj1 = liste_troncon[liste_troncon.index(troncon)-1]
+                adj2 = liste_troncon[liste_troncon.index(troncon)-1]
+                alignement1 = point_tr_gauche - adj1.coordonnees_debut
+                alignement2 = point_tr_droite- adj1.coordonnees_debut
+                
+                print(troncon)
+                print(alignement1)
+                print(alignement2)
+                print()
+                
+                #~ co1 =None
+                #~ if(liste_troncon.index(troncon)+1==len(liste_troncon)):
+                    #~ co1= liste_troncon[0].coordonnees_debut
+                #~ else: co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
+                #~ co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_fin
+                #~ alignement1 = troncon.coordonnees_debut - co1 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                #~ alignement2 = troncon.coordonnees_debut - co2 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                #~ alignement3 = troncon.coordonnees_debut - co1 - Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                #~ alignement4 = troncon.coordonnees_debut - co2 - Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                #~ print(alignement1.x)
+                #~ print(alignement2.x)
+                #~ print(alignement3.x)
+                #~ print(alignement4.x)
+                #~ print(alignement1.y)
+                #~ print(alignement2.y)
+                #~ print(alignement3.y)
+                #~ print(alignement4.y)
+                #~ if(alignement1.x != 0 and alignement1.y != 0 and alignement3.x != 0 and alignement3.y != 0):
+                    #~ raise Exception("Le troncon n'est pas ajusté correctement à gauche : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
+                #~ if(alignement2.x != 0 and alignement2.y != 0 and alignement4.x != 0 and alignement4.y != 0):
+                    #~ raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
     def lister_troncon(self):
         return [self.troncon_gauche,self.troncon_haut,self.troncon_droite,self.troncon_bas]
@@ -251,3 +275,7 @@ class Intersection:
                     dist = abs(nouvelle_co-coordonnees)
 
         return (coordonnee_blocage,vehicule_blocant)
+
+    def notifie_temps(self, increment, moteur):
+        #~ print("L'intersection a été notifié.")
+        pass
