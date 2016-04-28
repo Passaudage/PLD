@@ -100,7 +100,7 @@ class Troncon:
             for direction in directions:
                 proba_dir[direction] = proba_dir.get(direction)/proba_sum
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Coordonnees(0, 0)-self.trajectoire, proba_entree, proba_dir, vitesse_max)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Coordonnees(0, 0)-self.trajectoire, proba_entree, proba_dir)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
 

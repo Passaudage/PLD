@@ -158,13 +158,21 @@ class Intersection:
                 demi_largeur = troncon.largeur()/2
                 co1 = liste_troncon[liste_troncon.index(troncon)+1].coordonnees_debut
                 co2 = liste_troncon[liste_troncon.index(troncon)-1].coordonnees_debut
-                alignement1 = troncon.coordonnees_debut - co1 + demi_largeur
-                alignement2 = troncon.coordonnees_debut - co2 + demi_largeur
-                alignement3 = troncon.coordonnees_debut - co1 - demi_largeur
-                alignement4 = troncon.coordonnees_debut - co2 - demi_largeur
-                if (alignement1.x != 0 and alignement1.y != 0):
+                alignement1 = troncon.coordonnees_debut - co1 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                alignement2 = troncon.coordonnees_debut - co2 + Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                alignement3 = troncon.coordonnees_debut - co1 - Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                alignement4 = troncon.coordonnees_debut - co2 - Coordonnees.Coordonnees(demi_largeur, demi_largeur)
+                print(alignement1.x)
+                print(alignement2.x)
+                print(alignement3.x)
+                print(alignement4.x)
+                print(alignement1.y)
+                print(alignement2.y)
+                print(alignement3.y)
+                print(alignement4.y)
+                if(alignement1.x != 0 and alignement1.y != 0 and alignement3.x != 0 and alignement3.y != 0):
                     raise Exception("Le troncon n'est pas ajusté correctement à gauche : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
-                if (alignement2.x != 0 and alignement2.y != 0):
+                if(alignement2.x != 0 and alignement2.y != 0 and alignement4.x != 0 and alignement4.y != 0):
                     raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
     def lister_troncon(self):
