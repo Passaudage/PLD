@@ -16,7 +16,7 @@ class Vehicule:
     v_max = 50
     liste_voitures = []
 
-    def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
+    def __init__(self, simulateur, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
         Vehicule.liste_voitures.append(self)
 
@@ -24,7 +24,6 @@ class Vehicule:
         self.simulateur = simulateur
         self.coordonnees = coordonnees
         self.discourtois = discourtois
-        self.max_acceleration = max_acceleration
         self.longueur = longueur
         self.prochaine_direction = prochaine_direction
         self.voie = voie
@@ -62,9 +61,6 @@ class Vehicule:
         else:
             for vehicule_suivant in self.vehicules_suivants:
                 vehicule_suivant.notifie_temps(nb_increment, simulateur)
-
-    def mettre_coordonnees_a_jour(self, increment, nb, vit, pos):
-        return
 
     def avance_vehicule(self, incr, nb_tick):
         # si on existe pas encore
@@ -121,7 +117,7 @@ class Vehicule:
 
         # si l'obstacle est un feu rouge
         if (vehicule_blocant == "feu"):
-            self.mettre_coordonnees_a_jour(incr, nb_tick, (0, 0), coordonnees_obstacle)
+            self.mettre_coordonnees_a_jour(incr, nb_tick, 0, coordonnees_obstacle)
         else:
             self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
 
@@ -291,7 +287,7 @@ class Vehicule:
     def changer_trajectoire(self, destination, orientation_cible):
         self.orientation_cible = orientation_cible
         self.destination = destination
-        self.origine = self.position
+        self.origine = self.coordonnees
         self.orientation_origine = self.orientation
         self.repere_trajectoire_axe_x = self.destination - self.origine
         self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x / self.repere_trajectoire_axe_x.norm()
