@@ -10,6 +10,7 @@ class Vehicule:
 
     def __init__(self, simulateur, max_acceleration, discourtois, coordonnees, longueur, voie, prochaine_direction,
                  origine, destination, direction, vehicule_precedent):
+        self.simulateur = simulateur
         self.coordonnees = coordonnees
         self.max_acceleration = max_acceleration
         self.longueur = longueur
@@ -34,7 +35,8 @@ class Vehicule:
             self.greffe_arbre(vehicule_precedent)
         else:
             self.racine = self
-            # se déclarer tête de liste
+            # se déclarer tête de liste 
+            self.simulateur.add_listener(self)
 
     def changeDirection(self, x, y):
         self.direction = Coordonnees.Coordonnees(x, y)
@@ -48,7 +50,7 @@ class Vehicule:
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
-                vehicule_suivant.notifie_temps()
+                vehicule_suivant.notifie_temps(nb_increment, simulateur)
 
     def mettre_coordonnees_a_jour(self, increment, nb, vit, pos):
         return
@@ -195,6 +197,8 @@ class Vehicule:
     def greffe_arbre(self, vehicule_precedent):
         if (vehicule_precedent.racine == self.racine):
             return
+        if(self.racine == self):
+            self.simulateur.del_listener(self)
         self.set_vehicule_precedent(vehicule_precedent)
         vehicule_precedent.set_vehicules_suivants(self)
         self.propager_racine(vehicule_precedent.racine)
@@ -220,6 +224,7 @@ class Vehicule:
     def decrochage_arbre(self):
         if (self.vehicule_precedent is None):
             return
+        self.simulateur.add_listener(self)
         self.vehicule_precedent.supp_vehicule_suivant(self)
         self.vehicule_precedent = None
         self.propager_racine(self)
