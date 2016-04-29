@@ -84,12 +84,6 @@ class Visualisateur:
             #self.dessiner_tout()
             time.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
 
-
-    def boucle_dessiner(self):
-
-        while True:
-            self.dessiner_tout()
-
     def dessiner_tout(self, widget, cairo_context):
         #print("Dessin")
 
@@ -129,8 +123,7 @@ class Visualisateur:
         longueur = self.fact_echelle * voiture.longueur
         orientation = voiture.direction
 
-        print("dessin voiture !")
-        print(coord)
+        print("Dessin voiture :" + str(coord))
         
         angle = math.atan2(orientation.y, orientation.x)
         
