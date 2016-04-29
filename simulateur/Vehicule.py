@@ -331,7 +331,7 @@ class Vehicule:
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
         orientation = orientation.normaliser()
-        self.direction= orientation
+        self.direction = orientation
            
         self.vitesse.x += dvx
         self.vitesse.y += dvy
