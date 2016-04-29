@@ -96,6 +96,16 @@ def main():
     liste_v = Vehicule.Vehicule.liste_voitures
     print(liste_v)
     
+    toto = liste_v[0]
+    print(toto.origine)
+    
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    for i in range(6):
+        sm.avance_temps()
 
     toto = liste_v[1]
     print(toto.intersection)
@@ -115,8 +125,12 @@ def main():
     print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
     print(toto.coordonnees.x)
 
+    for i in range(2):
+        sm.avance_temps()
+        
     for v in liste_v:
         print(v.coordonnees)
+   
         
         
 main()
