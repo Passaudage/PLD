@@ -96,6 +96,16 @@ def main():
     liste_v = Vehicule.Vehicule.liste_voitures
     print(liste_v)
     
+    toto = liste_v[0]
+    print(toto.origine)
+    
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    for i in range(6):
+        sm.avance_temps()
 
     toto = liste_v[0]
     print(toto.intersection)
