@@ -11,6 +11,7 @@ import threading
 import time
 
 import random
+import math
 
 class Visualisateur: 
     """
@@ -104,7 +105,7 @@ class Visualisateur:
             Cette  méthode dessine l'ensemble des voitures
         """
         
-        self.cairo_context.set_source_rgba(1, 0, 0, 0.8)
+        self.cairo_context.set_source_rgba(1, 0, 0, 1)
         coord_test = self.echelle(Coordonnees.Coordonnees(6050, 7100))
         orientation = self.rotation
         longueur = self.fact_echelle * 350
@@ -130,15 +131,21 @@ class Visualisateur:
         orientation = voiture.direction
 
         print("dessin voiture !")
-
+        print(coord)
+        
+        angle = math.atan2(orientation.y, orientation.x)
+        
         self.cairo_context.save()
         self.cairo_context.translate(coord.x, coord.y)
-        self.cairo_context.rotate(orientation) # en degrés
+        self.cairo_context.rotate(angle) # en radiant
         self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
 
         self.cairo_context.restore()
+        widget.queue_draw()
+        #sleep(10)
+        #exit(0)
 
     def dessiner_voirie(self):
         

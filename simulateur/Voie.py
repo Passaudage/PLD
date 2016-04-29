@@ -15,10 +15,10 @@ class Voie:
         self.sens = sens
 
     def creer_vehicule(self, simulateur, discourtois, longueur):
-        prochaine_direction = "droite"
+        prochaine_direction = self.directions[0]
 
         dernier_vehicule = self.dernier_vehicule()
-        clio = Vehicule.Vehicule(simulateur, discourtois, Coordonnees.Coordonnees(0,0), longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, dernier_vehicule)
+        clio = Vehicule.Vehicule(simulateur, discourtois, longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, dernier_vehicule)
         self.ajouter_vehicule(clio)
 
     def direction_possible(self, direction):
@@ -50,10 +50,10 @@ class Voie:
         if(self.vehicules.index(vehicule)==0):
             return None
         else:
-            return self.vehicules.index(vehicule)-1
+            return self.vehicules[self.vehicules.index(vehicule)-1]
 
     def est_passant(self, direction):
-        return self.troncon.getFeu(direction).est_passant()
+        return self.troncon.get_feu(direction, self.sens).est_passant()
 
     def get_proba_dir(self, direction):
         return self.proba_dir.get(direction)

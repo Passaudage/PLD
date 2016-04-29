@@ -14,18 +14,19 @@ class Vehicule:
     v_max = 50
     liste_voitures = []
 
-    def __init__(self, simulateur, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
+    def __init__(self, simulateur, discourtois, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
         Vehicule.liste_voitures.append(self)
 
         #~ print(Vehicule.count)
         self.simulateur = simulateur
-        self.coordonnees = coordonnees
+        self.coordonnees = origine
         self.discourtois = discourtois
         self.longueur = longueur
         self.prochaine_direction = prochaine_direction
         self.voie = voie
         self.origine = origine
+        self.destination = destination
         self.direction = direction
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)
@@ -76,12 +77,12 @@ class Vehicule:
                 # @author : Marcus
         """
         # si on existe pas encore
-        if (self.vehicule_precedent.coordonnees == self.coordonnees):
+        if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
             return
 
         # Si il faut changer de voie
         if (not self.voie.direction_possible(self.prochaine_direction)):
-            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction)[0]
+            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * 2
             trajet = direction_virage + distance_avant
@@ -122,6 +123,11 @@ class Vehicule:
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
 
+        
+        # si l'obstacle est un feu rouge
+        if (vehicule_blocant == "feu"):
+            self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
+            return
         # Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
         #aucun obstacle
         if (vehicule_blocant is None):
@@ -130,11 +136,7 @@ class Vehicule:
         elif (self.vehicule_precedent != vehicule_blocant):
             self.change_arbre(vehicule_blocant)
 
-        # si l'obstacle est un feu rouge
-        if (vehicule_blocant == "feu"):
-            self.mettre_coordonnees_a_jour(incr, nb_tick, 0, coordonnees_obstacle)
-        else:
-            self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
+        self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
             
 
     def trouver_obstacle(self):
@@ -148,14 +150,27 @@ class Vehicule:
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
-            av = self.coordonnees.y / self.coordonnees.x
-            bv = self.coordonnees.y - av * self.coordonnees.x
-            for vehicule in self.nouvelle_voie.vehicules:
-                ac = self.nouvelle_voie.coordonnees_debut.y / self.nouvelle_voie.coordonnees_debut.x
+            x = None
+            if (self.direction.x == 0):
+                x = self.coordonnees.x
+            else:
+                av = self.direction.y / self.direction.x
+                bv = self.coordonnees.y - av * self.coordonnees.x
+            if(self.nouvelle_voie.orientation.x == 0):
+                x = self.nouvelle_voie.coordonnees_debut.x
+            else:
+                ac = self.nouvelle_voie.orientation.y / self.nouvelle_voie.orientation.x
                 bc = self.nouvelle_voie.coordonnees_debut.y - ac * self.nouvelle_voie.coordonnees_debut.x
+            if(x is None):
                 x = (bv - bc) / (ac - av)
+            if(self.direction.x != 0):
+                y = av * x + bv
+            elif(self.nouvelle_voie.orientation.x != 0):
                 y = ac * x + bc
-                p = Coordonnees.Coordonnees(x, y)
+            else:
+                pass
+            p = Coordonnees.Coordonnees(x, y)
+            for vehicule in self.nouvelle_voie.vehicules:           
                 # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
                 if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
                         > abs(p - self.nouvelle_voie.coordonnees_debut)):
@@ -195,7 +210,8 @@ class Vehicule:
         """
         if (vehicule_precedent.racine == self.racine):
             return
-        self.simulateur.del_listener(self)
+        if(self.racine == self):
+            self.simulateur.del_listener(self)
         self.set_vehicule_precedent(vehicule_precedent)
         vehicule_precedent.add_vehicule_suivant(self)
         self.propager_racine(vehicule_precedent.racine)
@@ -266,20 +282,16 @@ class Vehicule:
         if self.intersection != None:
             Vehicule.vitesse_max = Intersection.Intersection.vitesse_max
 
-        acceleration_libre_x = 1 - (self.vitesse.x/(vitesse_max*self.direction.x))**4
-        acceleration_libre_y = 1 - (self.vitesse.y/(vitesse_max*self.direction.y))**4
-        acceleration_approche_x =  Vehicule.distance_minimale * self.direction.x
-        acceleration_approche_x += self.vitesse.x * Vehicule.temps_reaction
-        acceleration_approche_x += (self.vitesse.x * (vitesse_obstacle.x - self.vitesse.x))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-        acceleration_approche_x **= 2
-
-        acceleration_approche_y =  Vehicule.distance_minimale * self.direction.y
-        acceleration_approche_y += self.vitesse.y * Vehicule.temps_reaction
-        acceleration_approche_y += (self.vitesse.y * (vitesse_obstacle.y - self.vitesse.y))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-        acceleration_approche_y **= 2
-            
-        acceleration_x = Vehicule.acceleration_max * (acceleration_approche_x - (acceleration_libre_x/(position_obstacle.x - self.coordonnees.x))**2)
-        acceleration_y = Vehicule.acceleration_max * (acceleration_approche_y - (acceleration_libre_y/(position_obstacle.y - self.coordonnees.y))**2)
+        acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
+        acceleration_approche =  Vehicule.distance_minimale
+        acceleration_approche =  acceleration_approche + abs(self.vitesse) * Vehicule.temps_reaction
+        acceleration_approche =  acceleration_approche + (abs(self.vitesse) * (abs(vitesse_obstacle - self.vitesse)))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche **= 2
+        
+        val_acceleration = Vehicule.acceleration_max * (acceleration_approche - (acceleration_libre/abs(position_obstacle - self.coordonnees))**2)
+        
+        self.acceleration.x = val_acceleration * self.direction.x
+        self.acceleration.y = val_acceleration * self.direction.y
             
         projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b

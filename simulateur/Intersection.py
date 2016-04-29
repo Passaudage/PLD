@@ -310,7 +310,7 @@ class Intersection:
         b = coordonnees.y - a*coordonnees.x
 
         #vrai si direction va vers la droite
-        droite = (1,0)*direction > 0
+        droite = Coordonnees.Coordonnees(1,0)*direction > 0
 
         for vehicule in self.vehicules :
             ar = vehicule.donner_arriere()
