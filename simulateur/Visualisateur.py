@@ -218,6 +218,18 @@ class Visualisateur:
 
             numero_voie += 1
 
+        # dessin des feux
+
+        rayon_feu = 100
+
+        if troncon.dir_voies_sens1["G"]:
+
+            if horizontal:
+                self.cairo_context.set_source_rgba(0.1, 1, 0.1, 1)
+                self.cairo_context.arc( max(vec_debut.x, vec_fin.x), vec_debut.y,
+                                        rayon_feu * self.fact_echelle, 0, 2*math.pi)
+                self.cairo_context.fill()
+
         self.cairo_context.restore()
 
     def dessiner_intersection(self, intersection):
