@@ -36,7 +36,8 @@ class Troncon:
             if queue_presente: self.intersection_queue.branche_troncon(self, "D")
             
     def ajouter_feux(self, sens, direction, feu):
-        if(sens==1):
+        print(str(sens))
+        if(sens=="sens1"):
             self.feux_sens1[direction] = feu
         else:
             self.feux_sens2[direction] = feu
@@ -100,9 +101,13 @@ class Troncon:
         return voies_possibles
 
     def est_passant(self, direction, sens):
+        print("sens :"+str(sens))
+        print("direction : "+str(direction))
         if(sens == "sens1") :
+            print(self.feux_sens1)
             return self.feux_sens1[direction].est_passant()
         if (sens == "sens2"):
+            print(self.feux_sens2)
             return self.feux_sens2[direction].est_passant()
 
     def get_intersection(self, voie):

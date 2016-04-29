@@ -155,10 +155,10 @@ class Intersection:
             raise Exception(position+" n'est pas une direction convenable.")
 
     def creer_feux(self):
-        self._creer_feux_troncon(1, self.troncon_bas, self.troncon_bas.voies_sens1, 3)
-        self._creer_feux_troncon(2, self.troncon_haut, self.troncon_haut.voies_sens2, 1)
-        self._creer_feux_troncon(1, self.troncon_gauche, self.troncon_gauche.voies_sens1, 2)
-        self._creer_feux_troncon(2, self.troncon_droite, self.troncon_droite.voies_sens2, 0)
+        self._creer_feux_troncon("sens1", self.troncon_bas, self.troncon_bas.voies_sens1, 3)
+        self._creer_feux_troncon("sens2", self.troncon_haut, self.troncon_haut.voies_sens2, 1)
+        self._creer_feux_troncon("sens1", self.troncon_gauche, self.troncon_gauche.voies_sens1, 2)
+        self._creer_feux_troncon("sens2", self.troncon_droite, self.troncon_droite.voies_sens2, 0)
 
         print("feux du troncon bas")
         self.troncon_bas.afficher_feux()
@@ -181,6 +181,7 @@ class Intersection:
                             0 si D, 1 si H, 2 si G et 3 si B
                 # @author : Bonfante
         """
+        raise Exception("ACADCDECAACEAGABGEEAEDCDECAACAAGACBGA")
         # Pour toutes les voies entrantes
         for voie in voies_entrantes:
             # Pour toutes les directions d'une voie entrante
