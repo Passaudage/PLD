@@ -12,12 +12,12 @@ def charger_simulateur():
     sm = SimulationManager.SimulationManager(5)
     gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen_sud)
-    #~ gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_ouest)
-    #~ gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_est)
-    #~ gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_nord)
+    gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #sm.add_listener(gen_ouest)
+    gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #sm.add_listener(gen_est)
+    gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
@@ -34,14 +34,20 @@ def charger_simulateur():
     t_est = Troncon.Troncon(None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},
                     {"G": 0.3, "TD": 0.2, "D": 0.5})
+
+    t_est.ajouter_generateur("sens2",gen_est)
     
     t_ouest = Troncon.Troncon(i, None, Coordonnees.Coordonnees(0, 6050), Coordonnees.Coordonnees(longueur_troncon, 6050),
                     {"G": 0.5, "TD": 0.2, "D": 0.3},
                     {"G": 0.1, "TD": 0.7, "D": 0.2})
 
+    t_ouest.ajouter_generateur("sens1",gen_ouest)
+
     t_nord = Troncon.Troncon(None, i, Coordonnees.Coordonnees(6050, 7100), Coordonnees.Coordonnees(6050, longueur_troncon+7100),
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
+
+    t_nord.ajouter_generateur("sens2",gen_nord)
  
     t_sud.creer_voie(["G"], "sens1", 50)
     t_sud.creer_voie(["TD"], "sens1", 50)
@@ -82,9 +88,9 @@ def charger_simulateur():
     #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ 
 
     

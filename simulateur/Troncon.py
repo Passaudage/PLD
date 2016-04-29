@@ -36,16 +36,16 @@ class Troncon:
             if queue_presente: self.intersection_queue.branche_troncon(self, "D")
         
     def ajouter_generateur(self, sens, generateur):
-        if(sens=="sens1"):
-            self.feux_sens1["D"] = generateur
-            self.feux_sens1["G"] = generateur
-            self.feux_sens1["TD"] = generateur
+        if(sens=="sens2"):
+            self.feux_sens1['D'] = generateur
+            self.feux_sens1['G'] = generateur
+            self.feux_sens1['TD'] = generateur
             generateur.ajoute_voie_entrante(self.voies_sens1)
             generateur.ajoute_voie_sortante(self.voies_sens2)
         else:
-            self.feux_sens2["D"] = generateur
-            self.feux_sens2["G"] = generateur
-            self.feux_sens2["TD"] = generateur 
+            self.feux_sens2['D'] = generateur
+            self.feux_sens2['G'] = generateur
+            self.feux_sens2['TD'] = generateur 
             generateur.ajoute_voie_entrante(self.voies_sens2)
             generateur.ajoute_voie_sortante(self.voies_sens1)
                    

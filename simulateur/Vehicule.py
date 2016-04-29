@@ -229,6 +229,9 @@ class Vehicule:
             if (self.voie.est_passant(self.prochaine_direction)):
                 intersection = self.voie.demander_intersection()
                 
+                if intersection is None:
+                    return (None, None)
+
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
             else:
@@ -306,13 +309,13 @@ class Vehicule:
 
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         if(position_obstacle is None):
-            self.coordonnees = self.coordonnees + self.direction*1
+            self.coordonnees = self.coordonnees + self.direction*2
             return
         distance = (position_obstacle-self.coordonnees)
         if(self.direction*distance <= 0):
             return
         distance = abs(distance)
-        distance_possible = min (distance - 30 , 1)
+        distance_possible = min (distance - 30 , 2)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         
     def changer_trajectoire(self, destination, orientation_cible):
