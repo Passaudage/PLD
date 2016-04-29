@@ -77,6 +77,7 @@ class Vehicule:
         """
         # si on existe pas encore
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
+            print("Je n'existe pas")
             return
 
         # Si il faut changer de voie
