@@ -302,7 +302,7 @@ class Vehicule:
         if vitesse_obstacle is None:
             vitesse_obstacle = self.direction * vitesse_max
 
-        acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
+        acceleration_libre = 1 - (min(abs(self.vitesse), Vehicule.deceleration_conf * vitesse_max)/abs(vitesse_max))**4
         acceleration_approche = 0
         
         print("Obstacle : "+str(position_obstacle)) 
