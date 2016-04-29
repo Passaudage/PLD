@@ -126,7 +126,6 @@ class Visualisateur:
         print("Dessin voiture :" + str(coord))
         
         angle = math.atan2(orientation.y, orientation.x)
-        
         self.cairo_context.save()
         self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(angle + math.pi / 2) # en radiant
@@ -138,19 +137,13 @@ class Visualisateur:
 
     def dessiner_voirie(self):
         
-        for intersection in self.intersections:
-            self.dessiner_intersection(intersection)
-
         for troncon in self.troncons:
             self.dessiner_troncon(troncon)
-        
 
-    def dessiner_intersection(self, intersection):
-        return
+#        for intersection in self.intersections:
+#            self.dessiner_intersection(intersection)
 
     def dessiner_troncon(self, troncon):
-
-        self.cairo_context.save()
 
 #        print(troncon.coordonnees_debut)
 #        print(troncon.coordonnees_fin)
@@ -160,6 +153,7 @@ class Visualisateur:
         largeur_voie = self.fact_echelle * Troncon.Troncon.const_largeur_voie
         largeur_voies = largeur_voie * (len(troncon.voies_sens1) + len(troncon.voies_sens2))
 
+        self.cairo_context.save()
         self.cairo_context.set_source_rgba(0, 0, 0, 0.6)
 
         self.cairo_context.move_to(vec_debut.x, vec_debut.y)
@@ -186,8 +180,11 @@ class Visualisateur:
         ajout_x = 0
         ajout_y = 0
 
+        horizontal = False
+
         if troncon.voies_sens1[0].orientation.y == 0:
             # horizontal
+            horizontal = True
             ajout_y = largeur_voie
         else:
             ajout_x = largeur_voie
@@ -222,7 +219,23 @@ class Visualisateur:
 
         self.cairo_context.restore()
 
-        
+    def dessiner_intersection(self, intersection):
+        # dessin des feux
+
+        offset_feu = 10
+
+        # pour chaque voie, on vérifie s'il existe un feu dans la direction 'G', 'D', 'H', 'B'
+        # et on accumule la réponse
+
+        directions = []
+
+        for voie in intersection.entrantes:
+            directions.extend([direction for direction in voie.directions if not direction in directions])
+
+        self.cairo_context.restore()
+
+        print("END")
+        time.sleep(10)
 
     def echelle(self, vec):
         return (vec - self.min) * self.fact_echelle
