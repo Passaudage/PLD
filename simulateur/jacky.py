@@ -10,8 +10,8 @@ def charger_simulateur():
     longueur_troncon = 5000
     
     sm = SimulationManager.SimulationManager(5)
-    #~ gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_sud)
+    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen_sud)
     #~ gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     #~ sm.add_listener(gen_ouest)
     #~ gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
@@ -28,6 +28,8 @@ def charger_simulateur():
              Coordonnees.Coordonnees(6050, longueur_troncon),
                 {"G" : 0.2 , "TD" : 0.5 , "D": 0.3},
                 {"G": 0.3, "TD": 0.2, "D": 0.5})
+                
+    t_sud.ajouter_generateur("sens1",gen_sud)
     
     t_est = Troncon.Troncon(None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},
@@ -80,9 +82,9 @@ def charger_simulateur():
     #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ 
 
     

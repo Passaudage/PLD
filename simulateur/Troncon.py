@@ -34,7 +34,21 @@ class Troncon:
         elif(coordonnees_fin.y == coordonnees_debut.y):
             if tete_presente: self.intersection_tete.branche_troncon(self, "G")
             if queue_presente: self.intersection_queue.branche_troncon(self, "D")
-            
+        
+    def ajouter_generateur(self, sens, generateur):
+        if(sens=="sens1"):
+            self.feux_sens1["D"] = generateur
+            self.feux_sens1["G"] = generateur
+            self.feux_sens1["TD"] = generateur
+            generateur.ajoute_voie_entrante(self.voies_sens1)
+            generateur.ajoute_voie_sortante(self.voies_sens2)
+        else:
+            self.feux_sens2["D"] = generateur
+            self.feux_sens2["G"] = generateur
+            self.feux_sens2["TD"] = generateur 
+            generateur.ajoute_voie_entrante(self.voies_sens2)
+            generateur.ajoute_voie_sortante(self.voies_sens1)
+                   
     def ajouter_feux(self, sens, direction, feu):
         print(str(sens))
         if(sens=="sens1"):

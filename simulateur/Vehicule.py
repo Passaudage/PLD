@@ -229,9 +229,6 @@ class Vehicule:
             if (self.voie.est_passant(self.prochaine_direction)):
                 intersection = self.voie.demander_intersection()
                 
-#                print("coordonnees : " + str(self.coordonnees))
-#                print("coordonnees suivantes : " + str(self.vehicules_suivants[0].coordonnees))
-                
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
             else:
