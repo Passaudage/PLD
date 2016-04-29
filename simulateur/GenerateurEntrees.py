@@ -2,7 +2,6 @@ import SimulationManager
 import math 
 import random
 import Vehicule
-import numpy
 
 def proba_poisson(k, freq, temps_obs):
     #Calcul du lambda correspondant
