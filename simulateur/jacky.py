@@ -94,10 +94,10 @@ def main():
     sm = charger_simulateur()
     
     liste_v = Vehicule.Vehicule.liste_voitures
-    print(liste_v)
+    #print(liste_v)
     
     toto = liste_v[0]
-    print(toto.origine)
+    #print(toto.origine)
 
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
@@ -108,13 +108,14 @@ def main():
         sm.avance_temps()
 
     toto = liste_v[0]
-    print(toto.intersection)
+    #print(toto.intersection)
 
     #~ for i in range(3000):
         #~ sm.avance_temps()
         
     for v in liste_v:
-        print(v.coordonnees)
+        #print(v.coordonnees)
+        pass
    
         
 if __name__ == '__main__':

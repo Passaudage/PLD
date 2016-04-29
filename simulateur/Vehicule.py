@@ -62,15 +62,15 @@ class Vehicule:
                 # simulateur : impulseur des incréments
                 # @author : Marcus
         """
-        print("avant : " + str(self.coordonnees))
+        #print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
-            print("après : " + str(self.coordonnees))
+            #print("après : " + str(self.coordonnees))
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
                 vehicule_suivant.notifie_temps(nb_increment, simulateur)
-        print("après : " + str(self.coordonnees))
+        #print("après : " + str(self.coordonnees))
 
     def avance_vehicule(self, incr, nb_tick):
         """
@@ -82,12 +82,12 @@ class Vehicule:
         """
         # si on existe pas encore
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
-            print("Je n'existe pas")
+            #print("Je n'existe pas")
             return
 
         # Si il faut changer de voie
         if (not self.voie.direction_possible(self.prochaine_direction)):
-            print("Ma voie est " + str(self.voie))
+            #print("Ma voie est " + str(self.voie))
             self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * 2
@@ -283,13 +283,13 @@ class Vehicule:
 
         
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
-        print("Coordonnees mises à jour")
+        #print("Coordonnees mises à jour")
 
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-        print("Delta x : "+str(dx))
-        print("Delta y : "+str(dy))
+        #print("Delta x : "+str(dx))
+        #print("Delta y : "+str(dy))
 
         dv = self.acceleration * (increment_temps / nb_ticks_sec) * 100
         dvx = dv.x
@@ -306,7 +306,7 @@ class Vehicule:
         acceleration_libre = 1 - (float(abs(self.vitesse))/(abs(vitesse_max)))**4
         acceleration_approche = 0
         
-        print("Obstacle : "+str(position_obstacle)) 
+        #print("Obstacle : "+str(position_obstacle))
 
         if position_obstacle is not None:
             acceleration_approche =  Vehicule.distance_minimale/100.0 # s_0
@@ -314,7 +314,7 @@ class Vehicule:
             acceleration_approche += (abs(self.vitesse) / 100.0 * (((self.vitesse - vitesse_obstacle)/100.0)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
             acceleration_approche /= abs(position_obstacle - self.coordonnees)/100.0
             acceleration_approche **= 2
-        print("Acceleration approche : "+str(acceleration_approche))
+        #print("Acceleration approche : "+str(acceleration_approche))
 
         val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
@@ -334,10 +334,10 @@ class Vehicule:
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
-        print ("Changement Trajectoire")
-        print (destination)
-        print (orientation_cible)
-        print ("Fin trace changement trajectoire")
+        #print ("Changement Trajectoire")
+        #print (destination)
+        #print (orientation_cible)
+        #print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
         self.origine = copy.copy(self.coordonnees)

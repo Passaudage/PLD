@@ -143,6 +143,7 @@ class Visualisateur:
 #        for intersection in self.intersections:
 #            self.dessiner_intersection(intersection)
 
+
     def dessiner_troncon(self, troncon):
 
 #        print(troncon.coordonnees_debut)
