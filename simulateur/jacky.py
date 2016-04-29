@@ -69,16 +69,24 @@ def main():
     t_ouest.creer_voie(["D"], "sens2", 50)
 
     
-    gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
-    gen_est.ajoute_voie_entrante(t_est.voies_sens1)
-    gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
-    gen_nord.ajoute_voie_entrante(t_nord.voies_sens1)
-    gen_sud.ajoute_voie_sortante(t_sud.voies_sens1)
-    gen_est.ajoute_voie_sortante(t_est.voies_sens2)
-    gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
-    gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
+    #~ gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
+    #~ gen_est.ajoute_voie_entrante(t_est.voies_sens1)
+    #~ gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
+    #~ gen_nord.ajoute_voie_entrante(t_nord.voies_sens1)
+    #~ gen_sud.ajoute_voie_sortante(t_sud.voies_sens1)
+    #~ gen_est.ajoute_voie_sortante(t_est.voies_sens2)
+    #~ gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
+    #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
     i.branche_troncon(t_sud, 'B')
     i.branche_troncon(t_est, 'D')
     i.branche_troncon(t_ouest, 'G')
     i.branche_troncon(t_nord, 'H')
+    
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    
+    print("lolo")
+    for l in sm.listener:
+        print("popo")
+        
+main()
