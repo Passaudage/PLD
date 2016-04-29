@@ -115,8 +115,12 @@ def main():
     print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
     print(toto.coordonnees.x)
 
+    for i in range(2):
+        sm.avance_temps()
+        
     for v in liste_v:
         print(v.coordonnees)
+   
         
         
 main()

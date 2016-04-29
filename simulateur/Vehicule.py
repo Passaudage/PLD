@@ -1,6 +1,7 @@
 import Coordonnees
 import Intersection
 from math import sqrt
+import copy
 
 class Vehicule:
     distance_minimale_roulant = 150 #cm
@@ -19,7 +20,7 @@ class Vehicule:
 
         #~ print(Vehicule.count)
         self.simulateur = simulateur
-        self.coordonnees = origine
+        self.coordonnees = copy.deepcopy(origine)
         self.discourtois = discourtois
         self.longueur = longueur
         self.prochaine_direction = prochaine_direction
@@ -60,12 +61,14 @@ class Vehicule:
                 # simulateur : impulseur des incréments
                 # @author : Marcus
         """
+        print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
                 vehicule_suivant.notifie_temps(nb_increment, simulateur)
+        print("après : " + str(self.coordonnees))
 
     def avance_vehicule(self, incr, nb_tick):
         """
@@ -310,8 +313,10 @@ class Vehicule:
            
         self.vitesse.x += dvx
         self.vitesse.y += dvy
+        #~ print("avant Luc : " + str(self.vehicules_suivants[0].coordonnees))
         self.coordonnees.x += dx
         self.coordonnees.y += dy
+        #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
         print ("Changement Trajectoire")
