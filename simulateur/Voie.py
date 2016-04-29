@@ -22,6 +22,7 @@ class Voie:
         self.ajouter_vehicule(clio)
 
     def direction_possible(self, direction):
+        print("Voie " + str(direction))
         return (direction in self.directions)
 
     """set de direction et probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba """
@@ -53,7 +54,7 @@ class Voie:
             return self.vehicules[self.vehicules.index(vehicule)-1]
 
     def est_passant(self, direction):
-        return self.troncon.est_passant()
+        return self.troncon.est_passant(direction, self.sens)
 
     def get_proba_voie(self):
         return self.troncon.get_proba_situation_voie(self, self.directions)

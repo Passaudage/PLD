@@ -44,7 +44,7 @@ class Coordonnees:
         """
         return self.x*c.y-self.y*c.x
 
-    def __div__(self, c): 
+    def __truediv__(self, c): 
         """
             Retourne le vecteur ayant subi une division scalaire.
         """

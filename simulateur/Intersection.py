@@ -121,10 +121,6 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_gauche = troncon
             
-            # Cree les feux et les donne aux troncons
-            self.creer_feux(1,troncon, self.entrantes, 2)
-
-            
         elif(position=='B'):
             if(self.troncon_bas != None):
                 raise Exception("Troncon deja ajoute en bas.")
@@ -134,9 +130,6 @@ class Intersection:
             
             # Ajoute le troncon
             self.troncon_bas = troncon
-            
-            # Cree les feux et les donne aux troncons
-            self.creer_feux(1,troncon, self.entrantes, 3)
             
         elif(position=='D'):
             if(self.troncon_droite != None):
@@ -148,9 +141,6 @@ class Intersection:
             # Ajoute le troncon
             self.troncon_droite = troncon
             
-            # Cree les feux et les donne aux troncons
-            self.creer_feux(2,troncon, self.entrantes, 0)
-            
         elif(position=='H'):
             if(self.troncon_haut != None):
                 raise Exception("Troncon deja ajoute en haut.")
@@ -160,14 +150,17 @@ class Intersection:
             
             # Ajoute le troncon
             self.troncon_haut = troncon
-            
-            # Cree les feux et les donne aux troncons
-            self.creer_feux(2, troncon, self.entrantes, 1)
-            
+
         else:
             raise Exception(position+" n'est pas une direction convenable.")
-    
-    def creer_feux(self, sens, troncon, voies_entrantes, offset):
+
+    def creer_feux(self):
+        self._creer_feux_troncon(1, self.troncon_bas, self.troncon_bas.voies_sens1, 3)
+        self._creer_feux_troncon(2, self.troncon_haut, self.troncon_haut.voies_sens2, 1)
+        self._creer_feux_troncon(1, self.troncon_gauche, self.troncon_gauche.voies_sens1, 2)
+        self._creer_feux_troncon(2, self.troncon_droite, self.troncon_droite.voies_sens2, 0)
+
+    def _creer_feux_troncon(self, sens, troncon, voies_entrantes, offset):
         """
             Permet d'ajouter aux voies entrantes un feu
                 # voies_entrantes : les voies entrantes
@@ -180,21 +173,22 @@ class Intersection:
             # Pour toutes les directions d'une voie entrante
             for direction in voie.directions:
                 # On choisit le bon feu
-                if(direction == 'D'):
+                if(direction == "D"):
                     index = 2+3*offset
-                elif(direction == 'G'):
+                elif(direction == "G"):
                     index = 0+3*offset
-                elif(direction == 'TD'):
+                elif(direction == "TD"):
                     index = 1+3*offset
                 # Si le feu existe 
                 if(index in self.feux.keys()):
                     feu = self.feux[index]
                 # Si le feu n'existe pas
                 else:
-                    feu = Feu.Feu(self,direction)
+                    feu = Feu.Feu(self)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)
+
                 
     def construire_chemins(self): #TODO : A corriger
         if (self.troncon_gauche == None or self.troncon_droite == None or self.troncon_haut == None or self.troncon_bas == None):
