@@ -116,9 +116,6 @@ class Visualisateur:
         self.cairo_context.translate(-largeur * 0.5, 0)
         self.cairo_context.rectangle(0, 0, largeur, longueur)
         self.cairo_context.fill()
-        
-        #self.cairo_context.arc(0, 0, 50, 0, 0)
-        
         self.cairo_context.restore()
 
         for voiture in Vehicule.Vehicule.liste_voitures:
@@ -141,11 +138,11 @@ class Visualisateur:
         self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
-
         self.cairo_context.restore()
+
         widget.queue_draw()
-        #sleep(10)
-        #exit(0)
+        sleep(10)
+        exit(0)
 
     def dessiner_voirie(self):
         
