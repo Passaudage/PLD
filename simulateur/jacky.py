@@ -101,7 +101,7 @@ def main():
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
-    for i in range(5):
+    for i in range(6):
         sm.avance_temps()
     
 
