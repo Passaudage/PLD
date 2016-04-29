@@ -77,6 +77,7 @@ class Vehicule:
         """
         # si on existe pas encore
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
+            print("Je n'existe pas")
             return
 
         # Si il faut changer de voie
@@ -99,7 +100,7 @@ class Vehicule:
                 self.intersection = None
 
                 self.prochaine_direction = "D"
-                self.direction = self.voie.direction
+                self.direction = self.voie.orientation
                 self.changer_trajectoire(self.destination, self.orientation_cible)
             # arrivée sur intersection
             elif (self.nouvelle_voie is None):
@@ -290,11 +291,14 @@ class Vehicule:
             vitesse_obstacle = self.direction * vitesse_max
 
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
-        acceleration_approche =  Vehicule.distance_minimale # s_0
-        acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
-        acceleration_approche += (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-        acceleration_approche /= abs(position_obstacle - self.coordonnees)
-        acceleration_approche **= 2
+        acceleration_approche = 0
+
+        if position_obstacle is not None:
+            acceleration_approche =  Vehicule.distance_minimale # s_0
+            acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
+            acceleration_approche += (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
+            acceleration_approche /= abs(position_obstacle - self.coordonnees)
+            acceleration_approche **= 2
         
         val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
@@ -309,18 +313,17 @@ class Vehicule:
            
         self.vitesse.x += dvx
         self.vitesse.y += dvy
-        self.coordonnees.x += dx
-        self.coordonnees.y += dy
+        self.coordonnees = Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
 
     def changer_trajectoire(self, destination, orientation_cible):
         print ("Changement Trajectoire")
         print (destination)
         print (orientation_cible)
         print ("Fin trace changement trajectoire")
-        self.orientation_cible = orientation_cible
-        self.destination = destination
-        self.origine = self.coordonnees
-        self.orientation_origine = self.direction
+        self.orientation_cible = copy.copy(orientation_cible)
+        self.destination = copy.copy(destination)
+        self.origine = copy.copy(self.coordonnees)
+        self.orientation_origine = copy.copy(self.direction)
         self.repere_trajectoire_axe_x = self.destination - self.origine
         self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x.normaliser()
         self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)

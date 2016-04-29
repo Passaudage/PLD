@@ -89,6 +89,9 @@ def main():
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     
+    print("debut voie " + str(t_est.voies_sens2[0].coordonnees_debut))
+    print("fin voie " + str(t_est.voies_sens2[0].coordonnees_fin))
+    
     
     liste_v = Vehicule.Vehicule.liste_voitures
     print(liste_v)
@@ -103,9 +106,27 @@ def main():
     #~ toto.notifie_temps(5,sm)
     for i in range(6):
         sm.avance_temps()
+
+    toto = liste_v[1]
+    print(toto.intersection)
     
+    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
+    print(toto.coordonnees.x)
+    sm.avance_temps()
+    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
+    print(toto.coordonnees.x)
+    sm.avance_temps()
+    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
+    print(toto.coordonnees.x)
+    sm.avance_temps()
+    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
+    print(toto.coordonnees.x)
+    sm.avance_temps()
+    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
+    print(toto.coordonnees.x)
 
     for v in liste_v:
         print(v.coordonnees)
+        
         
 main()
