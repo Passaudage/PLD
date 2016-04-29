@@ -208,7 +208,8 @@ class Vehicule:
         """
         if (vehicule_precedent.racine == self.racine):
             return
-        self.simulateur.del_listener(self)
+        if(self.racine == self):
+            self.simulateur.del_listener(self)
         self.set_vehicule_precedent(vehicule_precedent)
         vehicule_precedent.add_vehicule_suivant(self)
         self.propager_racine(vehicule_precedent.racine)

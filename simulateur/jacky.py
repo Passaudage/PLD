@@ -3,6 +3,7 @@ import Intersection
 import SimulationManager
 import Troncon
 import Coordonnees
+import Vehicule
 
 
 def main():
@@ -78,15 +79,26 @@ def main():
     #~ gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
     #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
-    i.branche_troncon(t_sud, 'B')
-    i.branche_troncon(t_est, 'D')
-    i.branche_troncon(t_ouest, 'G')
-    i.branche_troncon(t_nord, 'H')
+    #~ i.branche_troncon(t_sud, 'B')
+    #~ i.branche_troncon(t_est, 'D')
+    #~ i.branche_troncon(t_ouest, 'G')
+    #~ i.branche_troncon(t_nord, 'H')
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     
-    print("lolo")
-    for l in sm.listener:
-        print("popo")
+    
+    liste_v = Vehicule.Vehicule.liste_voitures
+    print(liste_v)
+    
+    toto = liste_v[-1]
+    print(toto)
+    print(toto.vehicule_precedent)
+    
+
+   # for l in sm.listeners:
+    #    print(l)
         
 main()
