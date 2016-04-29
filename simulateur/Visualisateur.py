@@ -172,6 +172,9 @@ class Visualisateur:
         self.min = None
         self.max = None
 
+        if not self.troncons:
+            raise Exception('Pas de troncons !')
+
         for troncon in self.troncons:
             if self.min is None:
                 self.min = troncon.coordonnees_debut
@@ -188,8 +191,6 @@ class Visualisateur:
 
         diff_x = self.max.x - self.min.x
         diff_y = self.max.y - self.min.y
-
-
 
         self.fact_echelle = self.taille_x / diff_x if diff_x > diff_y else self.taille_y / diff_y
 
