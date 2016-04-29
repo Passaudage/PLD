@@ -36,10 +36,19 @@ class Troncon:
             if queue_presente: self.intersection_queue.branche_troncon(self, "D")
             
     def ajouter_feux(self, sens, direction, feu):
-        if(sens=="sens1"):
+        if(sens==1):
             self.feux_sens1[direction] = feu
         else:
             self.feux_sens2[direction] = feu
+
+    def afficher_feux(self):
+        for direction in self.feux_sens1.keys():
+            print("feu sens 1 dans la direction suivante : " + direction + " est " + str(self.feux_sens1.get(direction).est_passant()))
+
+        for direction in self.feux_sens2.keys():
+            print("feu sens 2 dans la direction suivante : " + direction + " est " + str(
+                self.feux_sens2.get(direction).est_passant()))
+
 
     # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
     def creer_voie(self, directions, sens, vitesse_max):
