@@ -54,7 +54,7 @@ class Voie:
             return self.vehicules[self.vehicules.index(vehicule)-1]
 
     def est_passant(self, direction):
-        return self.troncon.est_passant()
+        return self.troncon.est_passant(direction, self.sens)
 
     def get_proba_voie(self):
         return self.troncon.get_proba_situation_voie(self, self.directions)
