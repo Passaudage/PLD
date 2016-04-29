@@ -185,7 +185,7 @@ class Intersection:
                     feu = self.feux[index]
                 # Si le feu n'existe pas
                 else:
-                    feu = Feu.Feu(self,direction)
+                    feu = Feu.Feu(self)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)

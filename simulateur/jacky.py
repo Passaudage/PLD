@@ -6,7 +6,7 @@ import Coordonnees
 import Vehicule
 
 
-def main():
+def charger_simulateur():
     longueur_troncon = 5000
     
     sm = SimulationManager.SimulationManager(5)
@@ -93,7 +93,12 @@ def main():
     
     toto = liste_v[0]
     print(toto.origine)
-    
+    return sm
+
+def main():
+
+    sm = charger_simulateur()
+
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
@@ -104,15 +109,13 @@ def main():
 
     toto = liste_v[0]
     print(toto.intersection)
-    
 
-
-    for i in range(100):
-        sm.avance_temps()
+    #~ for i in range(3000):
+        #~ sm.avance_temps()
         
     for v in liste_v:
         print(v.coordonnees)
    
         
-        
-main()
+if __name__ == '__main__':
+    main()
