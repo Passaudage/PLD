@@ -52,50 +52,50 @@ class Intersection:
         # Map voiture/Liste de points restant à passer
         self.chemins_voitures = {}
         
-	def get_proba(self, troncon, direction):
-		if(troncon == self.troncon_gauche):
-			somme = proba_haut+proba_droite+proba_bas
-			if(direction =="D"):
-				return proba_bas/somme
-			elif(direction =="G"):
-				return proba_haut/somme
-			elif(direction == "TD"):
-				return proba_droite/somme
-			else:
-				raise Exception("La direction n'est pas valide.")
-		elif(troncon == self.troncon_droite):
-			somme = proba_gauche+proba_haut+proba_bas
-			if(direction =="D"):
-				return proba_haut/somme
-			elif(direction =="G"):
-				return proba_bas/somme
-			elif(direction == "TD"):
-				return proba_gauche/somme
-			else:
-				raise Exception("La direction n'est pas valide.")
-		elif(troncon == self.troncon_haut):
-			somme = proba_gauche+proba_droite+proba_bas
-			if(direction =="D"):
-				return proba_gauche/somme
-			elif(direction =="G"):
-				return proba_droite/somme
-			elif(direction == "TD"):
-				return proba_bas/somme
-			else:
-				raise Exception("La direction n'est pas valide.")	
-		elif(troncon == self.troncon_bas):
-			somme = proba_gauche+proba_droite+proba_haut
-			if(direction =="D"):
-				return proba_droite/somme
-			elif(direction =="G"):
-				return proba_gauche/somme
-			elif(direction == "TD"):
-				return proba_haut/somme
-			else:
-				raise Exception("La direction n'est pas valide.")
-		else:
-			raise Exception("Le troncon n'existe pas dans l'intersection.")
-		
+    def get_proba(self, troncon, direction):
+        if(troncon == self.troncon_gauche):
+            somme = proba_haut+proba_droite+proba_bas
+            if(direction =="D"):
+                return proba_bas/somme
+            elif(direction =="G"):
+                return proba_haut/somme
+            elif(direction == "TD"):
+                return proba_droite/somme
+            else:
+                raise Exception("La direction n'est pas valide.")
+        elif(troncon == self.troncon_droite):
+            somme = proba_gauche+proba_haut+proba_bas
+            if(direction =="D"):
+                return proba_haut/somme
+            elif(direction =="G"):
+                return proba_bas/somme
+            elif(direction == "TD"):
+                return proba_gauche/somme
+            else:
+                raise Exception("La direction n'est pas valide.")
+        elif(troncon == self.troncon_haut):
+            somme = proba_gauche+proba_droite+proba_bas
+            if(direction =="D"):
+                return proba_gauche/somme
+            elif(direction =="G"):
+                return proba_droite/somme
+            elif(direction == "TD"):
+                return proba_bas/somme
+            else:
+                raise Exception("La direction n'est pas valide.")   
+        elif(troncon == self.troncon_bas):
+            somme = proba_gauche+proba_droite+proba_haut
+            if(direction =="D"):
+                return proba_droite/somme
+            elif(direction =="G"):
+                return proba_gauche/somme
+            elif(direction == "TD"):
+                return proba_haut/somme
+            else:
+                raise Exception("La direction n'est pas valide.")
+        else:
+            raise Exception("Le troncon n'existe pas dans l'intersection.")
+        
     def branche_troncon(self, troncon, position):
         """
             Permet de connecter un troncon a l'intersection
