@@ -207,6 +207,21 @@ class Vehicule:
 		self.vehicule_precedent.supp_vehicule_suivant(self)
 		self.vehicule_precedent = None
 		self.propager_racine(self)
+		
+	def change_arbre(self, vehicule_precedent):
+		"""
+			Se décroche de l'arbre actuel et se rattache à un autre sur un élément
+				# vehicule_precedent : élément sur lequel on se rattache
+				# @author : Marcus
+		"""
+		if (vehicule_precedent.racine == self.racine):
+			return
+		if (self.vehicule_precedent is None):
+			self.simulateur.del_listener(self)
+		self.vehicule_precedent.supp_vehicule_suivant(self)
+		self.set_vehicule_precedent(vehicule_precedent)
+		vehicule_precedent.add_vehicule_suivant(self)
+		self.propager_racine(vehicule_precedent.racine)
 
 	def propager_racine(self, racine):
 		"""
@@ -218,12 +233,6 @@ class Vehicule:
 		if (len(self.vehicules_suivants) != 0):
 			for vehicule_suivant in self.vehicules_suivants:
 				vehicule_suivant.propager_racine(racine)
-
-	def change_arbre(self, vehicule_precedent):
-		self.vehicule_precedent.supp_vehicule_suivant(self)
-		self.set_vehicule_precedent(vehicule_precedent)
-		vehicule_precedent.set_vehicules_suivants(self)
-		self.propager_racine(vehicule_precedent.racine)
 
 	def set_vehicule_precedent(self, vehicule):
 		self.vehicule_precedent = vehicule
