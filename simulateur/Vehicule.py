@@ -31,7 +31,7 @@ class Vehicule:
         self.direction = direction
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)
-        self.acceleration = Coordonnees.Coordonnees(0, 0)
+        self.val_acceleration = 0
 
         # non initialisés
         self.racine = None
@@ -291,15 +291,10 @@ class Vehicule:
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         #print("Coordonnees mises à jour")
 
-        dx = self.vitesse.x * increment_temps / nb_ticks_sec
-        dy = self.vitesse.y * increment_temps / nb_ticks_sec
+        dx = (increment_temps / nombre_ticks_seconde) * self.vitesse.x
+        dy = (increment_temps / nombre_ticks_seconde) * self.vitesse.y 
 
-        #print("Delta x : "+str(dx))
-        #print("Delta y : "+str(dy))
-
-        dv = self.acceleration * (increment_temps / nb_ticks_sec) * 100
-        dvx = dv.x
-        dvy = dv.y
+        dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
             
         vitesse_max = self.voie.vitesse_max
 
@@ -322,19 +317,16 @@ class Vehicule:
             acceleration_approche **= 2
         #print("Acceleration approche : "+str(acceleration_approche))
 
-        val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
+        self.val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
-        self.acceleration.x = val_acceleration * self.direction.x
-        self.acceleration.y = val_acceleration * self.direction.y
-            
+        valvitesse = self.direction * self.vitesse + dv
         projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
         orientation = orientation.normaliser()
         self.direction = orientation
-           
-        self.vitesse.x += dvx
-        self.vitesse.y += dvy
+        
+        self.vitesse = self.direction * valvitesse
         #~ print("avant Luc : " + str(self.vehicules_suivants[0].coordonnees))
         self.coordonnees = Coordonnees.Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
