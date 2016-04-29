@@ -64,6 +64,7 @@ class Vehicule:
         print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
+            print("après : " + str(self.coordonnees))
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
@@ -85,6 +86,7 @@ class Vehicule:
 
         # Si il faut changer de voie
         if (not self.voie.direction_possible(self.prochaine_direction)):
+            print("Ma voie est " + str(self.voie))
             self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * 2
@@ -287,8 +289,9 @@ class Vehicule:
         print("Delta x : "+str(dx))
         print("Delta y : "+str(dy))
 
-        dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.x
-        dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.y
+        dv = self.acceleration * (increment_temps / nb_ticks_sec)
+        dvx = dv.x
+        dvy = dv.y
             
         vitesse_max = self.voie.vitesse_max
 
@@ -298,8 +301,10 @@ class Vehicule:
         if vitesse_obstacle is None:
             vitesse_obstacle = self.direction * vitesse_max
 
-        acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
+        acceleration_libre = 1 - (min(abs(self.vitesse), Vehicule.deceleration_conf * vitesse_max)/abs(vitesse_max))**4
         acceleration_approche = 0
+        
+        print("Obstacle : "+str(position_obstacle)) 
 
         if position_obstacle is not None:
             acceleration_approche =  Vehicule.distance_minimale # s_0
@@ -307,7 +312,8 @@ class Vehicule:
             acceleration_approche += (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
             acceleration_approche /= abs(position_obstacle - self.coordonnees)
             acceleration_approche **= 2
-        
+        print("Acceleration approche : "+str(acceleration_approche))
+
         val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
         self.acceleration.x = val_acceleration * self.direction.x
