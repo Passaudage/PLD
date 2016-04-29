@@ -313,6 +313,10 @@ class Vehicule:
         self.coordonnees.y += dy
 
     def changer_trajectoire(self, destination, orientation_cible):
+        print ("Changement Trajectoire")
+        print (destination)
+        print (orientation_cible)
+        print ("Fin trace changement trajectoire")
         self.orientation_cible = orientation_cible
         self.destination = destination
         self.origine = self.coordonnees
