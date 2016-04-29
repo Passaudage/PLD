@@ -69,7 +69,7 @@ class Troncon:
             proba_sum = 0
             proba_entree = 0
             for direction in directions :
-                proba_entree = proba_entree + self.proba_dir_sens1[direction]/(len(self.dir_voies_sens1[direction]) +1) #la nouvelle voie n'est pas encore dans la liste
+                proba_entree = proba_entree + self.proba_dir_sens1.get(direction)/(len(self.dir_voies_sens1.get(direction)) +1) #la nouvelle voie n'est pas encore dans la liste
                 proba_dir[direction] = self.proba_dir_sens1.get(direction)
                 proba_sum = proba_sum + self.proba_dir_sens1.get(direction)
 
@@ -93,7 +93,7 @@ class Troncon:
             proba_sum = 0
             proba_entree = 0
             for direction in directions:
-                proba_entree = proba_entree + self.proba_dir_sens2[direction]/(len(self.dir_voies_sens2[direction]) + 1)  # la nouvelle voie n'est pas encore dans la liste
+                proba_entree = proba_entree + self.proba_dir_sens2.get(direction)/(len(self.dir_voies_sens2.get(direction)) + 1)  # la nouvelle voie n'est pas encore dans la liste
                 proba_dir[direction] = self.proba_dir_sens2.get(direction)
                 proba_sum = proba_sum + self.proba_dir_sens2.get(direction)
 
