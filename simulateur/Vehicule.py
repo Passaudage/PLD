@@ -284,8 +284,8 @@ class Vehicule:
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
         acceleration_approche =  Vehicule.distance_minimale # s_0
         acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
-        acceleration_approche +=  (abs(self.vitesse) * (vitesse_obstacle - self.vitesse)*self.direction)/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
-        acceleration_approche /= abs(position_obstacle - self.position)
+        acceleration_approche +=  (abs(self.vitesse) * ((vitesse_obstacle - self.vitesse)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche /= abs(position_obstacle - self.coordonnees)
         acceleration_approche **= 2
         
         val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
