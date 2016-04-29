@@ -110,7 +110,7 @@ class Vehicule:
                 print("coordonnees " +str(self.coordonnees))
                 print("direction " +str(self.direction))
 
-                self.prochaine_direction = "K"
+                self.prochaine_direction = "G"
                 self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
            
@@ -298,10 +298,10 @@ class Vehicule:
 
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         if(position_obstacle is None):
-            self.coordonnees = self.coordonnees + self.direction*0.5
+            self.coordonnees = self.coordonnees + self.direction*1
             return
         distance = abs(position_obstacle-self.coordonnees)
-        distance_possible = min (distance , 0.5)
+        distance_possible = min (distance , 1)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         
     def changer_trajectoire(self, destination, orientation_cible):

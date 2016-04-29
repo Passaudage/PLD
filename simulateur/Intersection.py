@@ -315,6 +315,10 @@ class Intersection:
         vehicule_blocant = None
 
         for vehicule in self.vehicules :
+
+            if vehicule.coordonnees == coord:
+                continue
+
             cur_pos = vehicule.coordonnees # position du nez de la voiture
             cur_dir = vehicule.direction # orientation de la voiture
             cur_long = vehicule.longueur
