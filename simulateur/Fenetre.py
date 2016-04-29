@@ -13,7 +13,7 @@ class Fenetre(Gtk.Window):
             # @author : Quentin
     """
 
-    taille_x = 800
+    taille_x = 600
     taille_y = 600
 
     def __init__(self):

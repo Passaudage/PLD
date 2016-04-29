@@ -104,19 +104,18 @@ class Visualisateur:
             Cette  méthode dessine l'ensemble des voitures
         """
         
-        self.cairo_context.set_source_rgba(1, 0, 160, 0.8)
+        self.cairo_context.set_source_rgba(1, 0, 0, 0.8)
         coord_test = self.echelle(Coordonnees.Coordonnees(6050, 7100))
         orientation = self.rotation
         longueur = self.fact_echelle * 350
         largeur = self.largeur_vehicule
         self.cairo_context.save()
-        self.cairo_context.translate(coord_test.x,self.position)
+        self.cairo_context.translate(coord_test.x, self.position)
         self.cairo_context.rotate(orientation) # en degrés
         self.cairo_context.translate(-largeur * 0.5, 0)
         self.cairo_context.rectangle(0, 0, largeur, longueur)
         self.cairo_context.fill()
         
-
         #self.cairo_context.arc(0, 0, 50, 0, 0)
         
         self.cairo_context.restore()
@@ -130,16 +129,13 @@ class Visualisateur:
         longueur = self.fact_echelle * voiture.longueur
         orientation = voiture.direction
 
-        self.cairo_context.save()
-
         print("dessin voiture !")
-        
-        self.cairo_context.translate(coord.x - (self.largeur_vehicule * 0.5), coord.y)
+
+        self.cairo_context.save()
+        self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(orientation) # en degrés
-
+        self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
-
-        #self.cairo_context.arc(0, 0, 50, 0, 0)
         self.cairo_context.fill()
 
         self.cairo_context.restore()
@@ -186,17 +182,47 @@ class Visualisateur:
         self.cairo_context.set_line_width(largeur_voie*0.15)
         self.cairo_context.stroke()
 
-        dash = [self.fact_echelle * 100, self.fact_echelle * 30]
+        dash = [self.fact_echelle * 200, self.fact_echelle * 150]
         distance = (vec_fin - vec_debut).__abs__()
         ndash = distance / (self.fact_echelle * 100)
 
-#        for voie in troncon.voies_sens1[0:1]:
-#            self.cairo_context.move_to(vec_debut.x + largeur_voie, vec_debut.y)
-#            self.cairo_context.rel_line_to( vec_fin.x - vec_debut.x,
-#                                            vec_fin.y - vec_debut.y)
-#            self.cairo_context.set_dash(dash, ndash)
-#            self.cairo_context.set_line_width(largeur_voie*0.15)
-#            self.cairo_context.stroke()
+        numero_voie = 1
+        ajout_x = 0
+        ajout_y = 0
+
+        if troncon.voies_sens1[0].orientation.y == 0:
+            # horizontal
+            ajout_y = largeur_voie
+        else:
+            ajout_x = largeur_voie
+
+        self.cairo_context.set_source_rgba(150, 150, 150, 1)
+
+        for voie in troncon.voies_sens1[1:]:
+
+            self.cairo_context.move_to( vec_debut.x + numero_voie * ajout_x,
+                                        vec_debut.y + numero_voie * ajout_y)
+            self.cairo_context.rel_line_to( vec_fin.x - vec_debut.x,
+                                            vec_fin.y - vec_debut.y)
+            self.cairo_context.set_dash(dash, ndash)
+            self.cairo_context.set_line_width(largeur_voie*0.1)
+            self.cairo_context.stroke()
+
+            numero_voie += 1
+
+        numero_voie = 1
+
+        for voie in troncon.voies_sens2[1:]:
+
+            self.cairo_context.move_to( vec_debut.x - numero_voie * ajout_x,
+                                        vec_debut.y - numero_voie * ajout_y)
+            self.cairo_context.rel_line_to( vec_fin.x - vec_debut.x,
+                                            vec_fin.y - vec_debut.y)
+            self.cairo_context.set_dash(dash, ndash)
+            self.cairo_context.set_line_width(largeur_voie*0.1)
+            self.cairo_context.stroke()
+
+            numero_voie += 1
 
         self.cairo_context.restore()
 
