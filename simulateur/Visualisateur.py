@@ -231,6 +231,7 @@ class Visualisateur:
             for direction in ['G', 'TD', 'D']:
 
                 if direction in sens:
+                    feu = sens[direction]
 
                     if horizontal:
                         position_feu_x = fonction(vec_debut.x, vec_fin.x)
@@ -239,7 +240,10 @@ class Visualisateur:
                         position_feu_x = vec_debut.x + coeff * (largeur_voie * (0.5 + numero_voie))
                         position_feu_y = fonction(vec_debut.y, vec_fin.y)
 
-                    self.cairo_context.set_source_rgba(0.1, 1, 0.1, 1)
+                    if feu.est_passant():
+                        self.cairo_context.set_source_rgba(0.1, 0.8, 0.1, 1)
+                    else:
+                        self.cairo_context.set_source_rgba(0.8, 0.1, 0.1, 1)
                     self.cairo_context.arc(position_feu_x ,position_feu_y,
                                             rayon_feu * self.fact_echelle, 0, 2*math.pi)
                     self.cairo_context.fill()
@@ -250,21 +254,7 @@ class Visualisateur:
 
 
     def dessiner_intersection(self, intersection):
-        # dessin des feux
-
-        offset_feu = 10
-
-        # pour chaque voie, on vérifie s'il existe un feu dans la direction 'G', 'D', 'H', 'B'
-        # et on accumule la réponse
-
-        directions = []
-
-        for voie in intersection.entrantes:
-            directions.extend([direction for direction in voie.directions if not direction in directions])
-
-        self.cairo_context.restore()
-
-        time.sleep(10)
+        return
 
     def echelle(self, vec):
         return (vec - self.min) * self.fact_echelle
