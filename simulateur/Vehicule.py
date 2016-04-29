@@ -7,8 +7,8 @@ class Vehicule:
     distance_minimale_roulant = 150 #cm
     distance_minimale = 30 #cm
     proportion_discourtois = 0.8
-    acceleration_max = 100 # cm.s^(-2)
-    deceleration_conf = 300 # cm.s^{-2}
+    acceleration_max = 1 # m.s^(-2)
+    deceleration_conf = 3 # m.s^{-2}
     temps_reaction = 1.5 # secondes
     count = 0
     v_max = 50
@@ -289,7 +289,7 @@ class Vehicule:
         print("Delta x : "+str(dx))
         print("Delta y : "+str(dy))
 
-        dv = self.acceleration * (increment_temps / nb_ticks_sec)
+        dv = self.acceleration * (increment_temps / nb_ticks_sec) * 100
         dvx = dv.x
         dvy = dv.y
             
@@ -301,16 +301,16 @@ class Vehicule:
         if vitesse_obstacle is None:
             vitesse_obstacle = self.direction * vitesse_max
 
-        acceleration_libre = 1 - (min(abs(self.vitesse), Vehicule.deceleration_conf * vitesse_max)/abs(vitesse_max))**4
+        acceleration_libre = 1 - (float(abs(self.vitesse))/(abs(vitesse_max)))**4
         acceleration_approche = 0
         
         print("Obstacle : "+str(position_obstacle)) 
 
         if position_obstacle is not None:
-            acceleration_approche =  Vehicule.distance_minimale # s_0
-            acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
-            acceleration_approche += (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
-            acceleration_approche /= abs(position_obstacle - self.coordonnees)
+            acceleration_approche =  Vehicule.distance_minimale/100.0 # s_0
+            acceleration_approche +=  abs(self.vitesse)/100.0 * Vehicule.temps_reaction # += v_aT 
+            acceleration_approche += (abs(self.vitesse) / 100.0 * (((self.vitesse - vitesse_obstacle)/100.0)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
+            acceleration_approche /= abs(position_obstacle - self.coordonnees)/100.0
             acceleration_approche **= 2
         print("Acceleration approche : "+str(acceleration_approche))
 
