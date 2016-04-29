@@ -270,8 +270,16 @@ class Vehicule:
 
         
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
+        print(self.vitesse)
+        print(self.coordonnees)
+        print(increment_temps)
+        print(nb_ticks_sec)
+
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
+
+        print(dx)
+        print(dy)
 
         dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.x
         dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.y
