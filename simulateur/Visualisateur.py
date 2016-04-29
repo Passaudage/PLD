@@ -123,7 +123,7 @@ class Visualisateur:
         longueur = self.fact_echelle * voiture.longueur
         orientation = voiture.direction
 
-        print("Dessin voiture :" + str(coord))
+#        print("Dessin voiture :" + str(coord))
         
         angle = math.atan2(orientation.y, orientation.x)
         self.cairo_context.save()
@@ -220,17 +220,34 @@ class Visualisateur:
 
         # dessin des feux
 
-        rayon_feu = 100
+        rayon_feu = 80
 
-        if troncon.dir_voies_sens1["G"]:
+#        print("Troncon : " + str(troncon.feux_sens1))
 
-            if horizontal:
-                self.cairo_context.set_source_rgba(0.1, 1, 0.1, 1)
-                self.cairo_context.arc( max(vec_debut.x, vec_fin.x), vec_debut.y,
-                                        rayon_feu * self.fact_echelle, 0, 2*math.pi)
-                self.cairo_context.fill()
+        numero_voie = 0
+
+        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [max, min], [1, -1]):
+
+            for direction in ['G', 'TD', 'D']:
+
+                if direction in sens:
+
+                    if horizontal:
+                        position_feu_x = fonction(vec_debut.x, vec_fin.x)
+                        position_feu_y = vec_debut.y - coeff * (largeur_voie * (0.5 + numero_voie))
+                    else:
+                        position_feu_x = vec_debut.x + coeff * (largeur_voie * (0.5 + numero_voie))
+                        position_feu_y = fonction(vec_debut.y, vec_fin.y)
+
+                    self.cairo_context.set_source_rgba(0.1, 1, 0.1, 1)
+                    self.cairo_context.arc(position_feu_x ,position_feu_y,
+                                            rayon_feu * self.fact_echelle, 0, 2*math.pi)
+                    self.cairo_context.fill()
+
+                    numero_voie += 1
 
         self.cairo_context.restore()
+
 
     def dessiner_intersection(self, intersection):
         # dessin des feux
@@ -247,7 +264,6 @@ class Visualisateur:
 
         self.cairo_context.restore()
 
-        print("END")
         time.sleep(10)
 
     def echelle(self, vec):
