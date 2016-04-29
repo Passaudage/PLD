@@ -331,9 +331,9 @@ class Intersection:
 
             # colinéaires ?
 
-            epsilon = 0.01
+            epsilon = 0.1
 
-            if abs(direction * cur_dir) > 1 - epsilon: # TODO prendre en compte un epsilon
+            if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
                 # trajectoires colinéaires
 
                 if direction.x != 0:
@@ -370,13 +370,18 @@ class Intersection:
 
             else:
                 # trajectoires non colinéaires
+                # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
+                
+                print("=" + str(coord))
                 if direction.x != 0:
-                    ratio = direction.y / direction.x
+                    ratio = (1.0 * direction.y) / direction.x
+                    print(direction)
+                    print(ratio)
                     gamma = (coord.x + ratio * (cur_pos.y - coord.y) - cur_pos.x) / (cur_dir.x - ratio * cur_dir.y)
                     mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
                 else:
                     # direction est normé, donc on est certain que (direction.y != 0)
-                    ratio = direction.x / direction.y
+                    ratio = (1.0 * direction.x) / direction.y
                     gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
                     mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
 
