@@ -55,9 +55,6 @@ class Voie:
     def est_passant(self, direction):
         return self.troncon.get_feu(direction, self.sens).est_passant()
 
-    def get_proba_dir(self, direction):
-        return self.proba_dir.get(direction)
-
     def get_proba_voie(self):
         return self.troncon.get_proba_situation_voie(self, self.directions)
 
