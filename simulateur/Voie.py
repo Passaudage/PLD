@@ -22,6 +22,7 @@ class Voie:
         self.ajouter_vehicule(clio)
 
     def direction_possible(self, direction):
+        print("Voie " + str(direction))
         return (direction in self.directions)
 
     """set de direction et probabilité de prendre cette direction en fonction des troncons accessibles et de leur proba """

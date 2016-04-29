@@ -98,6 +98,7 @@ def charger_simulateur():
     
     toto = liste_v[0]
     print(toto.origine)
+    return sm
 
 def main():
 
@@ -114,8 +115,8 @@ def main():
     toto = liste_v[0]
     print(toto.intersection)
 
-    for i in range(100):
-        sm.avance_temps()
+    #~ for i in range(3000):
+        #~ sm.avance_temps()
         
     for v in liste_v:
         print(v.coordonnees)
