@@ -145,19 +145,25 @@ class Vehicule:
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
 
+        print("obstacle : " +str(vehicule_blocant))
         
         # si l'obstacle est un feu rouge
         if (vehicule_blocant == "feu"):
+            print("obstacle feu")
             self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
             return
         # Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
         #aucun obstacle
         if (vehicule_blocant is None):
+            print("obstacle nul")
             self.decrochage_arbre()
             self.mettre_coordonnees_a_jour(incr, nb_tick, None, None)
         #nouvel obstacle
         elif (self.vehicule_precedent != vehicule_blocant):
+            print("nouvel obstacle")
             self.change_arbre(vehicule_blocant)
+            self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
+        else:
             self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
             
 
@@ -222,6 +228,10 @@ class Vehicule:
             # feu_vert
             if (self.voie.est_passant(self.prochaine_direction)):
                 intersection = self.voie.demander_intersection()
+                
+                print("coordonnees : " + str(self.coordonnees))
+                print("coordonnees suivantes : " + str(self.vehicules_suivants[0].coordonnees))
+                
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
             else:
@@ -300,7 +310,10 @@ class Vehicule:
         if(position_obstacle is None):
             self.coordonnees = self.coordonnees + self.direction*1
             return
-        distance = abs(position_obstacle-self.coordonnees)
+        distance = (position_obstacle-self.coordonnees)
+        if(self.direction*distance <= 0):
+            return
+        distance = abs(distance)
         distance_possible = min (distance , 1)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         

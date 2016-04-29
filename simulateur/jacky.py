@@ -80,9 +80,9 @@ def charger_simulateur():
     #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ 
 
     
@@ -104,17 +104,16 @@ def main():
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
-    for i in range(3000):
+    for i in range(10000):
         sm.avance_temps()
 
     toto = liste_v[0]
     #print(toto.intersection)
 
-    #~ for i in range(3000):
-        #~ sm.avance_temps()
+
         
     for v in liste_v:
-        #print(v.coordonnees)
+        print(v.coordonnees)
         pass
    
         
