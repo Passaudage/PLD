@@ -288,8 +288,8 @@ class Vehicule:
         
         val_acceleration = Vehicule.acceleration_max * (acceleration_approche - (acceleration_libre/abs(position_obstacle - self.coordonnees))**2)
         
-        self.acceleration.x = val_acceleration * self.orientation.x
-        self.acceleration.y = val_acceleration * self.orientation.y
+        self.acceleration.x = val_acceleration * self.direction.x
+        self.acceleration.y = val_acceleration * self.direction.y
             
         projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b

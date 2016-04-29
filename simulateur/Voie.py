@@ -15,7 +15,7 @@ class Voie:
         self.sens = sens
 
     def creer_vehicule(self, simulateur, discourtois, longueur):
-        prochaine_direction = "TD"
+        prochaine_direction = self.directions[0]
 
         dernier_vehicule = self.dernier_vehicule()
         clio = Vehicule.Vehicule(simulateur, discourtois, Coordonnees.Coordonnees(0,0), longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, dernier_vehicule)
