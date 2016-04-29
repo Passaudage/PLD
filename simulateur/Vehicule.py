@@ -289,6 +289,9 @@ class Vehicule:
         if self.intersection != None:
             Vehicule.vitesse_max = Intersection.Intersection.vitesse_max
 
+        if vitesse_obstacle is None:
+            vitesse_obstacle = self.direction * vitesse_max
+
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
         acceleration_approche =  Vehicule.distance_minimale # s_0
         acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
