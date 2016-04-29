@@ -56,8 +56,8 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
-        print("coordonnees " +str(self.coordonnees))
-        print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
+       # print("coordonnees " +str(self.coordonnees))
+       # print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
