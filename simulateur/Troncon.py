@@ -4,7 +4,7 @@ import Voie
 import Vehicule
 
 class Troncon:
-    const_largeur_voie = 350 #centimètres, largeur standard d'une voie en France
+    const_largeur_voie = 350 # centimètres
 
     def __init__(self, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
         self.intersection_tete = intersection_tete #en haut ou à droite
