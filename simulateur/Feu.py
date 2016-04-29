@@ -28,7 +28,7 @@ class Feu():
         # Couleur actuel de l'axe passé en parametre
         self.passant = True
         
-        print ("FEU : " + str(self.couleur_direction))
+        print ("FEU : " + str(self.passant))
 
     def notifie_temps(self, temps, simulation_manager):
         """
