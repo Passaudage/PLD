@@ -33,12 +33,12 @@ class Troncon:
         coordonnees_queue = self.intersection_queue.coordonnees_debut
         coordonnees_tete = self.intersection_tete.coordonnees_debut
         if(coordonnees_queue.x == coordonnees_tete.x):
-			self.intersection_tete.branche_troncon(self, B)
-			self.intersection_queue.branche_troncon(self, H)
-		elif(coordonnees_queue.y == coordonnees_tete.y):
-			self.intersection_tete.branche_troncon(self, G)
-			self.intersection_queue.branche_troncon(self, D)
-			
+            self.intersection_tete.branche_troncon(self, B)
+            self.intersection_queue.branche_troncon(self, H)
+        elif(coordonnees_queue.y == coordonnees_tete.y):
+            self.intersection_tete.branche_troncon(self, G)
+            self.intersection_queue.branche_troncon(self, D)
+            
     def ajouter_feux(self, sens, direction, feu):
         if(sens==1):
             if(direction == 'D'):
