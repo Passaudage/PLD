@@ -43,7 +43,7 @@ class GenerateurEntrees:
     def ajoute_voie_sortante(self, voies):
         self._voies_sortantes = voies
         for voie in self._voies_sortantes:
-            self._voies_sortantes_proba[voie] = voie.proba_entree
+            self._voies_sortantes_proba[voie] = voie.get_proba_voie()
             print(voie)
             print(voie.proba_entree)
 

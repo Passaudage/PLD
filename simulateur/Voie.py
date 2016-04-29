@@ -3,7 +3,7 @@ import Coordonnees
 
 class Voie:
 
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, vitesse_max):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, vitesse_max, sens):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
@@ -11,9 +11,8 @@ class Voie:
         self.vehicules = []
         self.orientation = (coordonnees_fin-coordonnees_debut).normaliser()
         self.directions = directions
-        self.proba_entree = proba_entree
-        self.proba_dir = proba_dir
         self.vitesse_max = vitesse_max
+        self.sens = sens
 
     def creer_vehicule(self, simulateur, discourtois, longueur):
         prochaine_direction = "droite"
@@ -56,6 +55,9 @@ class Voie:
 
     def get_proba_dir(self, direction):
         return self.proba_dir.get(direction)
+
+    def get_proba_voie(self):
+        return self.troncon.get_proba_situation_voie(self, self.directions)
 
     def demander_intersection(self):
         return self.troncon.get_intersection(self)
