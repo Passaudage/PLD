@@ -78,11 +78,6 @@ def main():
     gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
     gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
-    i.branche_troncon(t_sud, 'B')
-    i.branche_troncon(t_est, 'D')
-    i.branche_troncon(t_ouest, 'G')
-    i.branche_troncon(t_nord, 'H')
-
     #~ print("Intersection")
     #~ print(i.coordonnees)
     #~ print("Troncon bas")

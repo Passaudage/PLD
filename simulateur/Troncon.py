@@ -29,20 +29,18 @@ class Troncon:
 
         for direction in self.directions_sens2:
             self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue, 20)
-        
+        tete_presente = queue_presente = True 
         if(self.intersection_queue==None):
-			queue_presente = False
-			coordonnees_queue = self.intersection_queue.coordonnees
-		elif(self.intersection_tete==None):
-			tete_presente = False
-			coordonnees_tete = self.intersection_tete.coordonnees
+            queue_presente = False
+        elif(self.intersection_tete==None):
+            tete_presente = False
 			
-        if(coordonnees_queue.x == coordonnees_tete.x):
-            if tete_presente: self.intersection_tete.branche_troncon(self, B) 
-            if queue_presente: self.intersection_queue.branche_troncon(self, H)
-        elif(coordonnees_queue.y == coordonnees_tete.y):
-            if tete_presente: self.intersection_tete.branche_troncon(self, G)
-            if queue_presente: self.intersection_queue.branche_troncon(self, D)
+        if(coordonnees_debut.x == coordonnees_fin.x):
+            if tete_presente: self.intersection_tete.branche_troncon(self, "B") 
+            if queue_presente: self.intersection_queue.branche_troncon(self, "H")
+        elif(coordonnees_fin.y == coordonnees_debut.y):
+            if tete_presente: self.intersection_tete.branche_troncon(self, "G")
+            if queue_presente: self.intersection_queue.branche_troncon(self, "D")
             
     def ajouter_feux(self, sens, direction, feu):
         if(sens==1):
