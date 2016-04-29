@@ -24,11 +24,6 @@ class Troncon:
         self.feux_sens1 = {}
         self.feux_sens2 = {}
 
-        for direction in self.directions_sens1 :
-            self.dir_feu_sens1[direction] = Feu.Feu(self.intersection_tete, 20)
-
-        for direction in self.directions_sens2:
-            self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue, 20)
         tete_presente = queue_presente = True 
         if(self.intersection_queue==None):
             queue_presente = False
@@ -113,11 +108,11 @@ class Troncon:
 
         return voies_possibles
 
-    def get_feu(self, direction, sens):
+    def est_passant(self, direction, sens):
         if(sens == "sens1") :
-            return self.dir_feu_sens1[direction]
+            return self.feux_sens1[direction].est_passant()
         if (sens == "sens2"):
-            return self.dir_feu_sens2[direction]
+            return self.feux_sens2[direction].est_passant()
 
     def get_intersection(self, voie):
         if(voie in self.voies_sens1):
