@@ -325,7 +325,7 @@ class Vehicule:
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
         orientation = orientation.normaliser()
-        self.orientation = orientation
+        self.direction= orientation
            
         self.vitesse.x += dvx
         self.vitesse.y += dvy
@@ -354,6 +354,7 @@ class Vehicule:
 
         self.poly_a = ratio / dest_nv_rep.x
         self.poly_b = orientation_nv_rep.y - 2 * ratio
+        print("a : " + str(self.poly_a) + " b : " + str(self.poly_b))
 
     """
    def calculer_trajet_max(self, coordonnees_destination):
