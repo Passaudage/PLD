@@ -19,8 +19,6 @@ class Troncon:
         self.voies_sens2 = []
         self.dir_voies_sens1 = {"G": [], "TD": [], "D": []}
         self.dir_voies_sens2 = {"G": [], "TD": [], "D": []}
-        self.dir_feu_sens1 = {}
-        self.dir_feu_sens2 = {}
         self.feux_sens1 = {}
         self.feux_sens2 = {}
 
@@ -29,7 +27,9 @@ class Troncon:
             queue_presente = False
         elif(self.intersection_tete==None):
             tete_presente = False
-			
+
+
+
         if(coordonnees_debut.x == coordonnees_fin.x):
             if tete_presente: self.intersection_tete.branche_troncon(self, "B") 
             if queue_presente: self.intersection_queue.branche_troncon(self, "H")
