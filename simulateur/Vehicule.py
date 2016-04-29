@@ -229,8 +229,8 @@ class Vehicule:
             if (self.voie.est_passant(self.prochaine_direction)):
                 intersection = self.voie.demander_intersection()
                 
-                print("coordonnees : " + str(self.coordonnees))
-                print("coordonnees suivantes : " + str(self.vehicules_suivants[0].coordonnees))
+#                print("coordonnees : " + str(self.coordonnees))
+#                print("coordonnees suivantes : " + str(self.vehicules_suivants[0].coordonnees))
                 
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
@@ -275,7 +275,8 @@ class Vehicule:
             return
         if (self.vehicule_precedent is None):
             self.simulateur.del_listener(self)
-        self.vehicule_precedent.supp_vehicule_suivant(self)
+        else:
+            self.vehicule_precedent.supp_vehicule_suivant(self)
         self.set_vehicule_precedent(vehicule_precedent)
         vehicule_precedent.add_vehicule_suivant(self)
         self.propager_racine(vehicule_precedent.racine)
@@ -314,7 +315,7 @@ class Vehicule:
         if(self.direction*distance <= 0):
             return
         distance = abs(distance)
-        distance_possible = min (distance , 1)
+        distance_possible = min (distance - 30 , 1)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         
     def changer_trajectoire(self, destination, orientation_cible):

@@ -331,7 +331,9 @@ class Intersection:
 
             # colinéaires ?
 
-            if abs(direction * cur_dir) == 1: # TODO prendre en compte un epsilon
+            epsilon = 0.01
+
+            if abs(direction * cur_dir) > 1 - epsilon: # TODO prendre en compte un epsilon
                 # trajectoires colinéaires
 
                 if direction.x != 0:
@@ -359,19 +361,24 @@ class Intersection:
                         cur_intersection = cur_pos
                     else:
                         # de nez à dos (on enlève la longueur de la voiture de devant)
-                        cur_intersection = cur_pos - cur_dir * cur_long
+                        cur_intersection = vehicule.donner_arriere()
+
+                    if (cur_intersection - coord) *  direction <= 0:
+                        # Une voiture est en arrière de l'autre
+                        cur_intersection = None
+
 
             else:
                 # trajectoires non colinéaires
                 if direction.x != 0:
                     ratio = direction.y / direction.x
                     gamma = (coord.x + ratio * (cur_pos.y - coord.y) - cur_pos.x) / (cur_dir.x - ratio * cur_dir.y)
-                    mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
+                    mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
                 else:
                     # direction est normé, donc on est certain que (direction.y != 0)
                     ratio = direction.x / direction.y
                     gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
-                    mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
+                    mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
 
                 if (gamma > 0 and gamma < vehicule.longueur) and (mu > 0):
                     cur_intersection = coord + direction * mu
