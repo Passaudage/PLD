@@ -84,15 +84,6 @@ class Vehicule:
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
             #print("Je n'existe pas")
             return
-
-        # Si il faut changer de voie
-        if (not self.voie.direction_possible(self.prochaine_direction)):
-            #print("Ma voie est " + str(self.voie))
-            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
-            direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * 2
-            trajet = direction_virage + distance_avant
-            self.destination = trajet + self.coordonnees
             
             
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
@@ -141,6 +132,15 @@ class Vehicule:
                 self.nouvelle_voie = None
                 self.direction = self.voie.direction
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
+                
+        # Si il faut changer de voie
+        if (not self.voie.direction_possible(self.prochaine_direction)):
+            #print("Ma voie est " + str(self.voie))
+            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
+            direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
+            distance_avant = self.direction * 2
+            trajet = direction_virage + distance_avant
+            self.destination = trajet + self.coordonnees
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
