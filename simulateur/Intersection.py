@@ -181,7 +181,6 @@ class Intersection:
                             0 si D, 1 si H, 2 si G et 3 si B
                 # @author : Bonfante
         """
-        raise Exception("ACADCDECAACEAGABGEEAEDCDECAACAAGACBGA")
         # Pour toutes les voies entrantes
         for voie in voies_entrantes:
             # Pour toutes les directions d'une voie entrante
