@@ -75,7 +75,7 @@ class Vehicule:
 				# @author : Marcus
 		"""
 		# si on existe pas encore
-		if (self.vehicule_precedent.coordonnees == self.coordonnees):
+		if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
 			return
 
 		# Si il faut changer de voie
