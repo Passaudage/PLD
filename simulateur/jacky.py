@@ -98,6 +98,7 @@ def charger_simulateur():
     
     toto = liste_v[0]
     print(toto.origine)
+    return sm
 
 def main():
 
