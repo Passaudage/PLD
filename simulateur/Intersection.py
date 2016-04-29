@@ -302,30 +302,82 @@ class Intersection:
     def retirer_vehicule(self, vehicule):
         self.vehicules.remove(vehicule)
 
-    def donner_obstacle(self, coordonnees, direction):
-        coordonnee_blocage = None
-        dist = 0
+    def donner_obstacle(self, coord, direction):
+        coordonnees_blocage = None
+        distance_blocage = 0
         vehicule_blocant = None
-        a = direction.y / direction.x
-        b = coordonnees.y - a*coordonnees.x
-
-        #vrai si direction va vers la droite
-        droite = Coordonnees.Coordonnees(1,0)*direction > 0
 
         for vehicule in self.vehicules :
-            ar = vehicule.donner_arriere()
-            av = vehicule.coordonnees
-            a2 = (av.y-ar.y) / (av.x-ar.x)
-            b2 = av.y - a*av.x
-            x = (b - b2) / (a2 - a)
-            if (((droite and direction.x<=x)or(not droite and x<=direction.x)) and ((av.x<=x and x<=ar.x) or (ar.x<=x and x<=av.x))):
-                nouvelle_co = Coordonnees.Coordonnees(x,a*x+b)
-                if (coordonnee_blocage == None or dist > abs(nouvelle_co-coordonnees)):
-                    vehicule_blocant = vehicule
-                    coordonnee_blocage = nouvelle_co
-                    dist = abs(nouvelle_co-coordonnees)
+            cur_pos = vehicule.coordonnees # position du nez de la voiture
+            cur_dir = vehicule.direction # orientation de la voiture
+            cur_long = vehicule.longueur
 
-        return (coordonnee_blocage,vehicule_blocant)
+            cur_intersection = None
+            sens_opposes = None
+
+            gamma = None
+            mu = None
+
+            # colinéaires ?
+
+            if abs(direction * cur_dir) == 1: # TODO prendre en compte un epsilon
+                # trajectoires colinéaires
+
+                if direction.x != 0:
+                    mu = (cur_pos.x - coord.x) / direction.x
+
+                    if cur_pos.y == (coord.y + mu * direction.y):
+                        # support confondu
+                        sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
+
+                    # sinon trajectoires strictement parallèles
+
+                else:
+                    # direction est normé, donc on est certain que (direction.y != 0)
+                    mu = (cur_pos.y - coord.y) / direction.y
+
+                    if cur_pos.x == (coord.x + mu * direction.x):
+                        # support confondu
+                        sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
+                    # sinon trajectoires strictement parallèles
+
+                if sens_opposes is not None:
+
+                    if sens_opposes:
+                        # en sens opposés : de nez à nez
+                        cur_intersection = cur_pos
+                    else:
+                        # de nez à dos (on enlève la longueur de la voiture de devant)
+                        cur_intersection = cur_pos - cur_dir * cur_long
+
+            else:
+                # trajectoires non colinéaires
+                if direction.x != 0:
+                    ratio = direction.y / direction.x
+                    gamma = (coord.x + ratio * (cur_pos.y - coord.y) - cur_pos.x) / (cur_dir.x - ratio * cur_dir.y)
+                    mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
+                else:
+                    # direction est normé, donc on est certain que (direction.y != 0)
+                    ratio = direction.x / direction.y
+                    gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
+                    mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
+
+                if (gamma > 0 and gamma < vehicule.longueur) and (mu > 0):
+                    cur_intersection = coord + direction * mu
+
+            if cur_intersection is not None:
+                # on a trouvé une intersection
+                # on prend l'intersection la plus proche
+
+                distance = abs(cur_intersection - coord)
+
+                if (vehicule_blocant is None) or (distance < distance_blocage):
+                    vehicule_blocant = vehicule
+                    distance_blocage = distance
+                    coordonnees_blocage = cur_intersection
+
+
+        return (coordonnees_blocage, vehicule_blocant)
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")

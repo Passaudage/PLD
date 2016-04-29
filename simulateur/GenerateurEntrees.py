@@ -65,7 +65,7 @@ class GenerateurEntrees:
             longueur = random.normalvariate(428, 50)
             aggressivite = (random.random() < Vehicule.Vehicule.proportion_discourtois)
 
-            somme_probas = 0;
+            somme_probas = 0
             for voie in self._voies_sortantes:
                 somme_probas += voie.get_proba_voie()
             probas = [ voie.get_proba_voie() / somme_probas for voie in self._voies_sortantes ]
