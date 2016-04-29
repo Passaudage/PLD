@@ -204,6 +204,7 @@ class Vehicule:
         else:
             # feu_vert
             if (self.voie.est_passant(self.prochaine_direction)):
+                print("yolo")
                 intersection = self.voie.demander_intersection()
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
