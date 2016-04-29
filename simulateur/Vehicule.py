@@ -290,8 +290,9 @@ class Vehicule:
         print("Delta x : "+str(dx))
         print("Delta y : "+str(dy))
 
-        dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.x
-        dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.y
+        dv = self.acceleration * (increment_temps / nb_ticks_sec)
+        dvx = dv.x
+        dvy = dv.y
             
         vitesse_max = self.voie.vitesse_max
 
@@ -303,6 +304,8 @@ class Vehicule:
 
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
         acceleration_approche = 0
+        
+        print("Obstacle : "+str(position_obstacle)) 
 
         if position_obstacle is not None:
             acceleration_approche =  Vehicule.distance_minimale # s_0
@@ -310,7 +313,8 @@ class Vehicule:
             acceleration_approche += (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
             acceleration_approche /= abs(position_obstacle - self.coordonnees)
             acceleration_approche **= 2
-        
+        print("Acceleration approche : "+str(acceleration_approche))
+
         val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
         self.acceleration.x = val_acceleration * self.direction.x
