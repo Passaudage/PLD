@@ -137,11 +137,11 @@ class Vehicule:
         #aucun obstacle
         if (vehicule_blocant is None):
             self.decrochage_arbre()
+            self.mettre_coordonnees_a_jour(incr, nb_tick, None, None)
         #nouvel obstacle
         elif (self.vehicule_precedent != vehicule_blocant):
             self.change_arbre(vehicule_blocant)
-
-        self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
+            self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
             
 
     def trouver_obstacle(self):

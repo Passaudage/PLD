@@ -84,20 +84,20 @@ def charger_simulateur():
     #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ 
-    print("debut voie " + str(t_est.voies_sens2[0].coordonnees_debut))
-    print("fin voie " + str(t_est.voies_sens2[0].coordonnees_fin))
+
     
+   
+    return sm
+
+def main():
+
+    sm = charger_simulateur()
     
     liste_v = Vehicule.Vehicule.liste_voitures
     print(liste_v)
     
     toto = liste_v[0]
     print(toto.origine)
-    return sm
-
-def main():
-
-    sm = charger_simulateur()
 
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
