@@ -58,7 +58,8 @@ class Coordonnees:
 
     def normaliser(self):
         c = abs(self)
-        return Coordonnees(self.x/c, self.y/c)
+        if(c == 0): return Coordonnees(0,0)
+        else: return Coordonnees(self.x/c, self.y/c)
 
     def __str__(self): 
         """
