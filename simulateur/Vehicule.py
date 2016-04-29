@@ -13,18 +13,19 @@ class Vehicule:
     v_max = 50
     liste_voitures = []
 
-    def __init__(self, simulateur, discourtois, coordonnees, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
+    def __init__(self, simulateur, discourtois, longueur, voie, prochaine_direction, origine, destination, direction, vehicule_precedent):
         Vehicule.count += 1
         Vehicule.liste_voitures.append(self)
 
         #~ print(Vehicule.count)
         self.simulateur = simulateur
-        self.coordonnees = coordonnees
+        self.coordonnees = origine
         self.discourtois = discourtois
         self.longueur = longueur
         self.prochaine_direction = prochaine_direction
         self.voie = voie
         self.origine = origine
+        self.destination = destination
         self.direction = direction
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)

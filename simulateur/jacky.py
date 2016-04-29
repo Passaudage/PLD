@@ -94,14 +94,10 @@ def main():
     print(liste_v)
     
     toto = liste_v[0]
+    print(toto.origine)
     
     toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
-    toto.notifie_temps(5,sm)
+
     
 
     for v in liste_v:
