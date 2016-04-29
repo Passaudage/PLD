@@ -17,7 +17,7 @@ def charger_simulateur():
     gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen_est)
     gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_nord)
+   # sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
