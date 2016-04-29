@@ -276,8 +276,8 @@ class Vehicule:
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-        print(dx)
-        print(dy)
+        print("Delta x : "+str(dx))
+        print("Delta y : "+str(dy))
 
         dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.x
         dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.y
