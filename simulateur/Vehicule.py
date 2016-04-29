@@ -270,10 +270,7 @@ class Vehicule:
 
         
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
-        print(self.vitesse)
-        print(self.coordonnees)
-        print(increment_temps)
-        print(nb_ticks_sec)
+        print("Coordonnees mises à jour")
 
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
@@ -295,7 +292,7 @@ class Vehicule:
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
         acceleration_approche =  Vehicule.distance_minimale # s_0
         acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
-        acceleration_approche +=  (abs(self.vitesse) * ((vitesse_obstacle - self.vitesse)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche +=  (abs(self.vitesse) * ((self.vitesse - vitesse_obstacle!)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
         acceleration_approche /= abs(position_obstacle - self.coordonnees)
         acceleration_approche **= 2
         
