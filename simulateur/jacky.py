@@ -93,12 +93,18 @@ def main():
     liste_v = Vehicule.Vehicule.liste_voitures
     print(liste_v)
     
-    toto = liste_v[-1]
-    print(toto)
-    print(toto.vehicule_precedent)
+    toto = liste_v[0]
+    
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
+    toto.notifie_temps(5,sm)
     
 
-   # for l in sm.listeners:
-    #    print(l)
+    for v in liste_v:
+        print(v.coordonnees)
         
 main()

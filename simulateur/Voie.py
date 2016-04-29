@@ -50,7 +50,7 @@ class Voie:
         if(self.vehicules.index(vehicule)==0):
             return None
         else:
-            return self.vehicules.index(vehicule)-1
+            return self.vehicules[self.vehicules.index(vehicule)-1]
 
     def est_passant(self, direction):
         return self.troncon.get_feu(direction, self.sens).est_passant()
