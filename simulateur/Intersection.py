@@ -171,14 +171,13 @@ class Intersection:
         # Pour toutes les voies entrantes
         for voie in voies_entrantes:
             # Pour toutes les directions d'une voie entrante
-            feu = None
             for direction in voie.directions:
                 # On choisit le bon feu
-                if(direction == 'D'):
+                if(direction == "D"):
                     index = 2+3*offset
-                elif(direction == 'G'):
+                elif(direction == "G"):
                     index = 0+3*offset
-                elif(direction == 'TD'):
+                elif(direction == "TD"):
                     index = 1+3*offset
                 # Si le feu existe 
                 if(index in self.feux.keys()):
@@ -189,6 +188,7 @@ class Intersection:
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)
+
                 
     def construire_chemins(self): #TODO : A corriger
         if (self.troncon_gauche == None or self.troncon_droite == None or self.troncon_haut == None or self.troncon_bas == None):
