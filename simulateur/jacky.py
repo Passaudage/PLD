@@ -85,10 +85,10 @@ def main():
     #~ i.branche_troncon(t_nord, 'H')
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
-    
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    #~ 
     print("debut voie " + str(t_est.voies_sens2[0].coordonnees_debut))
     print("fin voie " + str(t_est.voies_sens2[0].coordonnees_fin))
     
@@ -97,25 +97,12 @@ def main():
     print(liste_v)
     
 
-    toto = liste_v[1]
+    toto = liste_v[0]
     print(toto.intersection)
     
-    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
-    print(toto.coordonnees.x)
-    sm.avance_temps()
-    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
-    print(toto.coordonnees.x)
-    sm.avance_temps()
-    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
-    print(toto.coordonnees.x)
-    sm.avance_temps()
-    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
-    print(toto.coordonnees.x)
-    sm.avance_temps()
-    print(toto.vehicule_precedent is not None and toto.vehicule_precedent.coordonnees == toto.coordonnees)
-    print(toto.coordonnees.x)
 
-    for i in range(2):
+
+    for i in range(100):
         sm.avance_temps()
         
     for v in liste_v:
