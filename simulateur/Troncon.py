@@ -28,8 +28,6 @@ class Troncon:
         elif(self.intersection_tete==None):
             tete_presente = False
 
-
-
         if(coordonnees_debut.x == coordonnees_fin.x):
             if tete_presente: self.intersection_tete.branche_troncon(self, "B") 
             if queue_presente: self.intersection_queue.branche_troncon(self, "H")
@@ -39,25 +37,18 @@ class Troncon:
             
     def ajouter_feux(self, sens, direction, feu):
         if(sens==1):
-            if(direction == 'D'):
-                self.feux_sens1['D'] = feu
-            elif(direction == 'G'):
-                self.feux_sens1['G'] = feu
-            elif(direction == 'TD'):
-                self.feux_sens1['TD'] = feu
-            else:
-                raise Exception("Mauvaise destination.")
+            self.feux_sens1[direction] = feu
+        else:
+            self.feux_sens2[direction] = feu
 
-        elif(sens==2):
-            if(direction == 'D'):
-                self.feux_sens2['D'] = feu
-            elif(direction == 'G'):
-                self.feux_sens2['G'] = feu
-            elif(direction == 'TD'):
-                self.feux_sens2['TD'] = feu
-            else:
-                raise Exception("Mauvaise destination.")
-                
+    def afficher_feux(self):
+        for direction in self.feux_sens1.keys():
+            print("feu sens 1 dans la direction suivante : " + direction + " est " + str(self.feux_sens1.get(direction).est_passant()))
+
+        for direction in self.feux_sens2.keys():
+            print("feu sens 2 dans la direction suivante : " + direction + " est " + str(
+                self.feux_sens2.get(direction).est_passant()))
+
 
     # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
     def creer_voie(self, directions, sens, vitesse_max):

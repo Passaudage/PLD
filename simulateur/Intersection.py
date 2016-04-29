@@ -160,6 +160,19 @@ class Intersection:
         self._creer_feux_troncon(1, self.troncon_gauche, self.troncon_gauche.voies_sens1, 2)
         self._creer_feux_troncon(2, self.troncon_droite, self.troncon_droite.voies_sens2, 0)
 
+        print("feux du troncon bas")
+        self.troncon_bas.afficher_feux()
+
+        print("feux du troncon haut")
+        self.troncon_haut.afficher_feux()
+
+        print("feux du troncon gauche")
+        self.troncon_gauche.afficher_feux()
+
+        print("feux du troncon droite")
+        self.troncon_droite.afficher_feux()
+
+
     def _creer_feux_troncon(self, sens, troncon, voies_entrantes, offset):
         """
             Permet d'ajouter aux voies entrantes un feu
