@@ -317,7 +317,7 @@ class Vehicule:
         self.vitesse.x += dvx
         self.vitesse.y += dvy
         #~ print("avant Luc : " + str(self.vehicules_suivants[0].coordonnees))
-        self.coordonnees = Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
+        self.coordonnees = Coordonnees.Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
