@@ -56,6 +56,8 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
+        print("coordonnees " +str(self.coordonnees))
+        print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
@@ -120,8 +122,6 @@ class Vehicule:
                 print("arrivée sur intersection")
 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
-                
-                print("orientation de la voie après intersection " + str(self.nouvelle_voie.orientation))
                 self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
@@ -340,10 +340,10 @@ class Vehicule:
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
-        #print ("Changement Trajectoire")
-        #print (destination)
-        #print (orientation_cible)
-        #print ("Fin trace changement trajectoire")
+        print ("Changement Trajectoire")
+        print (destination)
+        print (orientation_cible)
+        print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
         self.origine = copy.copy(self.coordonnees)
