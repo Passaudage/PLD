@@ -4,6 +4,7 @@ from math import sqrt
 import copy
 
 class Vehicule:
+    
     distance_minimale_roulant = 150 #cm
     distance_minimale = 30 #cm
     proportion_discourtois = 0.8
@@ -49,9 +50,6 @@ class Vehicule:
             self.simulateur.add_listener(self)
 
 
-    def changeDirection(self, x, y):
-        self.direction = Coordonnees.Coordonnees(x, y)
-
     def avancerBoucle(pasTemporel):
         return False
 
@@ -95,7 +93,8 @@ class Vehicule:
             distance_avant = self.direction * 2
             trajet = direction_virage + distance_avant
             self.destination = trajet + self.coordonnees
-
+            
+            
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
         if ((self.coordonnees - self.destination) * self.direction >= 0):
 
@@ -108,6 +107,8 @@ class Vehicule:
                 self.intersection = None
                 
                 print("sortie de l'intersection")
+                print("coordonnees " +str(self.coordonnees))
+                print("direction " +str(self.direction))
 
                 self.prochaine_direction = "K"
                 self.direction = self.voie.orientation
@@ -119,15 +120,23 @@ class Vehicule:
                 self.intersection.ajouter_vehicule(self)
                 self.voie.supprimer_vehicule(self)
                 
+                
                 print("arrivée sur intersection")
-
+                print("coordonnees " +str(self.coordonnees))
+                print("direction " +str(self.direction))
+                
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
+                self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
                 self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
                 self.nouvelle_voie.ajouter_vehicule_avant(self, self.vehicule_precedent)
                 self.voie = self.nouvelle_voie
+                
+                print("fin de changement de voie")
+                print("coordonnees " +str(self.coordonnees))
+                print("direction " +str(self.direction))
 
                 self.nouvelle_voie = None
                 self.direction = self.voie.direction
@@ -287,7 +296,20 @@ class Vehicule:
     def donner_arriere(self):
         return (self.coordonnees - self.direction * self.longueur)
 
+    def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
+        if(position_obstacle is None):
+            self.coordonnees = self.coordonnees + self.direction*0.5
+            return
+        distance = abs(position_obstacle-self.coordonnees)
+        distance_possible = min (distance , 0.5)
+        self.coordonnees = self.coordonnees + self.direction*distance_possible
         
+    def changer_trajectoire(self, destination, orientation_cible):
+        self.destination = destination
+        self.orientation_cible = orientation_cible
+
+
+    """
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         #print("Coordonnees mises à jour")
 
@@ -335,6 +357,7 @@ class Vehicule:
         print ("Changement Trajectoire")
         print (destination)
         print (orientation_cible)
+        print (self.direction)
         print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
@@ -354,6 +377,7 @@ class Vehicule:
         self.poly_b = orientation_nv_rep.y - 2 * ratio
         print("a : " + str(self.poly_a) + " b : " + str(self.poly_b))
 
+    """
     """
    def calculer_trajet_max(self, coordonnees_destination):
        distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
