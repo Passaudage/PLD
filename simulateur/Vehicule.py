@@ -285,7 +285,7 @@ class Vehicule:
         acceleration_approche =  acceleration_approche + (abs(self.vitesse) * (abs(vitesse_obstacle - self.vitesse)))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
         acceleration_approche **= 2
         
-        val_acceleration = Vehicule.acceleration_max * (acceleration_approche - (acceleration_libre_x/abs(position_obstacle - self.coordonnees))**2)
+        val_acceleration = Vehicule.acceleration_max * (acceleration_approche - (acceleration_libre/abs(position_obstacle - self.coordonnees))**2)
         
         self.acceleration.x = val_acceleration * self.orientation.x
         self.acceleration.y = val_acceleration * self.orientation.y
