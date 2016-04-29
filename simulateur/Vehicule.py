@@ -295,7 +295,7 @@ class Vehicule:
         dy = (increment_temps / nombre_ticks_seconde) * self.vitesse.y 
 
         dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
-            
+        
         vitesse_max = self.voie.vitesse_max
 
         if self.intersection != None:
