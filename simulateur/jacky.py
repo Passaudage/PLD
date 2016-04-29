@@ -41,7 +41,6 @@ def charger_simulateur():
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
  
-    print ("LaDoLaRéDoRéMiDoLALADoMiLaSolLaSiSolMi")
     t_sud.creer_voie(["G"], "sens1", 50)
     t_sud.creer_voie(["TD"], "sens1", 50)
     t_sud.creer_voie(["D"], "sens1", 50)
