@@ -38,10 +38,10 @@ class Voie:
         self.vehicules.remove(vehicule)
 
     def dernier_vehicule(self):
-		if(self.vehicules):
-			return self.vehicules[-1]
-		else:
-			return None
+        if(self.vehicules):
+            return self.vehicules[-1]
+        else:
+            return None
 
     def setTroncon(self, troncon):
         self.troncon = troncon
