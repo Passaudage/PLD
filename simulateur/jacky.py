@@ -11,7 +11,7 @@ def charger_simulateur():
     
     sm = SimulationManager.SimulationManager(5)
     gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_sud)
+    #sm.add_listener(gen_sud)
     gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     #sm.add_listener(gen_ouest)
     gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
@@ -91,6 +91,26 @@ def charger_simulateur():
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ 
 
     
@@ -98,6 +118,11 @@ def charger_simulateur():
     return sm
 
 def main():
+
+    a = Coordonnees.Coordonnees(0,1)
+    b = a
+    a = a + a
+    print(a + b)
 
     sm = charger_simulateur()
     

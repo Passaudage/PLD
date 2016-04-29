@@ -108,10 +108,22 @@ class Vehicule:
             # arrivée sur intersection
             elif (self.nouvelle_voie is None):
                 self.intersection = self.voie.demander_intersection()
+                
+                #si on sort du modèle, on se détâche de tout.
+                if(self.intersection is None):
+                    self.decrochage_arbre()
+                    self.voie.supprimer_vehicule(self)
+                    self.coordonnees = Coordonnees.Coordonnees(-1,-1)
+                    self.simulateur.del_listener(self)
+                    self.voie = None
+                    for suiv in self.vehicules_suivants:
+                        suiv.decrochage_arbre()
+                    return
+                    
+                
                 self.intersection.ajouter_vehicule(self)
                 self.voie.supprimer_vehicule(self)
-                
-                
+                                
                 print("arrivée sur intersection")
                 print("coordonnees " +str(self.coordonnees))
                 print("direction " +str(self.direction))
@@ -122,7 +134,10 @@ class Vehicule:
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
-                self.nouvelle_voie.ajouter_vehicule_avant(self, self.vehicule_precedent)
+                if(self.vehicule_precedent is None):
+                    self.nouvelle_voie.ajouter_vehicule(self)
+                else:
+                    self.nouvelle_voie.ajouter_vehicule_avant(self, self.vehicule_precedent)
                 self.voie = self.nouvelle_voie
                 
                 print("fin de changement de voie")
@@ -130,11 +145,11 @@ class Vehicule:
                 print("direction " +str(self.direction))
 
                 self.nouvelle_voie = None
-                self.direction = self.voie.direction
+                self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
                 
-        # Si il faut changer de voie
-        if (not self.voie.direction_possible(self.prochaine_direction)):
+        # Si il faut changer de voie, à faire une seule fois
+        if (not self.voie.direction_possible(self.prochaine_direction) and self.nouvelle_voie is None):
             #print("Ma voie est " + str(self.voie))
             self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
@@ -178,6 +193,9 @@ class Vehicule:
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
+            # s'il n'y a aucun véhicule sur la voie voulue
+            if(len(self.nouvelle_voie.vehicules)==0):
+                return (None,None)
             x = None
             y = None
             bv = None
