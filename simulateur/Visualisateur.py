@@ -222,6 +222,8 @@ class Visualisateur:
 
         self.cairo_context.restore()
 
+        
+
     def echelle(self, vec):
         return (vec - self.min) * self.fact_echelle
 

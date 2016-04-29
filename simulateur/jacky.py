@@ -69,7 +69,7 @@ def charger_simulateur():
     t_ouest.creer_voie(["TD"], "sens2", 50)
     t_ouest.creer_voie(["D"], "sens2", 50)
 
-    i.creer_feux()
+    
     #~ gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
     #~ gen_est.ajoute_voie_entrante(t_est.voies_sens1)
     #~ gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
@@ -78,6 +78,11 @@ def charger_simulateur():
     #~ gen_est.ajoute_voie_sortante(t_est.voies_sens2)
     #~ gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
     #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
+    
+    #~ i.branche_troncon(t_sud, 'B')
+    #~ i.branche_troncon(t_est, 'D')
+    #~ i.branche_troncon(t_ouest, 'G')
+    #~ i.branche_troncon(t_nord, 'H')
     
     t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
     #~ t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
@@ -93,7 +98,6 @@ def charger_simulateur():
     
     toto = liste_v[0]
     print(toto.origine)
-    return sm
 
 def main():
 
@@ -110,8 +114,8 @@ def main():
     toto = liste_v[0]
     print(toto.intersection)
 
-    #~ for i in range(3000):
-        #~ sm.avance_temps()
+    for i in range(100):
+        sm.avance_temps()
         
     for v in liste_v:
         print(v.coordonnees)
