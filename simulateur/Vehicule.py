@@ -100,7 +100,7 @@ class Vehicule:
                 self.intersection = None
 
                 self.prochaine_direction = "D"
-                self.direction = self.voie.direction
+                self.direction = self.voie.orientation
                 self.changer_trajectoire(self.destination, self.orientation_cible)
             # arrivée sur intersection
             elif (self.nouvelle_voie is None):
