@@ -80,7 +80,7 @@ class Vehicule:
 
 		# Si il faut changer de voie
 		if (not self.voie.direction_possible(self.prochaine_direction)):
-			self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction)[0]
+			self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
 			direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
 			distance_avant = self.direction * 2
 			trajet = direction_virage + distance_avant
@@ -121,6 +121,11 @@ class Vehicule:
 		coordonnees_obstacle = None
 		(coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
 
+		
+		# si l'obstacle est un feu rouge
+		if (vehicule_blocant == "feu"):
+			self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
+			return
 		# Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
 		#aucun obstacle
 		if (vehicule_blocant is None):
@@ -129,11 +134,7 @@ class Vehicule:
 		elif (self.vehicule_precedent != vehicule_blocant):
 			self.change_arbre(vehicule_blocant)
 
-		# si l'obstacle est un feu rouge
-		if (vehicule_blocant == "feu"):
-			self.mettre_coordonnees_a_jour(incr, nb_tick, 0, coordonnees_obstacle)
-		else:
-			self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
+		self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
 			
 
 	def trouver_obstacle(self):
@@ -147,14 +148,27 @@ class Vehicule:
 
 		# si on est en changement de voie
 		elif (not self.voie.direction_possible(self.prochaine_direction)):
-			av = self.coordonnees.y / self.coordonnees.x
-			bv = self.coordonnees.y - av * self.coordonnees.x
-			for vehicule in self.nouvelle_voie.vehicules:
-				ac = self.nouvelle_voie.coordonnees_debut.y / self.nouvelle_voie.coordonnees_debut.x
+			x = None
+			if (self.direction.x == 0):
+				x = self.coordonnees.x
+			else:
+				av = self.direction.y / self.direction.x
+				bv = self.coordonnees.y - av * self.coordonnees.x
+			if(self.nouvelle_voie.orientation.x == 0):
+				x = self.nouvelle_voie.coordonnees_debut.x
+			else:
+				ac = self.nouvelle_voie.orientation.y / self.nouvelle_voie.orientation.x
 				bc = self.nouvelle_voie.coordonnees_debut.y - ac * self.nouvelle_voie.coordonnees_debut.x
+			if(x is None):
 				x = (bv - bc) / (ac - av)
+			if(self.direction.x != 0):
+				y = av * x + bv
+			elif(self.nouvelle_voie.orientation.x != 0):
 				y = ac * x + bc
-				p = Coordonnees.Coordonnees(x, y)
+			else:
+				pass
+			p = Coordonnees.Coordonnees(x, y)
+			for vehicule in self.nouvelle_voie.vehicules:			
 				# si l'arrière du véhicule est devant le point d'insertion voulu, on passe
 				if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
 						> abs(p - self.nouvelle_voie.coordonnees_debut)):
