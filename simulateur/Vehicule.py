@@ -273,8 +273,8 @@ class Vehicule:
         dx = self.vitesse.x * increment_temps / nb_ticks_sec
         dy = self.vitesse.y * increment_temps / nb_ticks_sec
 
-        dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(1,0))
-        dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * (self.direction * Coordonnees.Coordonnees(0,1))
+        dvx = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.x
+        dvy = abs(self.acceleration) * increment_temps / nb_ticks_sec * self.direction.y
             
         vitesse_max = self.voie.vitesse_max
 
@@ -282,12 +282,13 @@ class Vehicule:
             Vehicule.vitesse_max = Intersection.Intersection.vitesse_max
 
         acceleration_libre = 1 - (abs(self.vitesse)/abs(vitesse_max))**4
-        acceleration_approche =  Vehicule.distance_minimale
-        acceleration_approche =  acceleration_approche + abs(self.vitesse) * Vehicule.temps_reaction
-        acceleration_approche =  acceleration_approche + (abs(self.vitesse) * (abs(vitesse_obstacle - self.vitesse)))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche =  Vehicule.distance_minimale # s_0
+        acceleration_approche +=  abs(self.vitesse) * Vehicule.temps_reaction # += v_aT 
+        acceleration_approche +=  (abs(self.vitesse) * (vitesse_obstacle - self.vitesse)*self.direction)/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf))
+        acceleration_approche /= abs(position_obstacle - self.position)
         acceleration_approche **= 2
         
-        val_acceleration = Vehicule.acceleration_max * (acceleration_approche - (acceleration_libre/abs(position_obstacle - self.coordonnees))**2)
+        val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
         self.acceleration.x = val_acceleration * self.direction.x
         self.acceleration.y = val_acceleration * self.direction.y
