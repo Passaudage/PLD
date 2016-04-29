@@ -23,7 +23,7 @@ class Visualisateur:
 
     def __init__(self, simulateur, taille_x, taille_y):
 
-        self.grain = 5 # en ticks
+        self.grain = 1 # en ticks
         self.simulateur = simulateur
         self.zone_dessin = Gtk.DrawingArea()
         self.taille_x = taille_x
@@ -74,7 +74,7 @@ class Visualisateur:
     def boucle_simulation(self):
         
         while not self.terminated:
-            for i in range(1):
+            for i in range(10):
                 self.simulateur.avance_temps()
                 self.rotation += 0.001 * 90 * 2 / 3.14159
                 if self.position > 550 or self.position < 50:
@@ -105,7 +105,7 @@ class Visualisateur:
             Cette  méthode dessine l'ensemble des voitures
         """
         
-        self.cairo_context.set_source_rgba(1, 0, 0, 1)
+        self.cairo_context.set_source_rgba(0.1, 0, 0.8, 1)
         coord_test = self.echelle(Coordonnees.Coordonnees(6050, 7100))
         orientation = self.rotation
         longueur = self.fact_echelle * 350
@@ -117,6 +117,8 @@ class Visualisateur:
         self.cairo_context.rectangle(0, 0, largeur, longueur)
         self.cairo_context.fill()
         self.cairo_context.restore()
+
+        self.cairo_context.set_source_rgba(1, 0, 0, 1)
 
         for voiture in Vehicule.Vehicule.liste_voitures:
             self.dessiner_voiture(voiture)
