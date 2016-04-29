@@ -20,6 +20,7 @@ class Fenetre(Gtk.Window):
         Gtk.Window.__init__(self)
         self.set_title("Visualisation")
         self.set_default_size(Fenetre.taille_x, Fenetre.taille_y)
+        self.set_position(Gtk.WindowPosition.CENTER)
 
         self.connect('delete-event', self.quit)
         
@@ -35,9 +36,11 @@ class Fenetre(Gtk.Window):
         self.sim = main.charger_simulateur()
 
         self.visual = Visualisateur.Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
+        self.visual.demarrer_simulation()
 
     def quit(self, a, b):
         # voir la doc, je ne sais pas à quoi correspondent ces deux arguments...
+        self.visual.notifier_fin()
         Gtk.main_quit(a, b)
 
 fenetre = Fenetre()

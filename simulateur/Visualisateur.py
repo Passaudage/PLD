@@ -8,6 +8,7 @@ import Intersection
 import Vehicule
 import Troncon
 import threading
+import time
 
 class Visualisateur: 
     """
@@ -19,7 +20,7 @@ class Visualisateur:
 
     def __init__(self, simulateur, taille_x, taille_y):
 
-        self.grain = 10 # en ticks
+        self.grain = 5 # en ticks
         self.simulateur = simulateur
         self.zone_dessin = Gtk.DrawingArea()
         self.taille_x = taille_x
@@ -33,7 +34,7 @@ class Visualisateur:
         self.troncons = []
 
         for listener in self.simulateur.listeners:
-            if type(listener) is Intersection:
+            if type(listener) is Intersection.Intersection:
                 self.intersections.append(listener)
                 
                 if listener.troncon_gauche is not None:
@@ -46,20 +47,23 @@ class Visualisateur:
                     self.troncons.append(listener.troncon_bas)
 
         self.definir_limite()
+        self.rotation = 0
+        self.position = 300
+        self.position_dec = True
 
     def notifier_fin(self):
         self.terminated = True
 
     def demarrer_simulation(self):
-        self.thread_sim = threading.Thread(None, boucle_simulation)
+        self.thread_sim = threading.Thread(None, self.boucle_simulation)
         self.thread_sim.start()
         
         return
 
-        self.thread_sim = threading.Thread(None, boucle_simulation)
+        self.thread_sim = threading.Thread(None, self.boucle_simulation)
         self.thread_sim.start()
 
-        self.thread_dessin = threading.Thread(None, boucle_dessiner)
+        self.thread_dessin = threading.Thread(None, self.boucle_dessiner)
         self.thread_dessin.start()
 
 
@@ -68,9 +72,13 @@ class Visualisateur:
         while not self.terminated:
             for i in range(1):
                 self.simulateur.avance_temps()
+                self.rotation += 0.001 * 90 * 2 / 3.14159
+                if self.position > 550 or self.position < 50:
+                    self.position_dec = not self.position_dec
+                self.position = self.position - 2 if self.position_dec else self.position + 2
 
-            self.dessiner_tout()
-            threading.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
+            #self.dessiner_tout()
+            time.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
 
 
     def boucle_dessiner(self):
@@ -79,6 +87,8 @@ class Visualisateur:
             self.dessiner_tout()
 
     def dessiner_tout(self, widget, cairo_context):
+        #print("Dessin")
+
         self.cairo_context = cairo_context
 
         self.dessiner_voirie()
@@ -93,31 +103,39 @@ class Visualisateur:
         # couleur d'une voiture
         self.cairo_context.set_source_rgba(0, 0, 70, 0.5)
 
-        coord_test = Coordonnees(6050, 7100)
-        orientation = 0
-        longueur = 350
+        coord_test = self.echelle(Coordonnees.Coordonnees(6050, 7100))
+        orientation = self.rotation
+        longueur = self.fact_echelle * 350 + 50
+        largeur = self.largeur_vehicule+50
+        self.cairo_context.save()
+        self.cairo_context.translate(coord_test.x,self.position)
+        self.cairo_context.rotate(orientation) # en degrés
+        self.cairo_context.translate(-largeur * 0.5, 0)
+        self.cairo_context.rectangle(0, 0, largeur, longueur)
+        self.cairo_context.fill()
+        
 
-        self.dessiner_voiture(coord_test, orientation, longueur);
+        #self.cairo_context.arc(0, 0, 50, 0, 0)
+        
+        self.cairo_context.restore()
 
-        return
-
-        for voiture in liste_voitures:
-            dessiner_voiture()
+        for voiture in Vehicule.Vehicule.liste_voitures:
+            self.dessiner_voiture(voiture)
 
     def dessiner_voiture(self, voiture):
-        #coord, orientation, longueur):
 
         coord = self.echelle(voiture.coordonnees)
         longueur = self.fact_echelle * voiture.longueur
+        orientation = self.voiture.direction
 
         self.cairo_context.save()
 
-        print("dessin !")
+        print("dessin voiture !")
         
-        self.cairo_context.translate(coord.x, coord.y)
+        self.cairo_context.translate(coord.x - (self.largeur_vehicule * 0.5), coord.y)
         self.cairo_context.rotate(orientation) # en degrés
 
-        self.cairo_context.rectangle(0, 0, Vehicule.largeur, longueur)
+        self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
 
         #self.cairo_context.arc(0, 0, 50, 0, 0)
         self.cairo_context.fill()
@@ -140,8 +158,8 @@ class Visualisateur:
 
         self.cairo_context.save()
 
-        print(troncon.coordonnees_debut)
-        print(troncon.coordonnees_fin)
+#        print(troncon.coordonnees_debut)
+#        print(troncon.coordonnees_fin)
 
         vec_debut = self.echelle(troncon.coordonnees_debut)
         vec_fin = self.echelle(troncon.coordonnees_fin)
@@ -181,18 +199,22 @@ class Visualisateur:
             if self.max is None:
                 self.max = troncon.coordonnees_debut
 
-            self.min = Coordonnees.apply(self.min, troncon.coordonnees_debut, min)
-            self.max = Coordonnees.apply(self.max, troncon.coordonnees_debut, max)
-            self.min = Coordonnees.apply(self.min, troncon.coordonnees_fin, min)
-            self.max = Coordonnees.apply(self.max, troncon.coordonnees_fin, max)
+            self.min = Coordonnees.Coordonnees.apply(
+                self.min, troncon.coordonnees_debut, min)
+            self.max = Coordonnees.Coordonnees.apply(
+                self.max, troncon.coordonnees_debut, max)
+            self.min = Coordonnees.Coordonnees.apply(
+                self.min, troncon.coordonnees_fin, min)
+            self.max = Coordonnees.Coordonnees.apply(
+                self.max, troncon.coordonnees_fin, max)
 
-        print(self.min)
-        print(self.max)
+        #print(self.min)
+        #print(self.max)
 
         diff_x = self.max.x - self.min.x
         diff_y = self.max.y - self.min.y
 
         self.fact_echelle = self.taille_x / diff_x if diff_x > diff_y else self.taille_y / diff_y
 
-
-        print(self.fact_echelle)
+        self.largeur_vehicule = Vehicule.Vehicule.largeur * self.fact_echelle
+        #print(self.fact_echelle)
