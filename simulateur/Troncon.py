@@ -90,7 +90,7 @@ class Troncon:
                 coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
                 coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Coordonnees.Coordonnees(0, 0)-self.trajectoire, sens)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Vehicule.Vehicule.v_max, sens)
             self.voies_sens2.append(v)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
@@ -125,8 +125,6 @@ class Troncon:
         else : return self.intersection_queue
 
     def get_proba_situation_voie(self, voie, directions):
-        dico_voies = {}
-        intersection = None
         if (voie.sens == "sens1"):
             dico_voies = self.dir_voies_sens1
             intersection = self.intersection_tete
