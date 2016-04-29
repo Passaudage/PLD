@@ -11,7 +11,7 @@ class Troncon:
         self.intersection_queue = intersection_queue #en bas ou à gauche
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
-        self.longueur = (self.coordonnees_fin-coordonnees_debut).__abs__()
+        self.longueur = abs((self.coordonnees_fin-coordonnees_debut))
         self.trajectoire = (self.coordonnees_fin-coordonnees_debut).normaliser()
         self.directions_sens1 = directions_sens_1
         self.directions_sens2 = directions_sens_2

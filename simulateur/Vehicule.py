@@ -151,6 +151,11 @@ class Vehicule:
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
             x = None
+            y = None
+            bv = None
+            av = None
+            ac = None
+            bc = None 
             if (self.direction.x == 0):
                 x = self.coordonnees.x
             else:
