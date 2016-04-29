@@ -134,15 +134,12 @@ class Visualisateur:
         
         self.cairo_context.save()
         self.cairo_context.translate(coord.x, coord.y)
-        self.cairo_context.rotate(angle) # en radiant
+        self.cairo_context.rotate(angle + math.pi / 2) # en radiant
         self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
         self.cairo_context.restore()
 
-        widget.queue_draw()
-        sleep(10)
-        exit(0)
 
     def dessiner_voirie(self):
         
