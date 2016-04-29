@@ -288,14 +288,14 @@ class Vehicule:
         self.origine = self.coordonnees
         self.orientation_origine = self.direction
         self.repere_trajectoire_axe_x = self.destination - self.origine
-        self.repere_trajectoire_axe_x = Coordonnees.normaliser(self.repere_trajectoire_axe_x)
+        self.repere_trajectoire_axe_x = self.repere_trajectoire_axe_x.normaliser()
         self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
 
         dest_nv_rep = Coordonnees.Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
-            
+
         orientation_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoire_axe_x)
             
-        ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep - 2)
+        ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep.x - 2)
 
         self.poly_a = ratio / dest_nv_rep.x
         self.poly_b = orientation_nv_rep.y - 2 * ratio
