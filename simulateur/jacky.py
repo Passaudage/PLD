@@ -5,18 +5,18 @@ import Troncon
 import Coordonnees
 
 
-def charger_simulateur():
+def main():
     longueur_troncon = 5000
     
     sm = SimulationManager.SimulationManager(5)
-    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_sud)
-    gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_ouest)
-    gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_est)
-    gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen_nord)
+    #~ gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #~ sm.add_listener(gen_sud)
+    #~ gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #~ sm.add_listener(gen_ouest)
+    #~ gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #~ sm.add_listener(gen_est)
+    #~ gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    #~ sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
@@ -69,44 +69,24 @@ def charger_simulateur():
     t_ouest.creer_voie(["D"], "sens2", 50)
 
     
-    gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
-    gen_est.ajoute_voie_entrante(t_est.voies_sens1)
-    gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
-    gen_nord.ajoute_voie_entrante(t_nord.voies_sens1)
-    gen_sud.ajoute_voie_sortante(t_sud.voies_sens1)
-    gen_est.ajoute_voie_sortante(t_est.voies_sens2)
-    gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
-    gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
+    #~ gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)
+    #~ gen_est.ajoute_voie_entrante(t_est.voies_sens1)
+    #~ gen_ouest.ajoute_voie_entrante(t_ouest.voies_sens2)
+    #~ gen_nord.ajoute_voie_entrante(t_nord.voies_sens1)
+    #~ gen_sud.ajoute_voie_sortante(t_sud.voies_sens1)
+    #~ gen_est.ajoute_voie_sortante(t_est.voies_sens2)
+    #~ gen_ouest.ajoute_voie_sortante(t_ouest.voies_sens1)
+    #~ gen_nord.ajoute_voie_sortante(t_nord.voies_sens2)
     
-    #~ print("Intersection")
-    #~ print(i.coordonnees)
-    #~ print("Troncon bas")
-    #~ print(i.troncon_bas.coordonnees_debut)
-    #~ print(i.troncon_bas.coordonnees_fin)
-    #~ print("Troncon haut")
-    #~ print(i.troncon_haut.coordonnees_debut)
-    #~ print(i.troncon_haut.coordonnees_fin)
-    #~ print("Troncon droite")
-    #~ print(i.troncon_droite.coordonnees_debut)
-    #~ print(i.troncon_droite.coordonnees_fin)
-    #~ print("Troncon gauche")
-    #~ print(i.troncon_gauche.coordonnees_debut)
-    #~ print(i.troncon_gauche.coordonnees_fin)
-    #~ 
-    #~ if(i.construire_chemins()):
-        #~ print("ca marche ! :D")
-    #~ else : print("Ca marche pas ! :'(")
+    i.branche_troncon(t_sud, 'B')
+    i.branche_troncon(t_est, 'D')
+    i.branche_troncon(t_ouest, 'G')
+    i.branche_troncon(t_nord, 'H')
     
-    return sm
-
-def main():
-
-    sm = charger_simulateur()
-
-    print(sm.listeners)
-    print()
-    for i in range(15000):
-        sm.avance_temps()
-        #~ print()
+    t_est.voies_sens2[0].creer_vehicule(sm, 0, 500)
+    
+    print("lolo")
+    for l in sm.listener:
+        print("popo")
         
-    #~ print(Vehicule.count)
+main()

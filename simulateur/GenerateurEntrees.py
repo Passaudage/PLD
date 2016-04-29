@@ -35,17 +35,12 @@ class GenerateurEntrees:
         self._etendue = self._timestamp_max - self._timestamp_min
         self._voies_sortantes = []
         self._voies_entrantes = []
-        self._voies_sortantes_proba = {}
 
     def ajoute_voie_entrante(self, voies):
         self._voies_entrantes = voies
     
     def ajoute_voie_sortante(self, voies):
         self._voies_sortantes = voies
-        for voie in self._voies_sortantes:
-            self._voies_sortantes_proba[voie] = voie.proba_entree
-            print(voie)
-            print(voie.proba_entree)
 
     def notifie_temps(self, increment, moteur):
         #~ print("Le generateur a ete modifie.")
@@ -70,10 +65,10 @@ class GenerateurEntrees:
             longueur = random.normalvariate(428, 50)
             aggressivite = (random.random() < Vehicule.Vehicule.proportion_discourtois)
 
-            probas = []
-            for key in self._voies_sortantes_proba.keys():
-                probas.append(self._voies_sortantes_proba.get(key))
-            print(probas)
+            somme_probas = 0;
+            for voie in self._voies_sortantes:
+                somme_probas += voie.get_proba_voie()
+            probas = [ voie.get_proba_voie() / somme_probas for voie in self._voies_sortantes ]
             k = 0
             pc = probas[k]
             p = random.random()

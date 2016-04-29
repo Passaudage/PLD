@@ -6,17 +6,15 @@ import Vehicule
 class Troncon:
     const_largeur_voie = 350 # centimètres
 
-    def __init__(self, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, proba_dir_sens1, proba_dir_sens2):  #sens1 : gauche vers droite, bas vers haut
+    def __init__(self, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, directions_sens_1, directions_sens_2):  #sens1 : gauche vers droite, bas vers haut
         self.intersection_tete = intersection_tete #en haut ou à droite
         self.intersection_queue = intersection_queue #en bas ou à gauche
         self.coordonnees_debut = coordonnees_debut
         self.coordonnees_fin = coordonnees_fin
         self.longueur = (self.coordonnees_fin-coordonnees_debut).__abs__()
         self.trajectoire = (self.coordonnees_fin-coordonnees_debut).normaliser()
-        self.proba_dir_sens1 = proba_dir_sens1
-        self.proba_dir_sens2 = proba_dir_sens2
-        self.directions_sens1 = self.proba_dir_sens1.keys()
-        self.directions_sens2 = self.proba_dir_sens2.keys()
+        self.directions_sens1 = directions_sens_1
+        self.directions_sens2 = directions_sens_2
         self.voies_sens1 = []
         self.voies_sens2 = []
         self.dir_voies_sens1 = {"G": [], "TD": [], "D": []}
@@ -31,7 +29,19 @@ class Troncon:
 
         for direction in self.directions_sens2:
             self.dir_feu_sens2[direction] = Feu.Feu(self.intersection_queue, 20)
-
+        tete_presente = queue_presente = True 
+        if(self.intersection_queue==None):
+            queue_presente = False
+        elif(self.intersection_tete==None):
+            tete_presente = False
+			
+        if(coordonnees_debut.x == coordonnees_fin.x):
+            if tete_presente: self.intersection_tete.branche_troncon(self, "B") 
+            if queue_presente: self.intersection_queue.branche_troncon(self, "H")
+        elif(coordonnees_fin.y == coordonnees_debut.y):
+            if tete_presente: self.intersection_tete.branche_troncon(self, "G")
+            if queue_presente: self.intersection_queue.branche_troncon(self, "D")
+            
     def ajouter_feux(self, sens, direction, feu):
         if(sens==1):
             if(direction == 'D'):
@@ -52,6 +62,7 @@ class Troncon:
                 self.feux_sens2['TD'] = feu
             else:
                 raise Exception("Mauvaise destination.")
+                
 
     # on crée les voies de l'intérieur vers l'extérieur dans les deux sens, l'utilisateur fera donc attention aux directions qu'il passe en paramètre (gauche d'abord)
     def creer_voie(self, directions, sens, vitesse_max):
@@ -65,19 +76,9 @@ class Troncon:
                 coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
                 coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
 
-            proba_dir = {}
-            proba_sum = 0
-            proba_entree = 0
-            for direction in directions :
-                proba_entree = proba_entree + self.proba_dir_sens1.get(direction)/(len(self.dir_voies_sens1.get(direction)) +1) #la nouvelle voie n'est pas encore dans la liste
-                proba_dir[direction] = self.proba_dir_sens1.get(direction)
-                proba_sum = proba_sum + self.proba_dir_sens1.get(direction)
-
-            for direction in directions :
-                proba_dir[direction] = proba_dir.get(direction)/proba_sum
-                #self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, vitesse_max):
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, Vehicule.Vehicule.v_max)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Vehicule.Vehicule.v_max, sens)
             self.voies_sens1.append(v)
+
             for direction in directions:
                 self.dir_voies_sens1[direction] = [self.dir_voies_sens1.get(direction)] + [v]
 
@@ -89,18 +90,7 @@ class Troncon:
                 coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
                 coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
 
-            proba_dir = {}
-            proba_sum = 0
-            proba_entree = 0
-            for direction in directions:
-                proba_entree = proba_entree + self.proba_dir_sens2.get(direction)/(len(self.dir_voies_sens2.get(direction)) + 1)  # la nouvelle voie n'est pas encore dans la liste
-                proba_dir[direction] = self.proba_dir_sens2.get(direction)
-                proba_sum = proba_sum + self.proba_dir_sens2.get(direction)
-
-            for direction in directions:
-                proba_dir[direction] = proba_dir.get(direction)/proba_sum
-
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Coordonnees.Coordonnees(0, 0)-self.trajectoire, proba_entree, proba_dir)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Coordonnees.Coordonnees(0, 0)-self.trajectoire, sens)
             self.voies_sens2.append(v)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
@@ -133,6 +123,20 @@ class Troncon:
         if(voie in self.voies_sens1):
             return self.intersection_tete
         else : return self.intersection_queue
+
+    def get_proba_situation_voie(self, voie, directions):
+        dico_voies = {}
+        intersection = None
+        if (voie.sens == "sens1"):
+            dico_voies = self.dir_voies_sens1
+            intersection = self.intersection_tete
+        else: 
+            dico_voies = self.dir_voies_sens2
+            intersection = self.intersection_queue
+        proba = 0
+        for direction in directions:
+            proba += intersection.get_proba(self, direction)/len(dico_voies.get(direction))
+        return proba
 
     def largeur(self):
         return (len(self.voies_sens1) + len(self.voies_sens2))*self.const_largeur_voie

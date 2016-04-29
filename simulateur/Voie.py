@@ -3,7 +3,7 @@ import Coordonnees
 
 class Voie:
 
-    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, proba_entree, proba_dir, vitesse_max):
+    def __init__(self, troncon, coordonnees_debut, coordonnees_fin, directions, vitesse_max, sens):
         self.intersectionsAccessibles = []
         self.troncon = troncon
         self.coordonnees_debut = coordonnees_debut
@@ -11,17 +11,15 @@ class Voie:
         self.vehicules = []
         self.orientation = (coordonnees_fin-coordonnees_debut).normaliser()
         self.directions = directions
-        self.proba_entree = proba_entree
-        self.proba_dir = proba_dir
         self.vitesse_max = vitesse_max
+        self.sens = sens
 
     def creer_vehicule(self, simulateur, discourtois, longueur):
         prochaine_direction = "droite"
 
-        clio = Vehicule.Vehicule(simulateur, discourtois, Coordonnees.Coordonnees(0,0), longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, None)
-        self.ajouter_vehicule(clio)
         dernier_vehicule = self.dernier_vehicule()
-        clio.greffe_arbre(dernier_vehicule)
+        clio = Vehicule.Vehicule(simulateur, discourtois, Coordonnees.Coordonnees(0,0), longueur, self, prochaine_direction, self.coordonnees_debut, self.coordonnees_fin, self.orientation, dernier_vehicule)
+        self.ajouter_vehicule(clio)
 
     def direction_possible(self, direction):
         return (direction in self.directions)
@@ -40,7 +38,10 @@ class Voie:
         self.vehicules.remove(vehicule)
 
     def dernier_vehicule(self):
-        return self.vehicules[-1]
+        if(self.vehicules):
+            return self.vehicules[-1]
+        else:
+            return None
 
     def setTroncon(self, troncon):
         self.troncon = troncon
@@ -56,6 +57,9 @@ class Voie:
 
     def get_proba_dir(self, direction):
         return self.proba_dir.get(direction)
+
+    def get_proba_voie(self):
+        return self.troncon.get_proba_situation_voie(self, self.directions)
 
     def demander_intersection(self):
         return self.troncon.get_intersection(self)

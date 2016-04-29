@@ -128,7 +128,7 @@ class Visualisateur:
 
         coord = self.echelle(voiture.coordonnees)
         longueur = self.fact_echelle * voiture.longueur
-        orientation = self.voiture.direction
+        orientation = voiture.direction
 
         self.cairo_context.save()
 
