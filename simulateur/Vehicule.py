@@ -122,9 +122,12 @@ class Vehicule:
 		(coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
 
 		# Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
-		if (self.vehicule_precedent != vehicule_blocant):
+		#aucun obstacle
+		if (vehicule_blocant is None):
 			self.decrochage_arbre()
-			self.greffe_arbre(vehicule_blocant)
+		#nouvel obstacle
+		elif (self.vehicule_precedent != vehicule_blocant):
+			self.change_arbre(vehicule_blocant)
 
 		# si l'obstacle est un feu rouge
 		if (vehicule_blocant == "feu"):
