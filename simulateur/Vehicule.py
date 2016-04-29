@@ -65,6 +65,7 @@ class Vehicule:
         print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
+            print("après : " + str(self.coordonnees))
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
@@ -86,6 +87,7 @@ class Vehicule:
 
         # Si il faut changer de voie
         if (not self.voie.direction_possible(self.prochaine_direction)):
+            print("Ma voie est " + str(self.voie))
             self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * 2
