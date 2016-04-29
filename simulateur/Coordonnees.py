@@ -68,6 +68,11 @@ class Coordonnees:
         return '('+str(self.x)+','+str(self.y)+')'
 
     def changer_repere(vec, origine, repere_x):
+        """
+            vec : le vecteur a changer
+            origine : origine du repère cible
+            repere_x : vecteur unitaire x du repère cible
+        """
         vec_nv_x = math.cos(repere_x.x)*vec.x - math.sin(repere_x.y)*vec.y
         vec_nv_x -= origine.x
 

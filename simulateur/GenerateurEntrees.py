@@ -78,7 +78,10 @@ class GenerateurEntrees:
             voie = self._voies_sortantes[k]
             voie.creer_vehicule(moteur, aggressivite, longueur)
 
-
+    
+    #pas toujours vrai en vrai
+    def est_passant(self):
+        return True
 
 ################################################
 #          TESTS
