@@ -56,6 +56,8 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
+        print("coordonnees " +str(self.coordonnees))
+        print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
@@ -120,8 +122,6 @@ class Vehicule:
                 print("arrivée sur intersection")
 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
-                
-                print("orientation de la voie après intersection " + str(self.nouvelle_voie.orientation))
                 self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
@@ -331,7 +331,7 @@ class Vehicule:
         coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
         orientation = orientation.normaliser()
-        self.orientation = orientation
+        self.direction = orientation
            
         self.vitesse.x += dvx
         self.vitesse.y += dvy
@@ -340,10 +340,10 @@ class Vehicule:
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
-        #print ("Changement Trajectoire")
-        #print (destination)
-        #print (orientation_cible)
-        #print ("Fin trace changement trajectoire")
+        print ("Changement Trajectoire")
+        print (destination)
+        print (orientation_cible)
+        print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
         self.origine = copy.copy(self.coordonnees)
@@ -360,6 +360,7 @@ class Vehicule:
 
         self.poly_a = ratio / dest_nv_rep.x
         self.poly_b = orientation_nv_rep.y - 2 * ratio
+        print("a : " + str(self.poly_a) + " b : " + str(self.poly_b))
 
     """
    def calculer_trajet_max(self, coordonnees_destination):
