@@ -123,7 +123,7 @@ class Visualisateur:
         longueur = self.fact_echelle * voiture.longueur
         orientation = voiture.direction
 
-        print("Dessin voiture :" + str(coord))
+#        print("Dessin voiture :" + str(coord))
         
         angle = math.atan2(orientation.y, orientation.x)
         self.cairo_context.save()
@@ -218,25 +218,43 @@ class Visualisateur:
 
             numero_voie += 1
 
-        self.cairo_context.restore()
-
-    def dessiner_intersection(self, intersection):
         # dessin des feux
 
-        offset_feu = 10
+        rayon_feu = 80
 
-        # pour chaque voie, on vérifie s'il existe un feu dans la direction 'G', 'D', 'H', 'B'
-        # et on accumule la réponse
+#        print("Troncon : " + str(troncon.feux_sens1))
 
-        directions = []
+        numero_voie = 0
 
-        for voie in intersection.entrantes:
-            directions.extend([direction for direction in voie.directions if not direction in directions])
+        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [max, min], [1, -1]):
+
+            for direction in ['G', 'TD', 'D']:
+
+                if direction in sens:
+                    feu = sens[direction]
+
+                    if horizontal:
+                        position_feu_x = fonction(vec_debut.x, vec_fin.x)
+                        position_feu_y = vec_debut.y - coeff * (largeur_voie * (0.5 + numero_voie))
+                    else:
+                        position_feu_x = vec_debut.x + coeff * (largeur_voie * (0.5 + numero_voie))
+                        position_feu_y = fonction(vec_debut.y, vec_fin.y)
+
+                    if feu.est_passant():
+                        self.cairo_context.set_source_rgba(0.1, 0.8, 0.1, 1)
+                    else:
+                        self.cairo_context.set_source_rgba(0.8, 0.1, 0.1, 1)
+                    self.cairo_context.arc(position_feu_x ,position_feu_y,
+                                            rayon_feu * self.fact_echelle, 0, 2*math.pi)
+                    self.cairo_context.fill()
+
+                    numero_voie += 1
 
         self.cairo_context.restore()
 
-        print("END")
-        time.sleep(10)
+
+    def dessiner_intersection(self, intersection):
+        return
 
     def echelle(self, vec):
         return (vec - self.min) * self.fact_echelle
