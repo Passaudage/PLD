@@ -104,7 +104,7 @@ def main():
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
-    for i in range(6):
+    for i in range(3000):
         sm.avance_temps()
 
     toto = liste_v[0]

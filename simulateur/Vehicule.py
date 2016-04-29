@@ -56,6 +56,8 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
+        print("coordonnees " +str(self.coordonnees))
+        print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
@@ -104,18 +106,23 @@ class Vehicule:
                 self.voie.ajouter_vehicule(self)
                 self.intersection.retirer_vehicule(self)
                 self.intersection = None
+                
+                print("sortie de l'intersection")
 
-                self.prochaine_direction = "D"
+                self.prochaine_direction = "K"
                 self.direction = self.voie.orientation
-                self.changer_trajectoire(self.destination, self.orientation_cible)
+                self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
+           
             # arrivée sur intersection
             elif (self.nouvelle_voie is None):
                 self.intersection = self.voie.demander_intersection()
                 self.intersection.ajouter_vehicule(self)
                 self.voie.supprimer_vehicule(self)
+                
+                print("arrivée sur intersection")
 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
-                self.changer_trajectoire(self.destination, self.orientation_cible)
+                self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
@@ -124,7 +131,7 @@ class Vehicule:
 
                 self.nouvelle_voie = None
                 self.direction = self.voie.direction
-                self.changer_trajectoire(self.destination, self.orientation_cible)
+                self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
@@ -205,7 +212,6 @@ class Vehicule:
         else:
             # feu_vert
             if (self.voie.est_passant(self.prochaine_direction)):
-                print("yolo")
                 intersection = self.voie.demander_intersection()
                 return intersection.donner_obstacle(self.coordonnees, self.direction)
             # feu_rouge
@@ -334,10 +340,10 @@ class Vehicule:
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
     def changer_trajectoire(self, destination, orientation_cible):
-        #print ("Changement Trajectoire")
-        #print (destination)
-        #print (orientation_cible)
-        #print ("Fin trace changement trajectoire")
+        print ("Changement Trajectoire")
+        print (destination)
+        print (orientation_cible)
+        print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
         self.origine = copy.copy(self.coordonnees)
