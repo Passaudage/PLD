@@ -96,8 +96,13 @@ def main():
     toto = liste_v[0]
     print(toto.origine)
     
-    toto.notifie_temps(5,sm)
-
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    #~ toto.notifie_temps(5,sm)
+    for i in range(5):
+        sm.avance_temps()
     
 
     for v in liste_v:
