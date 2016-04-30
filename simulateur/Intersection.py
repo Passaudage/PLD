@@ -12,7 +12,7 @@ class Intersection:
             # coordonees : Position de l'intersection sur la grille
             # @author : Bonfante
     """
-    vitesse_max = 972 # cm.s^{-1}
+    vitesse_max = 40 # cm.s^{-1} 972
         
     def __init__(self, coordonnees, hauteur, largeur):
         # Position du point central de l'intersection

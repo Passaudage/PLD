@@ -129,7 +129,7 @@ class Vehicule:
                 print("direction " +str(self.direction))
                 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
-                self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
+                #self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
                 self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
@@ -342,15 +342,13 @@ class Vehicule:
 
 
     i = 0
+    vehicule_inter = None
 
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         print("**** Coordonnees mises à jour : ")
         print(self)
 
         print("self.vitesse = " + str(self.vitesse))
-        if Vehicule.i > 2:
-            pass
-        Vehicule.i += 1
 
         dx = (increment_temps / nb_ticks_sec) * self.vitesse.x
         dy = (increment_temps / nb_ticks_sec) * self.vitesse.y 
@@ -359,7 +357,7 @@ class Vehicule:
         print("dy = " + str(dy))
 
         print("val_acceleration=" + str(self.val_acceleration))
-        if abs(self.val_acceleration) > 100000:
+        if abs(self.val_acceleration) > 1000000:
             exit(0)
 
         dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
@@ -367,6 +365,7 @@ class Vehicule:
         vitesse_max = self.voie.vitesse_max
 
         if self.intersection != None:
+            #exit(0)
             vitesse_max = Intersection.Intersection.vitesse_max
 
         if vitesse_obstacle is None:
@@ -388,10 +387,12 @@ class Vehicule:
             acceleration_approche += (abs(self.vitesse) / 100.0 * (((self.vitesse - vitesse_obstacle)/100.0)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
             acceleration_approche /= abs(position_obstacle - self.coordonnees)/100.0
             acceleration_approche **= 2
-        #print("Acceleration approche : "+str(acceleration_approche))
+        print("Acceleration approche : "+ str(acceleration_approche))
 
         self.val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
+        self.val_acceleration = min(self.val_acceleration, Vehicule.acceleration_max)
+
         print("val_acceleration après = " + str(self.val_acceleration))
 
         val_vitesse = self.direction * self.vitesse + dv
@@ -407,7 +408,7 @@ class Vehicule:
 
         self.direction = orientation
 
-        val_vitesse = min(val_vitesse, Intersection.Intersection.vitesse_max)
+        #val_vitesse = min(val_vitesse, Intersection.Intersection.vitesse_max)
 
         self.vitesse = self.direction * val_vitesse
         print("vitesse à la fin : " + str(abs(self.vitesse)))
