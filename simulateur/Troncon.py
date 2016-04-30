@@ -115,13 +115,13 @@ class Troncon:
         return voies_possibles
 
     def est_passant(self, direction, sens):
-        print("sens :"+str(sens))
-        print("direction : "+str(direction))
+        #~ print("sens :"+str(sens))
+        #~ print("direction : "+str(direction))
         if(sens == "sens1") :
-            print(self.feux_sens1)
+            #~ print(self.feux_sens1)
             return self.feux_sens1[direction].est_passant()
         if (sens == "sens2"):
-            print(self.feux_sens2)
+            #~ print(self.feux_sens2)
             return self.feux_sens2[direction].est_passant()
 
     def get_intersection(self, voie):

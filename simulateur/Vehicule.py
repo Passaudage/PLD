@@ -20,7 +20,6 @@ class Vehicule:
         Vehicule.count += 1
         Vehicule.liste_voitures.append(self)
 
-        #~ print(Vehicule.count)
         self.simulateur = simulateur
         self.coordonnees = copy.deepcopy(origine)
         self.discourtois = discourtois
@@ -54,23 +53,18 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
-       # print("coordonnees " +str(self.coordonnees))
-       # print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
                 # simulateur : impulseur des incréments
                 # @author : Marcus
         """
-        #print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
-            #print("après : " + str(self.coordonnees))
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
                 vehicule_suivant.notifie_temps(nb_increment, simulateur)
-        #print("après : " + str(self.coordonnees))
 
     def avance_vehicule(self, incr, nb_tick):
         """
@@ -82,12 +76,13 @@ class Vehicule:
         """
         # si on existe pas encore
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
-            #print("Je n'existe pas")
             return
             
             
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
         if ((self.coordonnees - self.destination) * self.direction >= 0):
+            
+            print ("destination atteinte : " + str(self.destination))
 
             # sortie de l'intersection
             if (self.intersection is not None):
@@ -148,34 +143,38 @@ class Vehicule:
                 self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
                 
-        # Si il faut changer de voie, à faire une seule fois
+        # Si il faut changer de voie, à faire une seule fois        
         if (not self.voie.direction_possible(self.prochaine_direction) and self.nouvelle_voie is None):
-            #print("Ma voie est " + str(self.voie))
             self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * 2
+            distance_avant = self.direction * self.longueur * 2
             trajet = direction_virage + distance_avant
             self.destination = trajet + self.coordonnees
+            self.direction = (self.destination - self.coordonnees).normaliser()
+            
+            print("début changement de voie")
+            print("coordonnees " +str(self.coordonnees))
+            print("direction " +str(self.direction))
+            
+            
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
-
-        print("obstacle : " +str(vehicule_blocant))
         
         # si l'obstacle est un feu rouge
         if (vehicule_blocant == "feu"):
-            print("obstacle feu")
+            #~ print("obstacle feu")
             self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
             return
         # Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
         #aucun obstacle
         if (vehicule_blocant is None):
-            print("obstacle nul")
+            #~ print("obstacle nul")
             self.decrochage_arbre()
             self.mettre_coordonnees_a_jour(incr, nb_tick, None, None)
         #nouvel obstacle
         elif (self.vehicule_precedent != vehicule_blocant):
-            print("nouvel obstacle")
+            #~ print("nouvel obstacle")
             self.change_arbre(vehicule_blocant)
             self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
         else:
