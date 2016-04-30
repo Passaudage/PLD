@@ -130,10 +130,10 @@ class Vehicule:
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
-                if(self.vehicule_precedent is None):
-                    self.nouvelle_voie.ajouter_vehicule(self)
-                else:
-                    self.nouvelle_voie.ajouter_vehicule_avant(self, self.vehicule_precedent)
+                #si on n'est pas déjà sur la liste de la nouvelle voie, on s'y ajoute
+                if(self.vehicule_precedent is None or self.vehicule_precedent.voie != self.nouvelle_voie):
+                    self.nouvelle_voie.ajouter_vehicule_position(self)
+
                 self.voie = self.nouvelle_voie
                 
                 print("fin de changement de voie")
@@ -194,6 +194,7 @@ class Vehicule:
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
+            
             # s'il n'y a aucun véhicule sur la voie voulue
             if(len(self.nouvelle_voie.vehicules)==0):
                 return (None,None)
@@ -222,10 +223,12 @@ class Vehicule:
             else:
                 pass
             p = Coordonnees.Coordonnees(x, y)
-            for vehicule in self.nouvelle_voie.vehicules:           
+            for vehicule in self.nouvelle_voie.vehicules:   
+                if(vehicule == self):
+                    continue       
                 # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
-                print("D1 : "+str(p))
-                print("D2 : "+str(self.nouvelle_voie.coordonnees_debut))
+                #~ print("D1 : "+str(p))
+                #~ print("D2 : "+str(self.nouvelle_voie.coordonnees_debut))
                 if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
                         > abs(p - self.nouvelle_voie.coordonnees_debut)):
                     pass
@@ -233,14 +236,21 @@ class Vehicule:
                 # si un véhicule gêne
                 elif (abs(vehicule.coordonnees - vehicule.voie.coordonnees_debut)
                           > abs(p - self.nouvelle_voie.coordonnees_debut)):
+                    self.nouvelle_voie.ajouter_vehicule_avant(self,vehicule)
                     return (p, vehicule)
 
             return (None, None)
-
+            
         # s'il y a qqun devant sur la voie
         elif (self.voie.precedent(self) is not None):
             vehicule_devant = self.voie.precedent(self)
-            arriere_vehicule = (vehicule_devant.coordonnees - self.direction * self.longueur)
+            
+            # s'il est en train de rentrer sur la voie
+            if(self.voie.precedent(self).nouvelle_voie is not None):
+                marge = vehicule_devant.destination - (self.voie.orientation*100)
+                return (marge, vehicule_devant)
+            
+            arriere_vehicule = vehicule_devant.donner_arriere()
             return (arriere_vehicule, vehicule_devant)
 
         # si on est devant
@@ -335,7 +345,7 @@ class Vehicule:
         if(self.direction*distance <= 0):
             return
         distance = abs(distance)
-        distance_possible = min (distance - 30 , 2)
+        distance_possible = min (distance - 100 , 2)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         
     def changer_trajectoire(self, destination, orientation_cible):

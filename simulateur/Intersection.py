@@ -342,7 +342,7 @@ class Intersection:
 
             epsilon = 0.01
 
-            print("colinéaires : " + str(direction * cur_dir))
+            #~ print("colinéaires : " + str(direction * cur_dir))
 
 
             if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
@@ -383,7 +383,7 @@ class Intersection:
                 # trajectoires non colinéaires
                 # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
                 
-                print("=" + str(coord))
+                #~ print("=" + str(coord))
 
                 if abs(direction * cur_dir) < epsilon: 
                     # cas perpendiculaire
