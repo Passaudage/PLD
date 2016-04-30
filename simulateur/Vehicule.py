@@ -190,7 +190,7 @@ class Vehicule:
         """
         # si on est sur une intersection
         if (self.intersection is not None):
-            return self.intersection.donner_obstacle(self.coordonnees, self.direction)
+            return self.intersection.donner_obstacle(self, self.coordonnees, self.direction)
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
@@ -252,7 +252,7 @@ class Vehicule:
                 if intersection is None:
                     return (None, None)
 
-                return intersection.donner_obstacle(self.coordonnees, self.direction)
+                return intersection.donner_obstacle(self, self.coordonnees, self.direction)
             # feu_rouge
             else:
                 return (self.destination, "feu")
