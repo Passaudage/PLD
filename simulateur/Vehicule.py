@@ -131,7 +131,8 @@ class Vehicule:
             else:
                 self.voie.supprimer_vehicule(self)
                 #si on n'est pas déjà sur la liste de la nouvelle voie, on s'y ajoute
-                if(self.vehicule_precedent is None or self.vehicule_precedent.voie != self.nouvelle_voie):
+                if(not self.nouvelle_voie.connait(self)):
+                    print("bolossage?")
                     self.nouvelle_voie.ajouter_vehicule_position(self)
 
                 self.voie = self.nouvelle_voie

@@ -39,9 +39,14 @@ class Voie:
                 pass
             # si v est derrière, on met vehicule juste devant dans la liste
             else:
+                print(v)
+                print(vehicule)
                 self.vehicules.insert(self.vehicules.index(v), vehicule)
                 return
         self.ajouter_vehicule(vehicule)
+        
+    def connait(self,vehicule):
+        return any(v == vehicule for v in self.vehicules)
                 
 
     #notification du véhicule en tête qui s'en va
