@@ -113,6 +113,19 @@ class Troncon:
                     voies_possibles.append(voie)
 
         return voies_possibles
+        
+    #Donne la prochaine voie sur laquelle il faut aller pour atteindre voie_arrivee à terme
+    def donner_etape_changement(self, voie_depart, voie_arrivee):
+        if(voie_depart in self.voies_sens1):
+            liste = self.voies_sens1
+        elif(voie_depart in self.voies_sens2):
+            liste = self.voies_sens2
+        ecart = liste.index(voie_arrivee) - liste.index(voie_depart)
+        if(abs(ecart) > 1):
+            sens = (int)(ecart/abs(ecart))
+            return  liste[liste.index(voie_depart)+sens]
+        return voie_arrivee
+        
 
     def est_passant(self, direction, sens):
         #~ print("sens :"+str(sens))

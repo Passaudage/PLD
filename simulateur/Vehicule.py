@@ -145,7 +145,8 @@ class Vehicule:
                 
         # Si il faut changer de voie, à faire une seule fois        
         if (not self.voie.direction_possible(self.prochaine_direction) and self.nouvelle_voie is None):
-            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
+            voie_destination = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
+            self.nouvelle_voie = self.voie.troncon.donner_etape_changement(self.voie, voie_destination)
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * self.longueur * 2
             trajet = direction_virage + distance_avant
