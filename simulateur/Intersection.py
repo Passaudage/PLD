@@ -10,9 +10,13 @@ class Intersection:
     """
         Modelise une intersection.
             # coordonees : Position de l'intersection sur la grille
+            # sur_place : Dictionnaire utilisé pour résoudre les interblocages
+            # qui arrivent parfois lorsque deux voitures se rencontrent perpendiculairement
+            # (des histoires d'arrondi...)
             # @author : Bonfante
     """
     vitesse_max = 972 # cm.s^{-1}
+    sur_place = {}
         
     def __init__(self, simulateur, coordonnees, hauteur, largeur):
         self.simulateur = simulateur
@@ -318,7 +322,7 @@ class Intersection:
     def retirer_vehicule(self, vehicule):
         self.vehicules.remove(vehicule)
 
-    def donner_obstacle(self, coord, direction):
+    def donner_obstacle(self, voiture, coord, direction):
         coordonnees_blocage = None
         distance_blocage = 0
         vehicule_blocant = None
@@ -343,9 +347,9 @@ class Intersection:
 
             # colinéaires ?
 
-            epsilon = 0.1
+            epsilon = 0.01
 
-            print("colinéaires : " + str(direction * cur_dir))
+            #~ print("colinéaires : " + str(direction * cur_dir))
 
 
             if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
@@ -386,16 +390,15 @@ class Intersection:
                 # trajectoires non colinéaires
                 # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
                 
-                print("=" + str(coord))
+                #~ print("=" + str(coord))
 
                 if abs(direction * cur_dir) < epsilon: 
                     # cas perpendiculaire
                     gamma = (coord - cur_pos) * cur_dir
                     mu = (cur_pos - coord) * direction
+
                 elif direction.x != 0:
                     ratio = (1.0 * direction.y) / direction.x
-                    print(direction)
-                    print(ratio)
                     gamma = (coord.x + ratio * (cur_pos.y - coord.y) - cur_pos.x) / (cur_dir.x - ratio * cur_dir.y)
                     mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
                 else:
@@ -414,10 +417,17 @@ class Intersection:
                 distance = abs(cur_intersection - coord)
 
                 if (vehicule_blocant is None) or (distance < distance_blocage):
-                    vehicule_blocant = vehicule
-                    distance_blocage = distance
-                    coordonnees_blocage = cur_intersection
+                    
+                    if not( vehicule in Intersection.sur_place and Intersection.sur_place[vehicule] == voiture ):
+                            
+                        vehicule_blocant = vehicule
+                        distance_blocage = distance
+                        coordonnees_blocage = cur_intersection
 
+                        Intersection.sur_place[voiture] = vehicule
+
+        if vehicule_blocant is None and voiture in Intersection.sur_place:
+            del Intersection.sur_place[voiture]
 
         return (coordonnees_blocage, vehicule_blocant)
 

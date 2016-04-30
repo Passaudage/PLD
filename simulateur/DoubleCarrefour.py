@@ -134,5 +134,42 @@ def charger_simulateur():
     # Feux #
     i.creer_feux()
     i2.creer_feux()
+    
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+    
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+    
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+    
    
     return sm
