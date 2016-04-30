@@ -32,6 +32,8 @@ class Vehicule:
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)
         self.val_acceleration = 0
+        
+        self.existence = False
 
         # non initialisés
         self.racine = None
@@ -75,8 +77,12 @@ class Vehicule:
                 # @author : Marcus
         """
         # si on existe pas encore
-        if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
-            return
+        if(not self.existence):
+            if (self.vehicule_precedent is None or 
+               (self.vehicule_precedent.donner_arriere()-self.coordonnees) * self.direction > 0):
+                self.existence = True
+            else:
+                return
             
             
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
@@ -186,6 +192,7 @@ class Vehicule:
             Calcule l'obstacle le plus proche dans la direction actuelle
                 # @author : Marcus
         """
+        
         # si on est sur une intersection
         if (self.intersection is not None):
             return self.intersection.donner_obstacle(self, self.coordonnees, self.direction)
