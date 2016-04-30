@@ -233,8 +233,7 @@ class Vehicule:
                           > abs(p - self.nouvelle_voie.coordonnees_debut)):
                     return (p, vehicule)
 
-                else:
-                    return (None, None)
+            return (None, None)
 
         # s'il y a qqun devant sur la voie
         elif (self.voie.precedent(self) is not None):
