@@ -341,30 +341,48 @@ class Vehicule:
 #        self.orientation_cible = orientation_cible
 
 
-    
+    i = 0
+
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
-        #print("Coordonnees mises à jour")
+        print("**** Coordonnees mises à jour : ")
+        print(self)
+
+        print("self.vitesse = " + str(self.vitesse))
+        if Vehicule.i > 2:
+            pass
+        Vehicule.i += 1
 
         dx = (increment_temps / nb_ticks_sec) * self.vitesse.x
         dy = (increment_temps / nb_ticks_sec) * self.vitesse.y 
+
+        print("dx = " + str(dx))
+        print("dy = " + str(dy))
+
+        print("val_acceleration=" + str(self.val_acceleration))
+        if abs(self.val_acceleration) > 100000:
+            exit(0)
 
         dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
         
         vitesse_max = self.voie.vitesse_max
 
         if self.intersection != None:
-            Vehicule.vitesse_max = Intersection.Intersection.vitesse_max
+            vitesse_max = Intersection.Intersection.vitesse_max
 
         if vitesse_obstacle is None:
             vitesse_obstacle = self.direction * vitesse_max
 
+        
         print("VIT vm: " + str(abs(vitesse_max)) + " vc : " + str(abs(self.vitesse)))
         acceleration_libre = 1 - (float(abs(self.vitesse))/(abs(vitesse_max)))**4
         acceleration_approche = 0
         
         #print("Obstacle : "+str(position_obstacle))
 
+        print("Acceleration libre : " + str(acceleration_libre))
+
         if position_obstacle is not None:
+            print("Un obstacle")
             acceleration_approche =  Vehicule.distance_minimale/100.0 # s_0
             acceleration_approche +=  abs(self.vitesse)/100.0 * Vehicule.temps_reaction # += v_aT 
             acceleration_approche += (abs(self.vitesse) / 100.0 * (((self.vitesse - vitesse_obstacle)/100.0)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
@@ -374,22 +392,29 @@ class Vehicule:
 
         self.val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
-        valvitesse = self.direction * self.vitesse + dv
+        print("val_acceleration après = " + str(self.val_acceleration))
+
+        val_vitesse = self.direction * self.vitesse + dv
 
         #Nouvelle orientation
         projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
-        coeff_tangeante = 3 * self.poly_a * (projection.x ** 2) + self.poly_b * projection.x + self.poly_c
-        
-        orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
+        coeff_tangente = 3 * self.poly_a * (projection.x ** 2) + 2 * self.poly_b * projection.x + self.poly_c
+
+        print("coeff_tangente = " + str(coeff_tangente))
+        orientation = Coordonnees.Coordonnees(1, coeff_tangente)
         orientation = orientation.normaliser()
-        orientation = Coordonnees.Coordonnees.inv_changer_repere(orientation, self.origine, self.repere_trajectoire_axe_x)
+        orientation = Coordonnees.Coordonnees.inv_changer_repere(orientation, None, self.repere_trajectoire_axe_x)
 
         self.direction = orientation
-        
-        self.vitesse = self.direction * valvitesse
+
+        val_vitesse = min(val_vitesse, Intersection.Intersection.vitesse_max)
+
+        self.vitesse = self.direction * val_vitesse
+        print("vitesse à la fin : " + str(abs(self.vitesse)))
         #~ print("avant Luc : " + str(self.vehicules_suivants[0].coordonnees))
         self.coordonnees = Coordonnees.Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
         #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
+
 
     def changer_trajectoire(self, destination, orientation_cible):
         print ("Changement Trajectoire")
@@ -408,15 +433,16 @@ class Vehicule:
         dest_nv_rep = Coordonnees.Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
         x_f = dest_nv_rep.x
 
-        orientation_d_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_origine, self.origine, self.repere_trajectoire_axe_x)
+        orientation_d_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_origine, None, self.repere_trajectoire_axe_x)
         ratio_d = orientation_d_nv_rep.y/orientation_d_nv_rep.x
-        
-        orientation_f_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoire_axe_x)
+
+        orientation_f_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, None, self.repere_trajectoire_axe_x)
         ratio_f = orientation_f_nv_rep.y/orientation_f_nv_rep.x
 
         self.poly_a = (ratio_f + ratio_d) / (x_f**2)
         self.poly_b = (-ratio_f - 2 * ratio_d) / x_f
         self.poly_c = ratio_d
+
         print("TRAJ orientation_cible :" + str(self.orientation_cible))
         print("TRAJ orientation :" + str(self.direction))
         print("TRAJ a : " + str(self.poly_a) + " b : " + str(self.poly_b) + " c : " + str(self.poly_c))

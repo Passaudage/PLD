@@ -73,9 +73,13 @@ class Coordonnees:
             origine : origine du repère cible
             repere_x : vecteur unitaire x du repère cible
         """
-        vec_translate = vec - origine
+        if origine is None:
+            vec_translate = vec
+        else:
+            vec_translate = vec - origine
+
         repere_y = Coordonnees(-repere_x.y, repere_x.x)
-        
+
         vec_nv_x = vec_translate * repere_x
         vec_nv_y = vec_translate * repere_y
         
@@ -86,6 +90,10 @@ class Coordonnees:
             Pour retourner dans le repere canonique depuis un repere 
             defini par une translation origine et un axe x repere_x
         """
+
+        if origine is None:
+            origine = Coordonnees(0, 0)
+
         repere_y = Coordonnees(-repere_x.y, repere_x.x)
         vec_x_canon = origine.x + vec.x * repere_x.x + vec.y * repere_y.x
         vec_y_canon = origine.y + vec.x * repere_x.y + vec.y * repere_y.y
