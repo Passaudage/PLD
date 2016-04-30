@@ -39,8 +39,6 @@ class Voie:
                 pass
             # si v est derrière, on met vehicule juste devant dans la liste
             else:
-                print(v)
-                print(vehicule)
                 self.vehicules.insert(self.vehicules.index(v), vehicule)
                 return
         self.ajouter_vehicule(vehicule)
