@@ -333,6 +333,9 @@ class Intersection:
 
             epsilon = 0.1
 
+            print("colinéaires : " + str(direction * cur_dir))
+
+
             if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
                 # trajectoires colinéaires
 
@@ -367,13 +370,17 @@ class Intersection:
                         # Une voiture est en arrière de l'autre
                         cur_intersection = None
 
-
             else:
                 # trajectoires non colinéaires
                 # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
                 
                 print("=" + str(coord))
-                if direction.x != 0:
+
+                if abs(direction * cur_dir) < epsilon: 
+                    # cas perpendiculaire
+                    gamma = (coord - cur_pos) * cur_dir
+                    mu = (cur_pos - coord) * direction
+                elif direction.x != 0:
                     ratio = (1.0 * direction.y) / direction.x
                     print(direction)
                     print(ratio)
