@@ -201,7 +201,11 @@ class Intersection:
                     feu = self.feux[index]
                 # Si le feu n'existe pas
                 else:
-                    feu = Feu.Feu(self)
+                    if(index in [0,1,2,6,7,8]):
+                        sens_feu = 0
+                    else:
+                        sens_feu = 1
+                    feu = Feu.Feu(self, sens_feu)
                     self.simulateur.add_listener(feu)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
@@ -419,4 +423,8 @@ class Intersection:
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
-        pass
+        temps_vert = 50000
+        if( moteur.temps%temps_vert ==0):
+            for key, value in self.feux.items():
+                value.change_couleur()
+           
