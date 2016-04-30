@@ -95,8 +95,9 @@ class Vehicule:
                 print("sortie de l'intersection")
                 print("coordonnees " +str(self.coordonnees))
                 print("direction " +str(self.direction))
+                
 
-                self.prochaine_direction = "G"
+                self.prochaine_direction = self.voie.troncon.donner_prochaine_direction(self.voie)
                 self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
            

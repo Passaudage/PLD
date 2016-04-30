@@ -2,6 +2,7 @@ import Coordonnees
 import Feu
 import Voie
 import Vehicule
+import random
 
 class Troncon:
     const_largeur_voie = 350 # centimètres
@@ -126,6 +127,21 @@ class Troncon:
             return  liste[liste.index(voie_depart)+sens]
         return voie_arrivee
         
+        
+    #A l'arrivee sur le troncon, donne prochaine direction selon les probas
+    def donner_prochaine_direction(self, voie):
+        if(voie in self.voies_sens1):
+            directions = self.directions_sens1
+        elif(voie in self.voies_sens2):
+            directions = self.directions_sens2
+        rand = random.randint(1,10)
+        if(rand <= directions["G"]*10):
+            return "G"
+        elif(rand <= (directions["G"]+directions["TD"])*10):
+            return "TD"
+        else:
+            return "D"
+    
 
     def est_passant(self, direction, sens):
         #~ print("sens :"+str(sens))
