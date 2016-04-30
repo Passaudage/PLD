@@ -10,7 +10,7 @@ def charger_simulateur():
     longueur_troncon = 5000 
     
     # Manager #
-    sm = SimulationManager.SimulationManager(5)
+    sm = SimulationManager.SimulationManager(20)
 	
 	# Générateurs #
     gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
@@ -28,9 +28,9 @@ def charger_simulateur():
     sm.add_listener(gen2_nord)
     
 	# Intersections #
-    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
+    i = Intersection.Intersection(sm, Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
-    i2 = Intersection.Intersection(Coordonnees.Coordonnees(13150, 6050), 2100, 2100)
+    i2 = Intersection.Intersection(sm, Coordonnees.Coordonnees(13150, 6050), 2100, 2100)
     sm.add_listener(i2)
     
     # Tronçons #    

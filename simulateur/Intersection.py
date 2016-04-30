@@ -14,7 +14,9 @@ class Intersection:
     """
     vitesse_max = 972 # cm.s^{-1}
         
-    def __init__(self, coordonnees, hauteur, largeur):
+    def __init__(self, simulateur, coordonnees, hauteur, largeur):
+        self.simulateur = simulateur
+        
         # Position du point central de l'intersection
         self.coordonnees = coordonnees
         self.hauteur = hauteur
@@ -200,6 +202,7 @@ class Intersection:
                 # Si le feu n'existe pas
                 else:
                     feu = Feu.Feu(self)
+                    self.simulateur.add_listener(feu)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)

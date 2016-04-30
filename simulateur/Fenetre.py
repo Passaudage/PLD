@@ -33,7 +33,7 @@ class Fenetre(Gtk.Window):
 
     def def_visual(self):
 
-        grain = 100
+        grain = 10000
 
         #~ self.sim = jacky.charger_simulateur()
         self.sim = DoubleCarrefour.charger_simulateur()
