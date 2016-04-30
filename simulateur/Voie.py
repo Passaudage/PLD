@@ -37,7 +37,7 @@ class Voie:
             # si v est en train d'arriver
             if(v.nouvelle_voie==self):
                 #si v va arriver plus loin
-                if(abs(v.destination-self.coordonnees_debut) >= abs(vehicule.destination-self.coordonnees_debut)):
+                if(abs(v.destination-self.coordonnees_debut)+1 >= abs(vehicule.destination-self.coordonnees_debut)):
                     pass
                 #si v va arrive derrière, on met vehicule juste devant dans la liste
                 else:
