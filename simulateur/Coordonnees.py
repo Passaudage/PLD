@@ -73,14 +73,26 @@ class Coordonnees:
             origine : origine du repère cible
             repere_x : vecteur unitaire x du repère cible
         """
-        vec_nv_x = math.cos(repere_x.x)*vec.x - math.sin(repere_x.y)*vec.y
-        vec_nv_x -= origine.x
-
-        vec_nv_y = math.sin(repere_x.x)*vec.x + math.cos(repere_x.y)*vec.y 
-        vec_nv_y -= origine.y
-
+        vec_translate = vec - origine
+        repere_y = Coordonnees(-repere_x.y, repere_x.x)
+        
+        vec_nv_x = vec_translate * repere_x
+        vec_nv_y = vec_translate * repere_y
+        
         return Coordonnees(vec_nv_x, vec_nv_y)
+
+    def inv_changer_repere(vec, origine, repere_x):
+        """
+            Pour retourner dans le repere canonique depuis un repere 
+            defini par une translation origine et un axe x repere_x
+        """
+        repere_y = Coordonnees(-repere_x.y, repere_x.x)
+        vec_x_canon = origine.x + vec.x * repere_x.x + vec.y * repere_y.x
+        vec_y_canon = origine.y + vec.x * repere_x.y + vec.y * repere_y.y
+
+        return Coordonnees(vec_x_canon, vec_y_canon)
 
     def apply(vec_a, vec_b, fonction):
         return Coordonnees( fonction(vec_a.x, vec_b.x),
                             fonction(vec_a.y, vec_b.y))
+

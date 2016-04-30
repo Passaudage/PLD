@@ -325,28 +325,28 @@ class Vehicule:
     def donner_arriere(self):
         return (self.coordonnees - self.direction * self.longueur)
 
-    def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
-        if(position_obstacle is None):
-            self.coordonnees = self.coordonnees + self.direction*2
-            return
-        distance = (position_obstacle-self.coordonnees)
-        if(self.direction*distance <= 0):
-            return
-        distance = abs(distance)
-        distance_possible = min (distance - 30 , 2)
-        self.coordonnees = self.coordonnees + self.direction*distance_possible
-        
-    def changer_trajectoire(self, destination, orientation_cible):
-        self.destination = destination
-        self.orientation_cible = orientation_cible
+#    def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
+#        if(position_obstacle is None):
+#            self.coordonnees = self.coordonnees + self.direction*2
+#            return
+#        distance = (position_obstacle-self.coordonnees)
+#        if(self.direction*distance <= 0):
+#            return
+#        distance = abs(distance)
+#        distance_possible = min (distance - 30 , 2)
+#        self.coordonnees = self.coordonnees + self.direction*distance_possible
+#        
+#    def changer_trajectoire(self, destination, orientation_cible):
+#        self.destination = destination
+#        self.orientation_cible = orientation_cible
 
 
-    """
+    
     def mettre_coordonnees_a_jour(self, increment_temps, nb_ticks_sec, vitesse_obstacle, position_obstacle):
         #print("Coordonnees mises à jour")
 
-        dx = (increment_temps / nombre_ticks_seconde) * self.vitesse.x
-        dy = (increment_temps / nombre_ticks_seconde) * self.vitesse.y 
+        dx = (increment_temps / nb_ticks_sec) * self.vitesse.x
+        dy = (increment_temps / nb_ticks_sec) * self.vitesse.y 
 
         dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
         
@@ -358,6 +358,7 @@ class Vehicule:
         if vitesse_obstacle is None:
             vitesse_obstacle = self.direction * vitesse_max
 
+        print("VIT vm: " + str(abs(vitesse_max)) + " vc : " + str(abs(self.vitesse)))
         acceleration_libre = 1 - (float(abs(self.vitesse))/(abs(vitesse_max)))**4
         acceleration_approche = 0
         
@@ -374,10 +375,15 @@ class Vehicule:
         self.val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
         valvitesse = self.direction * self.vitesse + dv
+
+        #Nouvelle orientation
         projection = Coordonnees.Coordonnees.changer_repere(self.coordonnees, self.origine, self.repere_trajectoire_axe_x)
-        coeff_tangeante = 2 * self.poly_a * projection.x + self.poly_b
+        coeff_tangeante = 3 * self.poly_a * (projection.x ** 2) + self.poly_b * projection.x + self.poly_c
+        
         orientation = Coordonnees.Coordonnees(1, coeff_tangeante)
         orientation = orientation.normaliser()
+        orientation = Coordonnees.Coordonnees.inv_changer_repere(orientation, self.origine, self.repere_trajectoire_axe_x)
+
         self.direction = orientation
         
         self.vitesse = self.direction * valvitesse
@@ -400,16 +406,22 @@ class Vehicule:
         self.repere_trajectoire_axe_y = Coordonnees.Coordonnees(-self.repere_trajectoire_axe_x.y, self.repere_trajectoire_axe_x.x)
 
         dest_nv_rep = Coordonnees.Coordonnees.changer_repere(self.destination, self.origine, self.repere_trajectoire_axe_x)
+        x_f = dest_nv_rep.x
 
-        orientation_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoire_axe_x)
-            
-        ratio = (dest_nv_rep.y - orientation_nv_rep.y) / (dest_nv_rep.x - 2)
+        orientation_d_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_origine, self.origine, self.repere_trajectoire_axe_x)
+        ratio_d = orientation_d_nv_rep.y/orientation_d_nv_rep.x
+        
+        orientation_f_nv_rep = Coordonnees.Coordonnees.changer_repere(self.orientation_cible, self.origine, self.repere_trajectoire_axe_x)
+        ratio_f = orientation_f_nv_rep.y/orientation_f_nv_rep.x
 
-        self.poly_a = ratio / dest_nv_rep.x
-        self.poly_b = orientation_nv_rep.y - 2 * ratio
-        print("a : " + str(self.poly_a) + " b : " + str(self.poly_b))
+        self.poly_a = (ratio_f + ratio_d) / (x_f**2)
+        self.poly_b = (-ratio_f - 2 * ratio_d) / x_f
+        self.poly_c = ratio_d
+        print("TRAJ orientation_cible :" + str(self.orientation_cible))
+        print("TRAJ orientation :" + str(self.direction))
+        print("TRAJ a : " + str(self.poly_a) + " b : " + str(self.poly_b) + " c : " + str(self.poly_c))
 
-    """
+    
     """
    def calculer_trajet_max(self, coordonnees_destination):
        distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
@@ -428,18 +440,17 @@ class Vehicule:
 
    def verifie_feu(self):
        return self.voie.est_passant(self.prochaine_direction)
-
-   def avance_feu(self):
-       resultat = self.calculer_trajet_max(self.voie.coordonnees_fin)
-       distance_faite = abs(resultat - self.coordonnees)
-       self.coordonnees = resultat
-       return distance_faite
-
-   def avance_change_voie(self):
-       trajet = self.calculer_trajet_max(self.destination.soustraction(self.direction.mult(30)))
-       self.coordonnees = self.coordonnees.addition(trajet)
-
-   def avancer_intersection(self, distance_faite):
-       trajet = self.calculer_trajet_max(self.destination)
-
-       """
+    """
+#   def avance_feu(self):
+#       resultat = self.calculer_trajet_max(self.voie.coordonnees_fin)
+#       distance_faite = abs(resultat - self.coordonnees)
+#       self.coordonnees = resultat
+#       return distance_faite
+#
+#   def avance_change_voie(self):
+#       trajet = self.calculer_trajet_max(self.destination.soustraction(self.direction.mult(30)))
+#       self.coordonnees = self.coordonnees.addition(trajet)
+#
+#   def avancer_intersection(self, distance_faite):
+#       trajet = self.calculer_trajet_max(self.destination)
+#
