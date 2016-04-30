@@ -196,8 +196,8 @@ class Vehicule:
             # s'il n'y a aucun véhicule sur la voie voulue
             if(len(self.nouvelle_voie.vehicules)==0):
                 return (None,None)
-            x = None
-            y = None
+            x = 0 #BONFANTE
+            y = 0 #BONFANTE
             bv = None
             av = None
             ac = None
@@ -223,6 +223,8 @@ class Vehicule:
             p = Coordonnees.Coordonnees(x, y)
             for vehicule in self.nouvelle_voie.vehicules:           
                 # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
+                print("D1 : "+str(p))
+                print("D2 : "+str(self.nouvelle_voie.coordonnees_debut))
                 if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
                         > abs(p - self.nouvelle_voie.coordonnees_debut)):
                     pass
