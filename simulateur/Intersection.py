@@ -1,5 +1,7 @@
 import Feu
 import Coordonnees
+import Vehicule
+
 """
     Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
@@ -314,6 +316,9 @@ class Intersection:
         distance_blocage = 0
         vehicule_blocant = None
 
+        # TODO : faire qqchose de plus réalise avec prise en compte des directions
+        distance_securite = Vehicule.Vehicule.largeur
+
         for vehicule in self.vehicules :
 
             if vehicule.coordonnees == coord:
@@ -392,7 +397,7 @@ class Intersection:
                     gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
                     mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
 
-                if (gamma > 0 and gamma < vehicule.longueur) and (mu > 0):
+                if (gamma < distance_securite) and (gamma > (-vehicule.longueur - distance_securite)) and (mu > 0):
                     cur_intersection = coord + direction * mu
 
             if cur_intersection is not None:
