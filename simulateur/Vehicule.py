@@ -145,7 +145,7 @@ class Vehicule:
             voie_destination = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             self.nouvelle_voie = self.voie.troncon.donner_etape_changement(self.voie, voie_destination)
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * self.longueur * 2
+            distance_avant = self.direction * self.longueur * 1
             trajet = direction_virage + distance_avant
             self.changer_trajectoire(trajet + self.coordonnees, self.nouvelle_voie.orientation)
 
@@ -192,49 +192,13 @@ class Vehicule:
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
+            vehicule_devant = self.nouvelle_voie.precedent(self)
             
             # s'il n'y a aucun véhicule sur la voie voulue
-            if(len(self.nouvelle_voie.vehicules)==0):
+            if(vehicule_devant is None):
                 return (None,None)
-            x = 0 #BONFANTE
-            y = 0 #BONFANTE
-            bv = None
-            av = None
-            ac = None
-            bc = None 
-            if (self.direction.x == 0):
-                x = self.coordonnees.x
             else:
-                av = self.direction.y / self.direction.x
-                bv = self.coordonnees.y - av * self.coordonnees.x
-            if(self.nouvelle_voie.orientation.x == 0):
-                x = self.nouvelle_voie.coordonnees_debut.x
-            else:
-                ac = self.nouvelle_voie.orientation.y / self.nouvelle_voie.orientation.x
-                bc = self.nouvelle_voie.coordonnees_debut.y - ac * self.nouvelle_voie.coordonnees_debut.x
-            if(x is None):
-                x = (bv - bc) / (ac - av)
-            if(self.direction.x != 0):
-                y = av * x + bv
-            elif(self.nouvelle_voie.orientation.x != 0):
-                y = ac * x + bc
-            else:
-                pass
-            p = Coordonnees.Coordonnees(x, y)
-            for vehicule in self.nouvelle_voie.vehicules:   
-                if(vehicule == self):
-                    continue       
-                # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
-                if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
-                        > abs(p - self.nouvelle_voie.coordonnees_debut)):
-                    pass
-
-                # si un véhicule gêne
-                elif (abs(vehicule.coordonnees - vehicule.voie.coordonnees_debut)
-                          > abs(p - self.nouvelle_voie.coordonnees_debut)):
-                    return (p, vehicule)
-
-            return (None, None)
+                return (vehicule_devant.donner_arriere(), vehicule_devant)
             
         # s'il y a qqun devant sur la voie
         elif (self.voie.precedent(self) is not None):
@@ -243,9 +207,6 @@ class Vehicule:
             # s'il est en train de rentrer sur la voie
             if(vehicule_devant.nouvelle_voie == self.voie):
                 marge = vehicule_devant.destination - (self.voie.orientation*100)
-                print("bolossage")
-                print(self)
-                print(vehicule_devant)
                 return (marge, vehicule_devant)
             
             arriere_vehicule = vehicule_devant.donner_arriere()
