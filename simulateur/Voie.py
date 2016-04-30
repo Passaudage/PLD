@@ -32,10 +32,19 @@ class Voie:
     def ajouter_vehicule_avant(self, second_vehicule, premier_vehicule):
         self.vehicules.insert(self.vehicules.index(premier_vehicule)+1, second_vehicule)
         
-    def ajouter_vehicule_position(self, vehicule):
+    def ajouter_vehicule_destination(self, vehicule):
         for v in self.vehicules:
-            # si v est devant vehicule
-            if(abs(v.coordonnees-self.coordonnees_debut) > abs(vehicule.coordonnees-self.coordonnees_debut)):
+            # si v est en train d'arriver
+            if(v.nouvelle_voie==self):
+                #si v va arriver plus loin
+                if(abs(v.destination-self.coordonnees_debut) >= abs(vehicule.destination-self.coordonnees_debut)):
+                    pass
+                #si v va arrive derrière, on met vehicule juste devant dans la liste
+                else:
+                    self.vehicules.insert(self.vehicules.index(v), vehicule)
+                    return
+            # si v est devant le point d'entrée de vehicule
+            elif(abs(v.coordonnees-self.coordonnees_debut) >= abs(vehicule.destination-self.coordonnees_debut)):
                 pass
             # si v est derrière, on met vehicule juste devant dans la liste
             else:

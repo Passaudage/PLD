@@ -130,10 +130,6 @@ class Vehicule:
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
-                #si on n'est pas déjà sur la liste de la nouvelle voie, on s'y ajoute
-                if(not self.nouvelle_voie.connait(self)):
-                    self.nouvelle_voie.ajouter_vehicule_position(self)
-
                 self.voie = self.nouvelle_voie
                 
                 print("fin de changement de voie")
@@ -151,7 +147,9 @@ class Vehicule:
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
             distance_avant = self.direction * self.longueur * 2
             trajet = direction_virage + distance_avant
-            self.destination = trajet + self.coordonnees
+            self.changer_trajectoire(trajet + self.coordonnees, self.nouvelle_voie.orientation)
+            #si on n'est pas déjà sur la liste de la nouvelle voie, on s'y ajoute
+            self.nouvelle_voie.ajouter_vehicule_destination(self)
             self.direction = (self.destination - self.coordonnees).normaliser()
             
             print("début changement de voie")
@@ -227,8 +225,6 @@ class Vehicule:
                 if(vehicule == self):
                     continue       
                 # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
-                #~ print("D1 : "+str(p))
-                #~ print("D2 : "+str(self.nouvelle_voie.coordonnees_debut))
                 if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
                         > abs(p - self.nouvelle_voie.coordonnees_debut)):
                     pass
@@ -236,7 +232,6 @@ class Vehicule:
                 # si un véhicule gêne
                 elif (abs(vehicule.coordonnees - vehicule.voie.coordonnees_debut)
                           > abs(p - self.nouvelle_voie.coordonnees_debut)):
-                    self.nouvelle_voie.ajouter_vehicule_avant(self,vehicule)
                     return (p, vehicule)
 
             return (None, None)
@@ -246,8 +241,10 @@ class Vehicule:
             vehicule_devant = self.voie.precedent(self)
             
             # s'il est en train de rentrer sur la voie
-            if(self.voie.precedent(self).nouvelle_voie is not None):
+            if(vehicule_devant.nouvelle_voie is not None):
                 marge = vehicule_devant.destination - (self.voie.orientation*100)
+                print(self)
+                print(vehicule_devant)
                 return (marge, vehicule_devant)
             
             arriere_vehicule = vehicule_devant.donner_arriere()
