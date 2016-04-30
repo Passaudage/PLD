@@ -1,5 +1,7 @@
 import Feu
 import Coordonnees
+import Vehicule
+
 """
     Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
@@ -314,6 +316,9 @@ class Intersection:
         distance_blocage = 0
         vehicule_blocant = None
 
+        # TODO : faire qqchose de plus réalise avec prise en compte des directions
+        distance_securite = Vehicule.Vehicule.largeur
+
         for vehicule in self.vehicules :
 
             if vehicule.coordonnees == coord:
@@ -332,6 +337,9 @@ class Intersection:
             # colinéaires ?
 
             epsilon = 0.1
+
+            print("colinéaires : " + str(direction * cur_dir))
+
 
             if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
                 # trajectoires colinéaires
@@ -367,13 +375,17 @@ class Intersection:
                         # Une voiture est en arrière de l'autre
                         cur_intersection = None
 
-
             else:
                 # trajectoires non colinéaires
                 # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
                 
                 print("=" + str(coord))
-                if direction.x != 0:
+
+                if abs(direction * cur_dir) < epsilon: 
+                    # cas perpendiculaire
+                    gamma = (coord - cur_pos) * cur_dir
+                    mu = (cur_pos - coord) * direction
+                elif direction.x != 0:
                     ratio = (1.0 * direction.y) / direction.x
                     print(direction)
                     print(ratio)
@@ -385,7 +397,7 @@ class Intersection:
                     gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
                     mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
 
-                if (gamma > 0 and gamma < vehicule.longueur) and (mu > 0):
+                if (gamma < distance_securite) and (gamma > (-vehicule.longueur - distance_securite)) and (mu > 0):
                     cur_intersection = coord + direction * mu
 
             if cur_intersection is not None:
