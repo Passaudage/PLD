@@ -213,7 +213,7 @@ class Vehicule:
             
             # s'il est en train de rentrer sur la voie
             if(vehicule_devant.nouvelle_voie == self.voie):
-                marge = vehicule_devant.destination - (self.voie.orientation*100)
+                marge = vehicule_devant.destination - (self.voie.orientation*vehicule_devant.longueur)
                 return (marge, vehicule_devant)
             
             arriere_vehicule = vehicule_devant.donner_arriere()
