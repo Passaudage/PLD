@@ -13,15 +13,11 @@ def charger_simulateur():
     sm = SimulationManager.SimulationManager(1)
 	
 	# Générateurs #
-<<<<<<< HEAD
     gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 30], [2, 30], [3, 10]])
-=======
-    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
->>>>>>> db540440c201bbb60fa7dff1b1cae74a5e76337d
     sm.add_listener(gen1_sud)
-    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
+    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 4], [2, 7], [3, 10]])
     sm.add_listener(gen1_ouest)
-    gen1_nord = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [1000, 50]])
+    gen1_nord = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen1_nord)
     
     gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
