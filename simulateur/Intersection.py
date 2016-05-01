@@ -468,7 +468,23 @@ class Intersection:
                     coordonnees_blocage = cur_intersection_rep
                     y_min_rep_blocage = cur_intersection.y # y dans le repère local de la voiture
 
-        return (coordonnees_blocage, vehicule_blocant)
+        if vehicule_blocant is not None:
+            # on a bien une intersection
+
+            bloque_par = vehicule_blocant.bloque_par
+
+            if bloque_par is not None:
+                if vehicule_blocant.timestamp_maj < voiture.timestamp_maj:
+                    vehicule_blocant.bloque_par = None
+                    bloque_par = vehicule_blocant
+            else:
+                bloque_par = vehicule_blocant
+
+            if bloque_par != voiture:
+                voiture.bloque_par = bloque_par
+                return (coordonnees_blocage, vehicule_blocant)
+
+        return (None, None)
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")

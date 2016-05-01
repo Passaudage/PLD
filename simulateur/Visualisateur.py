@@ -74,7 +74,7 @@ class Visualisateur:
     def boucle_simulation(self):
         
         while not self.terminated:
-            for i in range(10):
+            for i in range(1):
                 self.simulateur.avance_temps()
                 self.rotation += 0.001 * 90 * 2 / 3.14159
                 if self.position > 550 or self.position < 50:
