@@ -114,6 +114,7 @@ class Vehicule:
                     self.voie = None
                     for suiv in self.vehicules_suivants:
                         suiv.decrochage_arbre()
+                    Vehicule.liste_voitures.remove(self)
                     return
                     
                 
