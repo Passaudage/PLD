@@ -32,11 +32,14 @@ class Vehicule:
         self.changer_trajectoire(destination, direction)
         self.vitesse = Coordonnees.Coordonnees(0, 0)
         self.val_acceleration = 0
+        
+        self.existence = False
 
         # non initialisés
         self.racine = None
         self.nouvelle_voie = None
         self.intersection = None
+        self.intersection_avant = None
 
         # Mise dans l'arbre
         self.vehicule_precedent = vehicule_precedent
@@ -75,8 +78,12 @@ class Vehicule:
                 # @author : Marcus
         """
         # si on existe pas encore
-        if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
-            return
+        if(not self.existence):
+            if (self.vehicule_precedent is None or 
+               (self.vehicule_precedent.donner_arriere()-self.coordonnees) * self.direction > 0):
+                self.existence = True
+            else:
+                return
             
             
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
@@ -89,7 +96,7 @@ class Vehicule:
                 self.voie = self.nouvelle_voie
                 self.nouvelle_voie = None
                 self.voie.ajouter_vehicule(self)
-                self.intersection.retirer_vehicule(self)
+                self.intersection_avant = self.intersection
                 self.intersection = None
                 
                 #~ print("sortie de l'intersection")
@@ -146,8 +153,8 @@ class Vehicule:
             voie_destination = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             self.nouvelle_voie = self.voie.troncon.donner_etape_changement(self.voie, voie_destination)
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * self.longueur * 2
-            trajet = direction_virage + distance_avant
+            distance_avant = self.direction * self.longueur 
+            trajet = direction_virage + distance_avant * 3.5
             self.changer_trajectoire(trajet + self.coordonnees, self.nouvelle_voie.orientation)
 
             self.nouvelle_voie.ajouter_vehicule_destination(self)
@@ -157,7 +164,10 @@ class Vehicule:
             #~ print("coordonnees " +str(self.coordonnees))
             #~ print("direction " +str(self.direction))
             
-            
+        #si on est entièrement sur la voie, on s'enlève de l'intersection
+        if(self.intersection_avant is not None and (self.voie.orientation *(self.donner_arriere()-self.voie.coordonnees_debut))>0):
+            self.intersection_avant.retirer_vehicule(self)
+            self.intersection_avant = None    
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
@@ -187,55 +197,20 @@ class Vehicule:
             Calcule l'obstacle le plus proche dans la direction actuelle
                 # @author : Marcus
         """
+        
         # si on est sur une intersection
         if (self.intersection is not None):
             return self.intersection.donner_obstacle(self, self.coordonnees, self.direction)
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
+            vehicule_devant = self.nouvelle_voie.precedent(self)
             
             # s'il n'y a aucun véhicule sur la voie voulue
-            if(len(self.nouvelle_voie.vehicules)==0):
+            if(vehicule_devant is None):
                 return (None,None)
-            x = 0 #BONFANTE
-            y = 0 #BONFANTE
-            bv = None
-            av = None
-            ac = None
-            bc = None 
-            if (self.direction.x == 0):
-                x = self.coordonnees.x
             else:
-                av = self.direction.y / self.direction.x
-                bv = self.coordonnees.y - av * self.coordonnees.x
-            if (self.nouvelle_voie.orientation.x == 0):
-                x = self.nouvelle_voie.coordonnees_debut.x
-            else:
-                ac = self.nouvelle_voie.orientation.y / self.nouvelle_voie.orientation.x
-                bc = self.nouvelle_voie.coordonnees_debut.y - ac * self.nouvelle_voie.coordonnees_debut.x
-            if(x is None):
-                x = (bv - bc) / (ac - av)
-            if(self.direction.x != 0):
-                y = av * x + bv
-            elif(self.nouvelle_voie.orientation.x != 0):
-                y = ac * x + bc
-            else:
-                pass
-            p = Coordonnees.Coordonnees(x, y)
-            for vehicule in self.nouvelle_voie.vehicules:   
-                if(vehicule == self):
-                    continue       
-                # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
-                if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
-                        > abs(p - self.nouvelle_voie.coordonnees_debut)):
-                    pass
-
-                # si un véhicule gêne
-                elif (abs(vehicule.coordonnees - vehicule.voie.coordonnees_debut)
-                          > abs(p - self.nouvelle_voie.coordonnees_debut)):
-                    return (p, vehicule)
-
-            return (None, None)
+                return (vehicule_devant.donner_arriere(), vehicule_devant)
             
         # s'il y a qqun devant sur la voie
         elif (self.voie.precedent(self) is not None):
@@ -243,10 +218,7 @@ class Vehicule:
             
             # s'il est en train de rentrer sur la voie
             if(vehicule_devant.nouvelle_voie == self.voie):
-                marge = vehicule_devant.destination - (self.voie.orientation*100)
-                print("bolossage")
-                print(self)
-                print(vehicule_devant)
+                marge = vehicule_devant.destination - (self.voie.orientation*vehicule_devant.longueur)
                 return (marge, vehicule_devant)
             
             arriere_vehicule = vehicule_devant.donner_arriere()
@@ -421,11 +393,11 @@ class Vehicule:
 
 
     def changer_trajectoire(self, destination, orientation_cible):
-        print ("Changement Trajectoire")
-        print (destination)
-        print (orientation_cible)
-        print (self.direction)
-        print ("Fin trace changement trajectoire")
+        #print ("Changement Trajectoire")
+        #print (destination)
+        #print (orientation_cible)
+        #print (self.direction)
+        #print ("Fin trace changement trajectoire")
         self.orientation_cible = copy.copy(orientation_cible)
         self.destination = copy.copy(destination)
         self.origine = copy.copy(self.coordonnees)

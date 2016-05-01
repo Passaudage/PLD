@@ -10,14 +10,14 @@ def charger_simulateur():
     longueur_troncon = 5000 
     
     # Manager #
-    sm = SimulationManager.SimulationManager(5)
+    sm = SimulationManager.SimulationManager(1)
 	
 	# Générateurs #
-    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
     sm.add_listener(gen1_sud)
-    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
     sm.add_listener(gen1_ouest)
-    gen1_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen1_nord = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [1000, 50]])
     sm.add_listener(gen1_nord)
     
     gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
@@ -135,41 +135,41 @@ def charger_simulateur():
     i.creer_feux()
     i2.creer_feux()
     
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
-    
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
-    
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
-    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
+#    
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    t2_nord.voies_sens2[2].creer_vehicule(sm, 0, 500)
+#    
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
+#    t2_sud.voies_sens1[0].creer_vehicule(sm, 0, 500)
     
    
     return sm
