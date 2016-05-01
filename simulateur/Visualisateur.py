@@ -94,11 +94,9 @@ class Visualisateur:
 
         widget.queue_draw()
 
-    def dessiner_voitures(self):
-        """
-            Cette  méthode dessine l'ensemble des voitures
-        """
-        
+    def dessiner_mouche(self):
+        # petit délire personnel
+
         self.cairo_context.set_source_rgba(0.1, 0, 0.8, 1)
         coord_test = self.echelle(Coordonnees.Coordonnees(6050, 7100))
         orientation = self.rotation
@@ -111,6 +109,13 @@ class Visualisateur:
         self.cairo_context.rectangle(0, 0, largeur, longueur)
         self.cairo_context.fill()
         self.fin_dessiner()
+
+    def dessiner_voitures(self):
+        """
+            Cette  méthode dessine l'ensemble des voitures
+        """
+
+        # self.dessiner_mouche()
 
         self.cairo_context.set_source_rgba(1, 0, 0, 1)
 
@@ -129,7 +134,7 @@ class Visualisateur:
         self.debut_dessiner()
         self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(angle + math.pi / 2) # en radiant
-        self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
+        self.cairo_context.translate(-self.largeur_vehicule * 0.5, -longueur * 0.5)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
         self.fin_dessiner()
@@ -226,7 +231,7 @@ class Visualisateur:
 
         numero_voie = 0
 
-        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [min, max], [-1, 1]):
+        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [max, min], [-1, 1]):
 
             numero_voie = 0
 
@@ -237,9 +242,9 @@ class Visualisateur:
 
                     if horizontal:
                         position_feu_x = fonction(vec_debut.x, vec_fin.x)
-                        position_feu_y = vec_debut.y - coeff * (largeur_voie * (0.5 + numero_voie))
+                        position_feu_y = vec_debut.y + coeff * (largeur_voie * (0.5 + numero_voie))
                     else:
-                        position_feu_x = vec_debut.x + coeff * (largeur_voie * (0.5 + numero_voie))
+                        position_feu_x = vec_debut.x - coeff * (largeur_voie * (0.5 + numero_voie))
                         position_feu_y = fonction(vec_debut.y, vec_fin.y)
 
                     if feu.est_passant():

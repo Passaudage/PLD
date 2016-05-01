@@ -28,11 +28,14 @@ class Intersection:
     vitesse_max = 972 # cm.s^{-1}
     sur_place = {}
         
-    def __init__(self, coordonnees, hauteur, largeur):
+    def __init__(self, simulateur, coordonnees, hauteur, largeur):
+        self.simulateur = simulateur
+        
         # Position du point central de l'intersection
         self.coordonnees = coordonnees
         self.hauteur = hauteur
         self.largeur = largeur
+        self.temps_vert = 0
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -213,7 +216,12 @@ class Intersection:
                     feu = self.feux[index]
                 # Si le feu n'existe pas
                 else:
-                    feu = Feu.Feu(self)
+                    if(index in [0,1,2,6,7,8]):
+                        sens_feu = 0
+                    else:
+                        sens_feu = 1
+                    feu = Feu.Feu(self, sens_feu)
+                    self.simulateur.add_listener(feu)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)
@@ -488,4 +496,10 @@ class Intersection:
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
-        pass
+        temps_vert = 30
+        self.temps_vert += increment
+        if( self.temps_vert / moteur.nombre_ticks_seconde > temps_vert):
+            for key, value in self.feux.items():
+                value.change_couleur()
+            self.temps_vert = 0
+           

@@ -20,13 +20,16 @@ class Feu():
             # @author : Bonfante
     """
 
-    def __init__(self, intersection):
-		
+    def __init__(self, intersection, sens):
+        
         # Intersection où se trouve le feu
         self.intersection = intersection
 
         # Couleur actuel de l'axe passé en parametre
-        self.passant = True
+        if(sens == 0):
+            self.passant = True
+        else:
+            self.passant = False
         
         print ("FEU : " + str(self.passant))
 
@@ -35,7 +38,7 @@ class Feu():
             Methode appelée lorsque le simulateur augmente le temps
         """
         pass
-        #~ self.change_couleur()
+        #~ self.change_couleur(simulation_manager.temps)
 
     def change_couleur(self):
         """
