@@ -125,7 +125,7 @@ class Vehicule:
                 #~ print("direction " +str(self.direction))
                 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
-                self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
+                #~ self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
                 self.changer_trajectoire(self.nouvelle_voie.coordonnees_debut, self.nouvelle_voie.orientation)
             # fin de changement de voie
             else:
