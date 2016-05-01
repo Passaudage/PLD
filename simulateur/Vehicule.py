@@ -20,7 +20,6 @@ class Vehicule:
         Vehicule.count += 1
         Vehicule.liste_voitures.append(self)
 
-        #~ print(Vehicule.count)
         self.simulateur = simulateur
         self.coordonnees = copy.deepcopy(origine)
         self.discourtois = discourtois
@@ -54,23 +53,18 @@ class Vehicule:
         return False
 
     def notifie_temps(self, nb_increment, simulateur):
-       # print("coordonnees " +str(self.coordonnees))
-       # print("C'est ma direction " + str(self.direction) + " Peu de nouvelles, batterie faible, malédiction !")
         """
             Appelle la méthode d'avancement du véhicule et le transmet aux fils dans l'arbre
                 # nb_increment : numéro d'incrément
                 # simulateur : impulseur des incréments
                 # @author : Marcus
         """
-        #print("avant : " + str(self.coordonnees))
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
-            #print("après : " + str(self.coordonnees))
             return
         else:
             for vehicule_suivant in self.vehicules_suivants:
                 vehicule_suivant.notifie_temps(nb_increment, simulateur)
-        #print("après : " + str(self.coordonnees))
 
     def avance_vehicule(self, incr, nb_tick):
         """
@@ -82,12 +76,13 @@ class Vehicule:
         """
         # si on existe pas encore
         if (self.vehicule_precedent is not None and self.vehicule_precedent.coordonnees == self.coordonnees):
-            #print("Je n'existe pas")
             return
             
             
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
         if ((self.coordonnees - self.destination) * self.direction >= 0):
+            
+            print ("destination atteinte : " + str(self.destination))
 
             # sortie de l'intersection
             if (self.intersection is not None):
@@ -97,11 +92,12 @@ class Vehicule:
                 self.intersection.retirer_vehicule(self)
                 self.intersection = None
                 
-                print("sortie de l'intersection")
-                print("coordonnees " +str(self.coordonnees))
-                print("direction " +str(self.direction))
+                #~ print("sortie de l'intersection")
+                #~ print("coordonnees " +str(self.coordonnees))
+                #~ print("direction " +str(self.direction))
+                
 
-                self.prochaine_direction = "G"
+                self.prochaine_direction = self.voie.troncon.donner_prochaine_direction(self.voie)
                 self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
            
@@ -124,9 +120,9 @@ class Vehicule:
                 self.intersection.ajouter_vehicule(self)
                 self.voie.supprimer_vehicule(self)
                                 
-                print("arrivée sur intersection")
-                print("coordonnees " +str(self.coordonnees))
-                print("direction " +str(self.direction))
+                #~ print("arrivée sur intersection")
+                #~ print("coordonnees " +str(self.coordonnees))
+                #~ print("direction " +str(self.direction))
                 
                 self.nouvelle_voie = self.intersection.demander_voies_sorties(self.voie, self.prochaine_direction)
                 self.direction = (self.nouvelle_voie.coordonnees_debut - self.coordonnees).normaliser()
@@ -134,48 +130,51 @@ class Vehicule:
             # fin de changement de voie
             else:
                 self.voie.supprimer_vehicule(self)
-                if(self.vehicule_precedent is None):
-                    self.nouvelle_voie.ajouter_vehicule(self)
-                else:
-                    self.nouvelle_voie.ajouter_vehicule_avant(self, self.vehicule_precedent)
                 self.voie = self.nouvelle_voie
                 
-                print("fin de changement de voie")
-                print("coordonnees " +str(self.coordonnees))
-                print("direction " +str(self.direction))
+                #~ print("fin de changement de voie")
+                #~ print("coordonnees " +str(self.coordonnees))
+                #~ print("direction " +str(self.direction))
 
                 self.nouvelle_voie = None
                 self.direction = self.voie.orientation
                 self.changer_trajectoire(self.voie.coordonnees_fin, self.voie.orientation)
                 
-        # Si il faut changer de voie, à faire une seule fois
+        # Si il faut changer de voie, à faire une seule fois        
         if (not self.voie.direction_possible(self.prochaine_direction) and self.nouvelle_voie is None):
-            #print("Ma voie est " + str(self.voie))
-            self.nouvelle_voie = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
+            voie_destination = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
+            self.nouvelle_voie = self.voie.troncon.donner_etape_changement(self.voie, voie_destination)
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * 2
+            distance_avant = self.direction * self.longueur * 2
             trajet = direction_virage + distance_avant
-            self.destination = trajet + self.coordonnees
+            self.changer_trajectoire(trajet + self.coordonnees, self.nouvelle_voie.orientation)
+
+            self.nouvelle_voie.ajouter_vehicule_destination(self)
+            self.direction = (self.destination - self.coordonnees).normaliser()
+            
+            #~ print("début changement de voie")
+            #~ print("coordonnees " +str(self.coordonnees))
+            #~ print("direction " +str(self.direction))
+            
+            
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
-
-        print("obstacle : " +str(vehicule_blocant))
         
         # si l'obstacle est un feu rouge
         if (vehicule_blocant == "feu"):
-            print("obstacle feu")
+            #~ print("obstacle feu")
             self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
             return
         # Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
         #aucun obstacle
         if (vehicule_blocant is None):
-            print("obstacle nul")
+            #~ print("obstacle nul")
             self.decrochage_arbre()
             self.mettre_coordonnees_a_jour(incr, nb_tick, None, None)
         #nouvel obstacle
         elif (self.vehicule_precedent != vehicule_blocant):
-            print("nouvel obstacle")
+            #~ print("nouvel obstacle")
             self.change_arbre(vehicule_blocant)
             self.mettre_coordonnees_a_jour(incr, nb_tick, vehicule_blocant.vitesse, coordonnees_obstacle)
         else:
@@ -189,15 +188,16 @@ class Vehicule:
         """
         # si on est sur une intersection
         if (self.intersection is not None):
-            return self.intersection.donner_obstacle(self.coordonnees, self.direction)
+            return self.intersection.donner_obstacle(self, self.coordonnees, self.direction)
 
         # si on est en changement de voie
         elif (not self.voie.direction_possible(self.prochaine_direction)):
+            
             # s'il n'y a aucun véhicule sur la voie voulue
             if(len(self.nouvelle_voie.vehicules)==0):
                 return (None,None)
-            x = None
-            y = None
+            x = 0 #BONFANTE
+            y = 0 #BONFANTE
             bv = None
             av = None
             ac = None
@@ -221,7 +221,9 @@ class Vehicule:
             else:
                 pass
             p = Coordonnees.Coordonnees(x, y)
-            for vehicule in self.nouvelle_voie.vehicules:           
+            for vehicule in self.nouvelle_voie.vehicules:   
+                if(vehicule == self):
+                    continue       
                 # si l'arrière du véhicule est devant le point d'insertion voulu, on passe
                 if (abs(vehicule.donner_arriere() - self.nouvelle_voie.coordonnees_debut)
                         > abs(p - self.nouvelle_voie.coordonnees_debut)):
@@ -232,13 +234,21 @@ class Vehicule:
                           > abs(p - self.nouvelle_voie.coordonnees_debut)):
                     return (p, vehicule)
 
-                else:
-                    return (None, None)
-
+            return (None, None)
+            
         # s'il y a qqun devant sur la voie
         elif (self.voie.precedent(self) is not None):
             vehicule_devant = self.voie.precedent(self)
-            arriere_vehicule = (vehicule_devant.coordonnees - self.direction * self.longueur)
+            
+            # s'il est en train de rentrer sur la voie
+            if(vehicule_devant.nouvelle_voie == self.voie):
+                marge = vehicule_devant.destination - (self.voie.orientation*100)
+                print("bolossage")
+                print(self)
+                print(vehicule_devant)
+                return (marge, vehicule_devant)
+            
+            arriere_vehicule = vehicule_devant.donner_arriere()
             return (arriere_vehicule, vehicule_devant)
 
         # si on est devant
@@ -250,7 +260,7 @@ class Vehicule:
                 if intersection is None:
                     return (None, None)
 
-                return intersection.donner_obstacle(self.coordonnees, self.direction)
+                return intersection.donner_obstacle(self, self.coordonnees, self.direction)
             # feu_rouge
             else:
                 return (self.destination, "feu")
@@ -359,8 +369,8 @@ class Vehicule:
         print("dy = " + str(dy))
 
         print("val_acceleration=" + str(self.val_acceleration))
-        if abs(self.val_acceleration) > 100000:
-            exit(0)
+        #if abs(self.val_acceleration) > 100000:
+        #    exit(0)
 
         dv = self.val_acceleration * (increment_temps / nb_ticks_sec) * 100
         
@@ -388,11 +398,11 @@ class Vehicule:
             acceleration_approche += (abs(self.vitesse) / 100.0 * (((self.vitesse - vitesse_obstacle)/100.0)*self.direction))/(2 * sqrt(Vehicule.acceleration_max * Vehicule.deceleration_conf)) # += 
             acceleration_approche /= abs(position_obstacle - self.coordonnees)/100.0
             acceleration_approche **= 2
-        #print("Acceleration approche : "+str(acceleration_approche))
+        print("Acceleration approche : "+str(acceleration_approche))
 
         self.val_acceleration = Vehicule.acceleration_max * (acceleration_libre - acceleration_approche)
         
-        print("val_acceleration après = " + str(self.val_acceleration))
+        #print("val_acceleration après = " + str(self.val_acceleration))
 
         val_vitesse = self.direction * self.vitesse + dv
 
@@ -407,10 +417,10 @@ class Vehicule:
 
         self.direction = orientation
 
-        val_vitesse = min(val_vitesse, vitesse_max)
+        val_vitesse = max(val_vitesse, 0)
 
         self.vitesse = self.direction * val_vitesse
-        print("vitesse à la fin : " + str(abs(self.vitesse)))
+        #print("vitesse à la fin : " + str(abs(self.vitesse)))
         self.coordonnees = Coordonnees.Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
 
 
