@@ -407,13 +407,11 @@ class Vehicule:
 
         self.direction = orientation
 
-        val_vitesse = min(val_vitesse, Intersection.Intersection.vitesse_max)
+        val_vitesse = min(val_vitesse, vitesse_max)
 
         self.vitesse = self.direction * val_vitesse
         print("vitesse à la fin : " + str(abs(self.vitesse)))
-        #~ print("avant Luc : " + str(self.vehicules_suivants[0].coordonnees))
         self.coordonnees = Coordonnees.Coordonnees(self.coordonnees.x + dx, self.coordonnees.y + dy)
-        #~ print("après Luc : " + str(self.vehicules_suivants[0].coordonnees))
 
 
     def changer_trajectoire(self, destination, orientation_cible):
@@ -443,11 +441,6 @@ class Vehicule:
         self.poly_b = (-ratio_f - 2 * ratio_d) / x_f
         self.poly_c = ratio_d
 
-        print("TRAJ orientation_cible :" + str(self.orientation_cible))
-        print("TRAJ orientation :" + str(self.direction))
-        print("TRAJ a : " + str(self.poly_a) + " b : " + str(self.poly_b) + " c : " + str(self.poly_c))
-
-    
     """
    def calculer_trajet_max(self, coordonnees_destination):
        distance_vecteur = coordonnees_destination.soustraction(self.coordonnees)
