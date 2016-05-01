@@ -351,7 +351,7 @@ class Intersection:
                 if direction.x != 0:
                     mu = (cur_pos.x - coord.x) / direction.x
 
-                    if cur_pos.y == (coord.y + mu * direction.y):
+                    if abs(cur_pos.y - (coord.y + mu * direction.y)) < distance_securite * 0.5:
                         # support confondu
                         sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
 
@@ -361,7 +361,7 @@ class Intersection:
                     # direction est normé, donc on est certain que (direction.y != 0)
                     mu = (cur_pos.y - coord.y) / direction.y
 
-                    if cur_pos.x == (coord.x + mu * direction.x):
+                    if abs(cur_pos.x - (coord.x + mu * direction.x)) < distance_securite * 0.5:
                         # support confondu
                         sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
                     # sinon trajectoires strictement parallèles
