@@ -2,6 +2,7 @@ import Coordonnees
 import Feu
 import Voie
 import Vehicule
+import random
 
 class Troncon:
     const_largeur_voie = 350 # centimètres
@@ -77,7 +78,7 @@ class Troncon:
                 coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_debut.x,self.coordonnees_debut.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
                 coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_fin.x ,self.coordonnees_fin.y - (len(self.voies_sens1) + 0.5)*self.const_largeur_voie)
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Vehicule.Vehicule.v_max, sens)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, vitesse_max, sens)
             self.voies_sens1.append(v)
 
             for direction in directions:
@@ -91,7 +92,7 @@ class Troncon:
                 coordonnees_debut = Coordonnees.Coordonnees(self.coordonnees_fin.x, self.coordonnees_fin.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
                 coordonnees_fin = Coordonnees.Coordonnees(self.coordonnees_debut.x, self.coordonnees_debut.y + (len(self.voies_sens2) + 0.5)*self.const_largeur_voie)
 
-            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, Vehicule.Vehicule.v_max, sens)
+            v = Voie.Voie(self, coordonnees_debut, coordonnees_fin, directions, vitesse_max, sens)
             self.voies_sens2.append(v)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
@@ -113,15 +114,43 @@ class Troncon:
                     voies_possibles.append(voie)
 
         return voies_possibles
+        
+    #Donne la prochaine voie sur laquelle il faut aller pour atteindre voie_arrivee à terme
+    def donner_etape_changement(self, voie_depart, voie_arrivee):
+        if(voie_depart in self.voies_sens1):
+            liste = self.voies_sens1
+        elif(voie_depart in self.voies_sens2):
+            liste = self.voies_sens2
+        ecart = liste.index(voie_arrivee) - liste.index(voie_depart)
+        if(abs(ecart) > 1):
+            sens = (int)(ecart/abs(ecart))
+            return  liste[liste.index(voie_depart)+sens]
+        return voie_arrivee
+        
+        
+    #A l'arrivee sur le troncon, donne prochaine direction selon les probas
+    def donner_prochaine_direction(self, voie):
+        if(voie in self.voies_sens1):
+            directions = self.directions_sens1
+        elif(voie in self.voies_sens2):
+            directions = self.directions_sens2
+        rand = random.randint(1,10)
+        if(rand <= directions["G"]*10):
+            return "G"
+        elif(rand <= (directions["G"]+directions["TD"])*10):
+            return "TD"
+        else:
+            return "D"
+    
 
     def est_passant(self, direction, sens):
-        print("sens :"+str(sens))
-        print("direction : "+str(direction))
+        #~ print("sens :"+str(sens))
+        #~ print("direction : "+str(direction))
         if(sens == "sens1") :
-            print(self.feux_sens1)
+            #~ print(self.feux_sens1)
             return self.feux_sens1[direction].est_passant()
         if (sens == "sens2"):
-            print(self.feux_sens2)
+            #~ print(self.feux_sens2)
             return self.feux_sens2[direction].est_passant()
 
     def get_intersection(self, voie):

@@ -40,13 +40,13 @@ class Visualisateur:
             if type(listener) is Intersection.Intersection:
                 self.intersections.append(listener)
                 
-                if listener.troncon_gauche is not None:
+                if listener.troncon_gauche is not None and listener.troncon_gauche not in self.troncons:
                     self.troncons.append(listener.troncon_gauche)
-                if listener.troncon_droite is not None:
+                if listener.troncon_droite is not None and listener.troncon_droite not in self.troncons:
                     self.troncons.append(listener.troncon_droite)
-                if listener.troncon_haut is not None:
+                if listener.troncon_haut is not None and listener.troncon_haut not in self.troncons:
                     self.troncons.append(listener.troncon_haut)
-                if listener.troncon_bas is not None:
+                if listener.troncon_bas is not None and listener.troncon_bas not in self.troncons:
                     self.troncons.append(listener.troncon_bas)
 
         self.definir_limite()
@@ -129,7 +129,7 @@ class Visualisateur:
         self.cairo_context.save()
         self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(angle + math.pi / 2) # en radiant
-        self.cairo_context.translate(-self.largeur_vehicule * 0.5, - 0.5 * longueur)
+        self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
         self.cairo_context.restore()
@@ -226,7 +226,9 @@ class Visualisateur:
 
         numero_voie = 0
 
-        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [max, min], [1, -1]):
+        for sens, fonction, coeff in zip([troncon.feux_sens1, troncon.feux_sens2], [min, max], [-1, 1]):
+
+            numero_voie = 0
 
             for direction in ['G', 'TD', 'D']:
 

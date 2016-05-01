@@ -7,6 +7,7 @@ import SimulationManager
 import Visualisateur
 import main
 import jacky
+import DoubleCarrefour
 
 class Fenetre(Gtk.Window):
     """
@@ -34,7 +35,8 @@ class Fenetre(Gtk.Window):
 
         grain = 100
 
-        self.sim = jacky.charger_simulateur()
+        #~ self.sim = jacky.charger_simulateur()
+        self.sim = DoubleCarrefour.charger_simulateur()
 
         self.visual = Visualisateur.Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
         self.visual.demarrer_simulation()
