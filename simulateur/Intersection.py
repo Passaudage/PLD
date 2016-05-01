@@ -401,7 +401,7 @@ class Intersection:
                     gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
                     mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
 
-                if (gamma < distance_securite) and (gamma > (-vehicule.longueur - distance_securite)) and (mu > 0):
+                if (gamma < distance_securite) and (gamma > (-vehicule.longueur - distance_securite)) and (mu > distance_securite):
                     cur_intersection = coord + direction * mu
 
             if cur_intersection is not None:
