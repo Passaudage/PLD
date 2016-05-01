@@ -314,7 +314,7 @@ class Vehicule:
         distance = (position_obstacle-self.coordonnees)
         if(self.direction*distance <= 0):
             return
-        distance = abs(distance)
+        distance = distance * self.direction
         distance_possible = min (distance - 100 , 2)
         self.coordonnees = self.coordonnees + self.direction*distance_possible
         

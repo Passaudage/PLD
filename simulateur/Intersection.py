@@ -6,6 +6,15 @@ import Vehicule
     Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
 
+def min_liste_coord(liste, y = True):
+    element_min = None
+    for element in liste:
+        if element_min is None:
+            element_min = element
+        elif (y and element.y < element_min.y) or ((not y) and element.x < element_min.x):
+                element_min = element
+    return element_min
+
 class Intersection:
     """
         Modelise une intersection.
@@ -320,12 +329,14 @@ class Intersection:
         distance_blocage = 0
         vehicule_blocant = None
 
-        # TODO : faire qqchose de plus réalise avec prise en compte des directions
-        distance_securite = Vehicule.Vehicule.largeur
+        largeur = Vehicule.Vehicule.largeur
+        demi_largeur = largeur / 2
+
+        vecteur_repere_x = Coordonnees.Coordonnees(direction.y, - direction.x)
 
         for vehicule in self.vehicules :
 
-            if vehicule.coordonnees == coord:
+            if vehicule == voiture:
                 continue
 
             cur_pos = vehicule.coordonnees # position du nez de la voiture
@@ -333,94 +344,110 @@ class Intersection:
             cur_long = vehicule.longueur
 
             cur_intersection = None
-            sens_opposes = None
-
-            gamma = None
-            mu = None
 
             # colinéaires ?
 
-            epsilon = 0.01
+            liste_points_rep = []
 
-            #~ print("colinéaires : " + str(direction * cur_dir))
+            points_gauche = []
+            points_milieu = []
+            points_droite = []
 
+            # changement de repère
 
-            if abs(direction * cur_dir) > (1 - epsilon): # TODO prendre en compte un epsilon
-                # trajectoires colinéaires
+            cur_vecteur_repere_x = Coordonnees.Coordonnees(cur_dir.y, - cur_dir.x)
 
-                if direction.x != 0:
-                    mu = (cur_pos.x - coord.x) / direction.x
+            point_1 = cur_pos + cur_vecteur_repere_x * demi_largeur
+            point_2 = cur_pos - cur_vecteur_repere_x * demi_largeur
+            point_3 = vehicule.donner_arriere() + cur_vecteur_repere_x * demi_largeur
+            point_4 = vehicule.donner_arriere() - cur_vecteur_repere_x * demi_largeur
 
-                    if abs(cur_pos.y - (coord.y + mu * direction.y)) < distance_securite * 0.5:
-                        # support confondu
-                        sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
+            # déterminer les quatres points : set à gauche, milieu, droite
+            # on ne considère par les points si tous les y sont < -longueur_voiture
 
-                    # sinon trajectoires strictement parallèles
+            tous_y_derriere_vehicule = True
 
-                else:
-                    # direction est normé, donc on est certain que (direction.y != 0)
-                    mu = (cur_pos.y - coord.y) / direction.y
-
-                    if abs(cur_pos.x - (coord.x + mu * direction.x)) < distance_securite * 0.5:
-                        # support confondu
-                        sens_opposes = (abs(direction * cur_dir) / (direction * cur_dir)) < 0
-                    # sinon trajectoires strictement parallèles
-
-                if sens_opposes is not None:
-
-                    if sens_opposes:
-                        # en sens opposés : de nez à nez
-                        cur_intersection = cur_pos
-                    else:
-                        # de nez à dos (on enlève la longueur de la voiture de devant)
-                        cur_intersection = vehicule.donner_arriere()
-
-                    if (cur_intersection - coord) *  direction <= 0:
-                        # Une voiture est en arrière de l'autre
-                        cur_intersection = None
-
-            else:
-                # trajectoires non colinéaires
-                # and (cur_dir.x - (direction.y / direction.x) * cur_dir.y) != 0
+            for point in [point_1, point_2, point_3, point_4]:
+                point_rep = Coordonnees.Coordonnees.changer_repere(point_1, coord, vecteur_repere_x)
                 
-                #~ print("=" + str(coord))
-
-                if abs(direction * cur_dir) < epsilon: 
-                    # cas perpendiculaire
-                    gamma = (coord - cur_pos) * cur_dir
-                    mu = (cur_pos - coord) * direction
-
-                elif direction.x != 0:
-                    ratio = (1.0 * direction.y) / direction.x
-                    gamma = (coord.x + ratio * (cur_pos.y - coord.y) - cur_pos.x) / (cur_dir.x - ratio * cur_dir.y)
-                    mu = (cur_pos.x + gamma * cur_dir.x - coord.x) / direction.x
+                if point_rep.x < - demi_largeur:
+                    points_gauche.append(point_rep)
+                elif point_rep.x > demi_largeur:
+                    points_droite.append(point_rep)
                 else:
-                    # direction est normé, donc on est certain que (direction.y != 0)
-                    ratio = (1.0 * direction.x) / direction.y
-                    gamma = (coord.y + ratio * (cur_pos.x - coord.x) - cur_pos.y) / (cur_dir.y - ratio * cur_dir.x)
-                    mu = (cur_pos.y + gamma * cur_dir.y - coord.y) / direction.y
+                    points_milieu.append(point_rep)
 
-                if (gamma < distance_securite) and (gamma > (-vehicule.longueur - distance_securite)) and (mu > 0):
-                    cur_intersection = coord + direction * mu
+                if point_rep.y >= - voiture.longueur:
+                    tous_y_derriere_vehicule = False
+
+            if tous_y_derriere_vehicule:
+                continue
+
+            # si tous les points sont à droite ou à gauche : pas d'intersection
+
+            if len(points_gauche) == 4 or len(points_droite) == 4:
+                continue
+
+            if points_milieu:
+                # au moins 1 point au milieu
+                point_y_min_milieu = min_liste_coord(points_milieu)
+
+                if len(points_milieu) == 4:
+                    cur_intersection = point_y_min_milieu
+                else:
+
+                    point_y_min_autour = min_liste_coord(points_gauche + points_droite)
+
+                    if point_y_min_autour.x < -demi_largeur:
+                        x_intersection = -demi_largeur
+                    else:
+                        x_intersection = demi_largeur
+
+                    if point_y_min_milieu.y < point_y_min_autour.y:
+                        # on a trouvé le point le plus proche
+                        cur_intersection = point_y_min_milieu
+                    else:
+                        # on intersecte du bon côté la demi-droite
+                        # entre point_y_min_milieu et point_y_min_autour
+                        # droite y = a*x + b
+
+                        a = (point_y_min_milieu.y - point_y_min_autour.y) / (point_y_min_milieu.x - point_y_min_autour.x)
+                        b = point_y_min_milieu.y - (a * point_y_min_milieu.x)
+
+                        y_intersection = (a * x_intersection) + b
+
+                        cur_intersection = Coordonnees.Coordonnees(x_intersection, y_intersection)
+            else:
+                # pas de points au milieu
+                point_y_min_gauche = min_liste_coord(points_gauche)
+                point_y_min_droite = min_liste_coord(points_droite)
+
+                if point_y_min_droite.y < point_y_min_gauche.y:
+                    # on intersecte à droite
+                    x_intersection = demi_largeur
+                else:
+                    # on intersecte à gauche
+                    x_intersection = - demi_largeur
+
+                a = (point_y_min_gauche.y - point_y_min_droite.y) / (point_y_min_gauche.x - point_y_min_droite.x)
+                b = point_y_min_gauche.y - a * point_y_min_gauche.x
+
+                y_intersection = a * x_intersection + b
+
+                cur_intersection = Coordonnees.Coordonnees(x_intersection, y_intersection)
 
             if cur_intersection is not None:
                 # on a trouvé une intersection
                 # on prend l'intersection la plus proche
 
-                distance = abs(cur_intersection - coord)
+                cur_intersection_rep = Coordonnees.Coordonnees.inv_changer_repere(cur_intersection, coord, vecteur_repere_x)
 
-                if (vehicule_blocant is None) or (distance < distance_blocage):
-                    
-                    if not( vehicule in Intersection.sur_place and Intersection.sur_place[vehicule] == voiture ):
-                            
-                        vehicule_blocant = vehicule
-                        distance_blocage = distance
-                        coordonnees_blocage = cur_intersection
+                distance = abs(cur_intersection_rep - coord)
 
-                        Intersection.sur_place[voiture] = vehicule
-
-        if vehicule_blocant is None and voiture in Intersection.sur_place:
-            del Intersection.sur_place[voiture]
+                if (distance < distance_blocage) or (vehicule_blocant is None):
+                    vehicule_blocant = vehicule
+                    distance_blocage = distance
+                    coordonnees_blocage = cur_intersection_rep
 
         return (coordonnees_blocage, vehicule_blocant)
 
