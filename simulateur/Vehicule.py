@@ -39,6 +39,7 @@ class Vehicule:
         self.racine = None
         self.nouvelle_voie = None
         self.intersection = None
+        self.intersection_avant = None
 
         # Mise dans l'arbre
         self.vehicule_precedent = vehicule_precedent
@@ -95,7 +96,7 @@ class Vehicule:
                 self.voie = self.nouvelle_voie
                 self.nouvelle_voie = None
                 self.voie.ajouter_vehicule(self)
-                self.intersection.retirer_vehicule(self)
+                self.intersection_avant = self.intersection
                 self.intersection = None
                 
                 #~ print("sortie de l'intersection")
@@ -162,7 +163,10 @@ class Vehicule:
             #~ print("coordonnees " +str(self.coordonnees))
             #~ print("direction " +str(self.direction))
             
-            
+        #si on est entièrement sur la voie, on s'enlève de l'intersection
+        if(self.intersection_avant is not None and (self.voie.orientation *(self.donner_arriere()-self.voie.coordonnees_debut))>0):
+            self.intersection_avant.retirer_vehicule(self)
+            self.intersection_avant = None    
 
         coordonnees_obstacle = None
         (coordonnees_obstacle, vehicule_blocant) = self.trouver_obstacle()
