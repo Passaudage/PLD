@@ -44,7 +44,7 @@ class Voie:
                     self.vehicules.insert(self.vehicules.index(v), vehicule)
                     return
             # si v est devant le point d'entrée de vehicule
-            elif(abs(v.coordonnees-self.coordonnees_debut) >= abs(vehicule.destination-self.coordonnees_debut)):
+            elif(abs(v.coordonnees-self.coordonnees_debut)+1 >= abs(vehicule.destination-(self.orientation*vehicule.longueur*2.5)-self.coordonnees_debut)):
                 pass
             # si v est derrière, on met vehicule juste devant dans la liste
             else:
