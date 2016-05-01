@@ -74,7 +74,7 @@ class Visualisateur:
     def boucle_simulation(self):
         
         while not self.terminated:
-            for i in range(10):
+            for i in range(1):
                 self.simulateur.avance_temps()
                 self.rotation += 0.001 * 90 * 2 / 3.14159
                 if self.position > 550 or self.position < 50:
@@ -104,13 +104,13 @@ class Visualisateur:
         orientation = self.rotation
         longueur = self.fact_echelle * 350
         largeur = self.largeur_vehicule
-        self.cairo_context.save()
+        self.debut_dessiner()
         self.cairo_context.translate(coord_test.x, self.position)
         self.cairo_context.rotate(orientation) # en degrés
         self.cairo_context.translate(-largeur * 0.5, 0)
         self.cairo_context.rectangle(0, 0, largeur, longueur)
         self.cairo_context.fill()
-        self.cairo_context.restore()
+        self.fin_dessiner()
 
         self.cairo_context.set_source_rgba(1, 0, 0, 1)
 
@@ -126,13 +126,13 @@ class Visualisateur:
 #        print("Dessin voiture :" + str(coord))
         
         angle = math.atan2(orientation.y, orientation.x)
-        self.cairo_context.save()
+        self.debut_dessiner()
         self.cairo_context.translate(coord.x, coord.y)
         self.cairo_context.rotate(angle + math.pi / 2) # en radiant
         self.cairo_context.translate(-self.largeur_vehicule * 0.5, 0)
         self.cairo_context.rectangle(0, 0, self.largeur_vehicule, longueur)
         self.cairo_context.fill()
-        self.cairo_context.restore()
+        self.fin_dessiner()
 
 
     def dessiner_voirie(self):
@@ -154,7 +154,7 @@ class Visualisateur:
         largeur_voie = self.fact_echelle * Troncon.Troncon.const_largeur_voie
         largeur_voies = largeur_voie * (len(troncon.voies_sens1) + len(troncon.voies_sens2))
 
-        self.cairo_context.save()
+        self.debut_dessiner()
         self.cairo_context.set_source_rgba(0, 0, 0, 0.6)
 
         self.cairo_context.move_to(vec_debut.x, vec_debut.y)
@@ -252,7 +252,7 @@ class Visualisateur:
 
                     numero_voie += 1
 
-        self.cairo_context.restore()
+        self.fin_dessiner()
 
 
     def dessiner_intersection(self, intersection):
@@ -260,6 +260,19 @@ class Visualisateur:
 
     def echelle(self, vec):
         return (vec - self.min) * self.fact_echelle
+
+    def debut_dessiner(self):
+        # centre le dessin et flip la vue en y
+
+        translate_x = (self.taille_x - self.dim_voirie.x) * 0.5
+        translate_y = self.taille_y - (self.taille_y - self.dim_voirie.y) * 0.5
+
+        self.cairo_context.save()
+        self.cairo_context.translate(translate_x, translate_y)
+        self.cairo_context.scale(1, -1)
+
+    def fin_dessiner(self):
+        self.cairo_context.restore()
 
     def definir_limite(self):
         """
@@ -296,4 +309,7 @@ class Visualisateur:
         self.fact_echelle = self.taille_x / diff_x if diff_x > diff_y else self.taille_y / diff_y
 
         self.largeur_vehicule = Vehicule.Vehicule.largeur * self.fact_echelle
+
+        self.dim_voirie = Coordonnees.Coordonnees(diff_x, diff_y) * self.fact_echelle
+
         #print(self.fact_echelle)
