@@ -345,8 +345,6 @@ class Intersection:
 
             cur_intersection = None
 
-            # colinéaires ?
-
             liste_points_rep = []
 
             points_gauche = []
@@ -366,6 +364,7 @@ class Intersection:
             # on ne considère par les points si tous les y sont < -longueur_voiture
 
             tous_y_derriere_vehicule = True
+            tous_y_devant_vehicule_blocant = True
 
             for point in [point_1, point_2, point_3, point_4]:
                 point_rep = Coordonnees.Coordonnees.changer_repere(point_1, coord, vecteur_repere_x)
@@ -380,7 +379,10 @@ class Intersection:
                 if point_rep.y >= - voiture.longueur:
                     tous_y_derriere_vehicule = False
 
-            if tous_y_derriere_vehicule:
+                if (vehicule_blocant is not None) and (point_rep.y < y_min_rep_blocage):
+                    tous_y_devant_vehicule_blocant = False
+
+            if tous_y_devant_vehicule_blocant or tous_y_derriere_vehicule:
                 continue
 
             # si tous les points sont à droite ou à gauche : pas d'intersection
@@ -448,6 +450,7 @@ class Intersection:
                     vehicule_blocant = vehicule
                     distance_blocage = distance
                     coordonnees_blocage = cur_intersection_rep
+                    y_min_rep_blocage = cur_intersection.y # y dans le repère local de la voiture
 
         return (coordonnees_blocage, vehicule_blocant)
 
