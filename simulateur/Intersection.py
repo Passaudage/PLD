@@ -1,6 +1,7 @@
 import Feu
 import Coordonnees
 import Vehicule
+import time
 
 """
     Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
@@ -334,6 +335,11 @@ class Intersection:
 
         vecteur_repere_x = Coordonnees.Coordonnees(direction.y, - direction.x)
 
+        #print("@qlabernia : len(vehicules)=" + str(len(self.vehicules)))
+        print("-> Voiture référence : " + str(voiture))
+        print("   pos : " + str(coord))
+        print("   dir : " + str(direction))
+
         for vehicule in self.vehicules :
 
             if vehicule == voiture:
@@ -365,9 +371,10 @@ class Intersection:
 
             tous_y_derriere_vehicule = True
             tous_y_devant_vehicule_blocant = True
+            un_y_devant_vehicule = False
 
             for point in [point_1, point_2, point_3, point_4]:
-                point_rep = Coordonnees.Coordonnees.changer_repere(point_1, coord, vecteur_repere_x)
+                point_rep = Coordonnees.Coordonnees.changer_repere(point, coord, vecteur_repere_x)
                 
                 if point_rep.x < - demi_largeur:
                     points_gauche.append(point_rep)
@@ -379,10 +386,15 @@ class Intersection:
                 if point_rep.y >= - voiture.longueur:
                     tous_y_derriere_vehicule = False
 
+                if point_rep.y > un_y_devant_vehicule:
+                    un_y_devant_vehicule = True
+
                 if (vehicule_blocant is not None) and (point_rep.y < y_min_rep_blocage):
                     tous_y_devant_vehicule_blocant = False
 
-            if tous_y_devant_vehicule_blocant or tous_y_derriere_vehicule:
+                print(point_rep)
+
+            if not(un_y_devant_vehicule) or tous_y_derriere_vehicule or ((vehicule_blocant is not None) and tous_y_devant_vehicule_blocant):
                 continue
 
             # si tous les points sont à droite ou à gauche : pas d'intersection
@@ -440,6 +452,10 @@ class Intersection:
 
             if cur_intersection is not None:
                 # on a trouvé une intersection
+
+                if cur_intersection.y < 0:
+                    continue
+
                 # on prend l'intersection la plus proche
 
                 cur_intersection_rep = Coordonnees.Coordonnees.inv_changer_repere(cur_intersection, coord, vecteur_repere_x)
