@@ -74,7 +74,7 @@ class Visualisateur:
     def boucle_simulation(self):
         
         while not self.terminated:
-            for i in range(1):
+            for i in range(20):
                 self.simulateur.avance_temps()
                 self.rotation += 0.001 * 90 * 2 / 3.14159
                 if self.position > 550 or self.position < 50:
@@ -82,7 +82,7 @@ class Visualisateur:
                 self.position = self.position - 2 if self.position_dec else self.position + 2
 
             #self.dessiner_tout()
-            time.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
+            time.sleep(0.001)
 
     def dessiner_tout(self, widget, cairo_context):
         #print("Dessin")

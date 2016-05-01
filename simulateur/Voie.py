@@ -39,12 +39,12 @@ class Voie:
                 #si v va arriver plus loin
                 if(abs(v.destination-self.coordonnees_debut)+1 >= abs(vehicule.destination-self.coordonnees_debut)):
                     pass
-                #si v va arrive derrière, on met vehicule juste devant dans la liste
-                else:
+                #si v va arrive derrière et qu'on est déjà devant, on met vehicule juste devant dans la liste
+                elif (abs(v.coordonnees-self.coordonnees_debut) < abs(vehicule.coordonnees-self.coordonnees_debut)):
                     self.vehicules.insert(self.vehicules.index(v), vehicule)
                     return
             # si v est devant le point d'entrée de vehicule
-            elif(abs(v.coordonnees-self.coordonnees_debut)+1 >= abs(vehicule.destination-(self.orientation*vehicule.longueur*2.5)-self.coordonnees_debut)):
+            elif(abs(v.coordonnees-self.coordonnees_debut)+1 >= abs(vehicule.destination-(self.orientation*vehicule.longueur*2)-self.coordonnees_debut)):
                 pass
             # si v est derrière, on met vehicule juste devant dans la liste
             else:

@@ -25,7 +25,7 @@ class Intersection:
             # (des histoires d'arrondi...)
             # @author : Bonfante
     """
-    vitesse_max = 972 # cm.s^{-1}
+    vitesse_max = 555 # cm.s^{-1}
     sur_place = {}
         
     def __init__(self, simulateur, coordonnees, hauteur, largeur):

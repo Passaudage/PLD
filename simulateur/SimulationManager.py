@@ -1,5 +1,5 @@
 class SimulationManager:
-    nombre_ticks_seconde = 100
+    nombre_ticks_seconde = 256
     def __init__(self, grain):
         self.grain = grain
         self.temps = 0
