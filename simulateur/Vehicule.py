@@ -152,8 +152,8 @@ class Vehicule:
             voie_destination = self.voie.troncon.trouver_voie_direction(self.prochaine_direction, self.voie.sens)[0]
             self.nouvelle_voie = self.voie.troncon.donner_etape_changement(self.voie, voie_destination)
             direction_virage = self.nouvelle_voie.coordonnees_debut - self.voie.coordonnees_debut
-            distance_avant = self.direction * self.longueur * 1
-            trajet = direction_virage + distance_avant
+            distance_avant = self.direction * self.longueur 
+            trajet = direction_virage + distance_avant * 3.5
             self.changer_trajectoire(trajet + self.coordonnees, self.nouvelle_voie.orientation)
 
             self.nouvelle_voie.ajouter_vehicule_destination(self)
