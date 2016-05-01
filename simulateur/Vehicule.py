@@ -208,7 +208,7 @@ class Vehicule:
             else:
                 av = self.direction.y / self.direction.x
                 bv = self.coordonnees.y - av * self.coordonnees.x
-            if(self.nouvelle_voie.orientation.x == 0):
+            if (self.nouvelle_voie.orientation.x == 0):
                 x = self.nouvelle_voie.coordonnees_debut.x
             else:
                 ac = self.nouvelle_voie.orientation.y / self.nouvelle_voie.orientation.x
