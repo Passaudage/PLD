@@ -35,7 +35,8 @@ class Intersection:
         self.coordonnees = coordonnees
         self.hauteur = hauteur
         self.largeur = largeur
-        self.tempo = 0
+        self.temps_feu_vert = 0
+        self.temps_feu_rouge = 0
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -293,7 +294,7 @@ class Intersection:
 
     def trouver_configurations_feux(self):
         """
-            renvoie toutes les combinaisons possibles de feus
+            renvoie toutes les combinaisons possibles de feux
             # @author : marcus
         """
         liste = []
@@ -321,7 +322,7 @@ class Intersection:
         for points1 in liste_points:
             for points2 in liste_points:
                 if(points1 != points2):
-                    if(Coordonnees.se_coupent(points1[1], points1[2], points2[1], points2[2])):
+                    if(Coordonnees.Coordonnees.se_coupent(points1[1], points1[2], points2[1], points2[2])):
                         return False
         return True
         
@@ -333,18 +334,19 @@ class Intersection:
             # numero : numéro du feu dans l'intersection
             # @author : marcus
         """
+        voies = None
         voie1 = None
         voie2 = None
         if(numero < 3):
-            voies = self.troncon_sud.voies_sens1
+            voies = self.troncon_bas.voies_sens1
         elif(numero<6):
-            voies = self.troncon_est.voies_sens2
+            voies = self.troncon_droite.voies_sens2
             numero-=3
         elif(numero<9):
-            voies = self.troncon_nord.voies_sens2
+            voies = self.troncon_haut.voies_sens2
             numero-=6
         elif(numero<12):
-            voies = self.troncon_ouest.voies_sens1
+            voies = self.troncon_gauche.voies_sens1
             numero-=9
         if(numero==0):
             for v in voies:
@@ -598,25 +600,28 @@ class Intersection:
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
 
-        tempo = 30
-        step = 27
-        self.tempo += increment
-        if( self.tempo / moteur.nombre_ticks_seconde > tempo and tempo == 30):
+        self.temps_feu_vert -= increment
+        self.temps_feu_rouge -= increment
+        if( self.temps_feu_vert / moteur.nombre_ticks_seconde <= 0 ):
             for key, value in self.feux.items():
                 if(value.passant):
                     value.change_couleur()
-            self.tempo = 0
-            tempo = tempo - step
-            step = step - step
 
 
-        if( self.tempo / moteur.nombre_ticks_seconde > tempo and tempo == 3 ):
-            for key, value in self.feux.items():
-                if (not value.passant):
-                    value.change_couleur()
-            self.tempo = 0
-            tempo = tempo - step
-            step = step - step
+        if( self.temps_feu_rouge / moteur.nombre_ticks_seconde <= 0 ):
+            """
+            ******* mettre ici à la place des valeurs le numéro de config et la tempo a appliquer  ********
+            """
+            config = [35, 20]
+
+            feux_verts = [] #implementer
+            self.temps_feu_vert = config[1]
+            self.temps_feu_rouge = config[1]+3
+
+            for feu in feux_verts:
+                feu.change_couleur()
+
+
 
 
            

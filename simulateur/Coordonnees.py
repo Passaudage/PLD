@@ -103,13 +103,14 @@ class Coordonnees:
     def apply(vec_a, vec_b, fonction):
         return Coordonnees( fonction(vec_a.x, vec_b.x),
                             fonction(vec_a.y, vec_b.y))
+
     @staticmethod
     def se_coupent(d1, f1, d2, f2):
         axe_x = (f1 - d1).normaliser()
-        d1_n = changer_repere(d1, d1, axe_x)
-        d2_n = changer_repere(d1, d1, axe_x)
-        f1_n = changer_repere(f1, d1, axe_x)
-        f2_n = changer_repere(f2, d1, axe_x)
+        d1_n = Coordonnees.changer_repere(d1, d1, axe_x)
+        d2_n = Coordonnees.changer_repere(d1, d1, axe_x)
+        f1_n = Coordonnees.changer_repere(f1, d1, axe_x)
+        f2_n = Coordonnees.changer_repere(f2, d1, axe_x)
 
         liste_points = [d2_n, f2_n]
         tous_au_dessus = True
