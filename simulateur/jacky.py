@@ -114,6 +114,8 @@ def charger_simulateur():
     #~ 
 
     i.trouver_configurations_feux()
+    print(i.combinaisons)
+    raise Exception("Bonfante")
    
     return sm
 
