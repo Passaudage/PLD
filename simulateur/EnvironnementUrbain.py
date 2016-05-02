@@ -20,7 +20,7 @@ class EnvironnementUrbain(Environment):
     def performAction(self, action):
         """
             Action décidée par le réseau de neurone.
-            action : une des configurations valide de feux.
+                # action : une des configurations valide de feux.
         """
 
         print("Action : " + str(action[0]))

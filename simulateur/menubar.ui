@@ -7,14 +7,17 @@
         <item>
           <attribute name="label">Simulation</attribute>
           <attribute name="action">app.simuler</attribute>
+          <attribute name="accel">&lt;Primary&gt;s</attribute>
         </item>
         <item>
           <attribute name="label">Apprentissage</attribute>
           <attribute name="action">app.apprentissage</attribute>
+          <attribute name="accel">&lt;Primary&gt;a</attribute>
         </item>
         <item>
           <attribute name="label">Quitter</attribute>
           <attribute name="action">app.quitter</attribute>
+          <attribute name="accel">&lt;Primary&gt;q</attribute>
         </item>
       </section>
     </submenu>
