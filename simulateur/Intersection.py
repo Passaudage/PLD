@@ -31,6 +31,9 @@ class Intersection:
     def __init__(self, simulateur, coordonnees, hauteur, largeur):
         self.simulateur = simulateur
         
+        # Map combinaisons
+        self.combinaisons = {}
+        
         # Position du point central de l'intersection
         self.coordonnees = coordonnees
         self.hauteur = hauteur
@@ -274,14 +277,13 @@ class Intersection:
                 #~ if(alignement2.x != 0 and alignement2.y != 0 and alignement4.x != 0 and alignement4.y != 0):
                     #~ raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
-	
+    
 
     def dec2bin(d,nb=0):
 
         """
             dec2bin(d,nb=0): conversion nombre entier positif ou nul -> chaîne binaire (si nb>0, complète à gauche par des zéros)
         """
-
         if d==0:
             b="0"
         else:
@@ -297,13 +299,23 @@ class Intersection:
             renvoie toutes les combinaisons possibles de feux
             # @author : marcus
         """
-        liste = []
+        index = 0
         configuration = None
+        # Pour toutes les configurations
         for i in range(4096):
+            print(i)
             configuration = Intersection.dec2bin(i,12)
+            print(configuration)
+            # Si la configuration est correcte
             if(not self.correcte(configuration)):
-                liste.append(configuration)
-        return liste
+                # On ajoute les feux à rendre passant
+                liste_feux = []
+                for j in range(len(configuration)):
+                    if(j == '1'):
+                        liste_feux.append(self.feux[j])
+                # on ajoute la combinaison à la map
+                self.combinaisons[index] = liste_feux
+                index +=1
                 
                 
     def correcte(self,config):
@@ -353,7 +365,7 @@ class Intersection:
                 if(v.direction_possible('G')):
                     voie1 = v
                     pass
-            return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'G').coordonnees_debut, None, None)
+            return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'G').coordonnees_debut, None, None)
         elif(numero==1):
             if(voies[1].direction_possible('TD')):
                 voie1 = voies[1]
@@ -367,13 +379,13 @@ class Intersection:
             else:
                 d2=voie2.coordonnees_sortie
                 f2=self.demander_voies_sorties(voie2, 'TD').coordonnees_debut
-            return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
+            return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
         elif(numero==2):
-            for i in voies[::-1]:
-                if(voies[i].directions_possible('D')):
-                    voie1 = voies[i]
+            for v in voies[::-1]:
+                if(v.direction_possible('D')):
+                    voie1 = v
                     pass
-            return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'D').coordonnees_debut, None, None)
+            return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'D').coordonnees_debut, None, None)
             
 
     def lister_troncon(self):

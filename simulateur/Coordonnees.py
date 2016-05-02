@@ -108,7 +108,7 @@ class Coordonnees:
     def se_coupent(d1, f1, d2, f2):
         axe_x = (f1 - d1).normaliser()
         d1_n = Coordonnees.changer_repere(d1, d1, axe_x)
-        d2_n = Coordonnees.changer_repere(d1, d1, axe_x)
+        d2_n = Coordonnees.changer_repere(d2, d1, axe_x)
         f1_n = Coordonnees.changer_repere(f1, d1, axe_x)
         f2_n = Coordonnees.changer_repere(f2, d1, axe_x)
 
@@ -119,9 +119,9 @@ class Coordonnees:
         tous_a_gauche = True
 
         for point in liste_points:
-            if point.x > d1_n.x:
+            if point.x >= d1_n.x:
                 tous_a_gauche = False
-            if point.x < f1_n.x:
+            if point.x <= f1_n.x:
                 tous_a_droite = False
             if point.y <= 0:
                 tous_au_dessus = False
@@ -143,4 +143,4 @@ class Coordonnees:
 
         x_inter = -b / a
 
-        return (x >= 0 and x <= f1_n.x)
+        return (x_inter >= 0 and x_inter <= f1_n.x)
