@@ -628,5 +628,12 @@ class Intersection:
             step = -step
             self.temps_rouge = -step
 
+    def recuperer_etat_trafic(self):
+        etat_trafic = {}
+
+        # TODO
+
+        return etat_trafic
+
 
            
