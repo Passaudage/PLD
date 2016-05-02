@@ -14,7 +14,7 @@ class EnvironnementUrbain(Environment):
         """ 
             Etat actuel du trafic : retourne un tableau de nombres (mesures sur le trafic)
         """
-        print("Récupération état du trafic")
+        # print("Récupération état du trafic")
         return self.intersection.recuperer_etat_trafic()
 
     def performAction(self, action):
@@ -22,8 +22,6 @@ class EnvironnementUrbain(Environment):
             Action décidée par le réseau de neurone.
                 # action : une des configurations valide de feux.
         """
-
-        print("Action* : " + str(action))
         print("Action : " + str(action[0]))
 
         # on change les feux
