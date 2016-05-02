@@ -50,6 +50,7 @@ class Application(Gtk.Application):
     def __init__(self):
         Gtk.Application.__init__(self)
         self.visual = None
+        self.apprentissage = None
 
     def do_activate(self):
         self.win = Fenetre(self)
@@ -61,6 +62,8 @@ class Application(Gtk.Application):
     def quitter_callback(self, action, parametre):
         if self.visual is not None:
             self.visual.notifier_fin()
+        if self.apprentissage is not None:
+            self.apprentissage.notifier_fin()
         sys.exit()
 
     def apprentissage_callback(self, action, parametre):

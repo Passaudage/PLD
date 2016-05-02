@@ -7,7 +7,12 @@ import Intersection
 import SimulationIntersectionTask
 import EnvironnementUrbain
 
+import threading
+
 class Apprentissage:
+
+    nb_tours_simulateur = 0
+    nb_interactions = 4
 
     def __init__(self, simulateur):
         self.simulateur = simulateur
@@ -16,6 +21,7 @@ class Apprentissage:
         self.reseaux_action = []
         self.agents = []
         self.experiments = []
+        self.terminated = False
 
         for listener in self.simulateur.listeners:
             if type(listener) is Intersection.Intersection:
@@ -43,7 +49,10 @@ class Apprentissage:
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
-        self.demarrer_apprentissage(1)
+        thread = threading.Thread(None, self.demarrer_apprentissage, kwargs = {'duree' : 1})
+
+        thread.start()
+
 
     def demarrer_apprentissage(self, duree):
         """
@@ -56,33 +65,33 @@ class Apprentissage:
 
         duree *= self.simulateur.nombre_ticks_seconde
 
-        nb_tours_simulateur = 0
-        nb_interactions = 4
-
         accumulateur = 0
 
         while accumulateur < duree:
 
-            for i in range(nb_interactions):
+            for i in range(Apprentissage.nb_interactions):
                 for experiment in self.experiments: # potentiellement multithreadable
                     experiment.doInteractions(1)
 
                 # faire avancer la simulation
-                for s in range(nb_tours_simulateur):
+                for s in range(Apprentissage.nb_tours_simulateur):
                     self.simulateur.avance_temps()
+
+                if self.terminated: # juste pour éviter de trop attendre
+                    break
 
             for agent in self.agents: # potentiellement multithreadable
                 agent.learn()
 
             accumulateur += self.simulateur.grain
 
+            if self.terminated: # juste pour éviter de trop attendre
+                break
 
-            for i in range(nombre_interactions):
-                experiment.doInteractions()
+        print("Fin apprentissage")
 
-
-
-
+    def notifier_fin(self):
+        self.terminated = True
 
 
 
