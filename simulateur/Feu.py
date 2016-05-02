@@ -28,10 +28,10 @@ class Feu():
         # Couleur actuel de l'axe passé en parametre
         self.vient_juste_de_passer_au_rouge = False
         if(sens == 0):
-            self.passant = True
+            self.passant = False
         else:
             self.passant = False
-            self.vient_juste_de_passer_au_rouge = False
+            self.vient_juste_de_passer_au_rouge = True
         
         print ("FEU : " + str(self.passant))
 
