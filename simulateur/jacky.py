@@ -19,7 +19,7 @@ def charger_simulateur():
     gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
    # sm.add_listener(gen_nord)
 
-    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
+    i = Intersection.Intersection(sm, Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
     
     t_sud = Troncon.Troncon(i,
@@ -113,7 +113,7 @@ def charger_simulateur():
     t_est.voies_sens2[2].creer_vehicule(sm, 0, 500)
     #~ 
 
-    
+    i.trouver_configurations_feux()
    
     return sm
 
@@ -137,13 +137,13 @@ def main():
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
     #~ toto.notifie_temps(5,sm)
-    for i in range(10000):
-        sm.avance_temps()
+    #~ for i in range(10000):
+        #~ sm.avance_temps()
 
     toto = liste_v[0]
     #print(toto.intersection)
 
-
+    
         
     for v in liste_v:
         print(v.coordonnees)
