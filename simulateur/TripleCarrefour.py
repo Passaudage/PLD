@@ -13,24 +13,24 @@ def charger_simulateur():
     sm = SimulationManager.SimulationManager(5)
     
     # Générateurs #
-    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
+    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 20]])
     sm.add_listener(gen1_sud)
     gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen1_ouest)
     
-    gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
+    gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 10], [2, 6], [3, 20]])
     sm.add_listener(gen2_sud)
     gen2_est = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen2_est)
 
     gen3_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen3_ouest)
-    gen3_nord = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
+    gen3_nord = GenerateurEntrees.GenerateurEntrees([[1 , 20], [2, 6], [3, 10]])
     sm.add_listener(gen3_nord)
 
     gen4_est = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen4_est)
-    gen4_nord = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
+    gen4_nord = GenerateurEntrees.GenerateurEntrees([[1 , 20], [2, 6], [3, 10]])
     sm.add_listener(gen4_nord)
 
     # Intersections #
