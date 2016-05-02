@@ -84,3 +84,13 @@ class Voie:
 
     def demander_intersection(self):
         return self.troncon.get_intersection(self)
+
+    def __eq__(self, other):
+        return (self.coordonnees_debut == other.coordonnees_debut) and (self.coordonnees_fin == other.coordonnees_fin)
+
+    def get_vehicules(self):
+        vehicules = []
+        for vehicule in self.vehicules:
+            if (vehicule.voie == self):
+                vehicules.append(vehicule)
+        return vehicules
