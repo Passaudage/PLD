@@ -83,6 +83,86 @@ def test_sub():
 	else:
 		print("Test soustraction ko.")
 		return False
+		
+def test_se_coupent():
+	c1 = Coordonnees(1,1)
+	c2 = Coordonnees(4,4)
+	c3 = Coordonnees(0,4)
+	c4 = Coordonnees(4,0)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+		
+def test_se_coupent2():
+	c1 = Coordonnees(0,0)
+	c2 = Coordonnees(4,0)
+	c3 = Coordonnees(0,4)
+	c4 = Coordonnees(6,0)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ko")
+	else:
+		print("Test se_coupent ok")
+		
+def test_se_coupent3():
+	c1 = Coordonnees(0,1)
+	c2 = Coordonnees(4,1)
+	c3 = Coordonnees(2,4)
+	c4 = Coordonnees(2,0)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+		
+def test_se_coupent4():
+	c1 = Coordonnees(0,1)
+	c2 = Coordonnees(4,1)
+	c3 = Coordonnees(4,4)
+	c4 = Coordonnees(4,0)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+	
+def test_se_coupent5():
+	c1 = Coordonnees(0,0)
+	c2 = Coordonnees(0,4)
+	c3 = Coordonnees(0,2)
+	c4 = Coordonnees(0,3)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+	
+def test_se_coupent6():
+	c1 = Coordonnees(0,0)
+	c2 = Coordonnees(0,4)
+	c3 = Coordonnees(0,2)
+	c4 = Coordonnees(0,6)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+	
+def test_se_coupent7():
+	c1 = Coordonnees(0,0)
+	c2 = Coordonnees(0,4)
+	c3 = Coordonnees(0,5)
+	c4 = Coordonnees(0,6)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ko")
+	else:
+		print("Test se_coupent ok")
+		
+def test_se_coupent8():
+	c1 = Coordonnees(2,2)
+	c2 = Coordonnees(2,4)
+	c3 = Coordonnees(2,3)
+	c4 = Coordonnees(2,6)
+	if(Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
 	
 test_string()
 test_abs()
@@ -92,6 +172,13 @@ test_produit_entier()
 test_produit_scalaire()
 test_add()
 test_sub()
+test_se_coupent()
+test_se_coupent2()
+test_se_coupent3()
+test_se_coupent4()
+test_se_coupent5()
+test_se_coupent6()
+test_se_coupent7()
 
 c = Coordonnees(1, 1)
 c2 = Coordonnees(2, 1)
