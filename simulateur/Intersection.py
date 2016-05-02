@@ -507,7 +507,7 @@ class Intersection:
                     value.change_couleur()
             self.temps_vert = 0
 
-        if( self.temps_rouge / moteur.nombre_tick_seconde > temps_rouge):
+        if( self.temps_rouge / moteur.nombre_ticks_seconde > temps_rouge):
             for key, value in self.feux.items():
                 if (not value.passant):
                     value.change_couleur()
