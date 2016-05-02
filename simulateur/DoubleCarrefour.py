@@ -10,7 +10,7 @@ def charger_simulateur():
     longueur_troncon = 5000 
     
     # Manager #
-    sm = SimulationManager.SimulationManager(1)
+    sm = SimulationManager.SimulationManager(5)
 	
 	# Générateurs #
     gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 30], [2, 30], [3, 10]])
