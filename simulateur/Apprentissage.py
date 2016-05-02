@@ -1,5 +1,7 @@
 import Intersection
 
+import EnvironnementUrbain
+
 class Apprentissage:
 
     def __init__(self, simulateur):
@@ -29,7 +31,7 @@ class Apprentissage:
             learner.explorer.epsilon = 0.4 # TODO : à tuner
 
             agents.append(LearningAgent(av_network, learner))
-            env = EnvironnementUrbain(intersection, sim)
+            env = EnvironnementUrbain.EnvironnementUrbain(intersection, sim)
             task = SimulationIntersectionTask(env)
             experiments.append(Experiment(task, agent))
 
