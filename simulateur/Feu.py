@@ -21,18 +21,16 @@ class Feu():
     """
 
     def __init__(self, intersection, sens):
-        
+
         # Intersection où se trouve le feu
         self.intersection = intersection
 
         # Couleur actuel de l'axe passé en parametre
-        self.vient_juste_de_passer_au_rouge = False
         if(sens == 0):
-            self.passant = False
+            self.passant = True
         else:
             self.passant = False
-            self.vient_juste_de_passer_au_rouge = True
-        
+
         print ("FEU : " + str(self.passant))
 
     def notifie_temps(self, temps, simulation_manager):
@@ -48,10 +46,7 @@ class Feu():
                     Change la couleur du feu
 
         """
-        if(not self.passant and self.vient_juste_de_passer_au_rouge):
-            self.vient_juste_de_passer_au_rouge = False
-        else:
-            self.passant = not(self.passant)
+        self.passant = not(self.passant)
 
     def est_passant(self):
         return self.passant

@@ -35,8 +35,7 @@ class Intersection:
         self.coordonnees = coordonnees
         self.hauteur = hauteur
         self.largeur = largeur
-        self.temps_vert = 0
-        self.temps_rouge= 0
+        self.tempo = 0
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -497,24 +496,26 @@ class Intersection:
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
-        temps_vert = 33
-        temps_rouge = 3
+
+        tempo = 30
         step = 27
-        self.temps_vert += increment
-        self.temps_rouge += increment
-        if( self.temps_vert / moteur.nombre_ticks_seconde > temps_vert):
+        self.tempo += increment
+        if( self.tempo / moteur.nombre_ticks_seconde > tempo and tempo == 30):
             for key, value in self.feux.items():
                 if(value.passant):
                     value.change_couleur()
-                    value.vient_juste_de_passer_au_rouge = True
-            self.temps_vert = 0
+            self.tempo = 0
+            tempo = tempo - step
+            step = step - step
 
-        if( self.temps_rouge / moteur.nombre_ticks_seconde > temps_rouge):
+
+        if( self.tempo / moteur.nombre_ticks_seconde > tempo and tempo == 3 ):
             for key, value in self.feux.items():
                 if (not value.passant):
                     value.change_couleur()
-            step = -step
-            self.temps_rouge = -step
+            self.tempo = 0
+            tempo = tempo - step
+            step = step - step
 
 
            
