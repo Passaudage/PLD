@@ -311,19 +311,11 @@ class Intersection:
                 # On ajoute les feux à rendre passant
                 liste_feux = []
                 for j in range(len(configuration)):
-<<<<<<< HEAD
-                        if(j == '1'):
-                                liste_feux.append(self.feux[j])
-                # on ajoute la combinaison à la map
-                self.combinaisons[index] = liste_feux
-=======
                     if(j == '1'):
                         liste_feux.append(self.feux[j])
                 # on ajoute la combinaison à la map
                 self.combinaisons[index] = liste_feux
                 index +=1
->>>>>>> 2c90bcbde43633aeb0b438bd089d743b801836c1
-                
                 
     def correcte(self,config):
         """
