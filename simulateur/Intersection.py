@@ -31,6 +31,9 @@ class Intersection:
     def __init__(self, simulateur, coordonnees, hauteur, largeur):
         self.simulateur = simulateur
         
+        # Map combinaisons
+        self.combinaisons = {}
+        
         # Position du point central de l'intersection
         self.coordonnees = coordonnees
         self.hauteur = hauteur
@@ -297,13 +300,20 @@ class Intersection:
             renvoie toutes les combinaisons possibles de feus
             # @author : marcus
         """
-        liste = []
+        index = 0
         configuration = None
+        # Pour toutes les configurations
         for i in range(4096):
             configuration = Intersection.dec2bin(i,12)
+            # Si la configuration est correcte
             if(not self.correcte(configuration)):
-                liste.append(configuration)
-        return liste
+				# On ajoute les feux à rendre passant
+				liste_feux = []
+				for j in range(len(configuration)):
+					if(j == '1'):
+						liste_feux.append(self.feux[j])
+				# on ajoute la combinaison à la map
+				self.combinaisons[index] = liste_feux
                 
                 
     def correcte(self,config):
