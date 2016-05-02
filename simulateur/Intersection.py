@@ -672,7 +672,7 @@ class Intersection:
                     for voiture in liste_vehicules:
                         somme += abs(voiture.vitesse)
                     # TODO : mettre une vitesse_max cohérente
-                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else vitesse_max
+                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else 1000
                     etat_trafic.append(vitmoy)
 
         liste_vehicules = self.vehicules
@@ -681,7 +681,7 @@ class Intersection:
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
         # TODO : mettre une vitesse_max cohérente
-        vitmoy = somme /len(liste_vehicules) if liste_vehicules else vitesse_max
+        vitmoy = somme /len(liste_vehicules) if liste_vehicules else 1000
         etat_trafic.append(vitmoy)
 
         etat_trafic.append(self.timestamp_maj)

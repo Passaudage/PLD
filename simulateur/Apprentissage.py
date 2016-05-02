@@ -38,12 +38,12 @@ class Apprentissage:
 
             agent = LearningAgent(av_network, learner)
             self.agents.append(agent)
-            
+
             env = EnvironnementUrbain.EnvironnementUrbain(intersection, self.simulateur)
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
-
+        self.demarrer_apprentissage(1)
 
     def demarrer_apprentissage(self, duree):
         """
@@ -53,6 +53,8 @@ class Apprentissage:
             nb_interactions : nombre de prise en compte de l'environnement
             avant chaque apprentissage (nombre d'élément dans un minibatch)
         """
+
+        duree *= self.simulateur.nombre_ticks_seconde
 
         nb_tours_simulateur = 0
         nb_interactions = 0
