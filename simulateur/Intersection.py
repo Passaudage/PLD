@@ -196,7 +196,7 @@ class Intersection:
         self.troncon_droite.afficher_feux()
 
     def appliquer_configuration(self, numero_config):
-        configuration = self.combinaison[numero_config]
+        configuration = self.combinaisons[numero_config]
         for ident, feu in self.feux.items():
             feu.passant = False
         
@@ -648,7 +648,7 @@ class Intersection:
         nb = 0
         for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
             if troncon is not None:
-                for voie in [troncon.voies_sens1, troncon.voies_sens2]:
+                for voie in (troncon.voies_sens1 + troncon.voies_sens2):
                     liste_vehicules = voie.get_vehicules()
                     nb += len(liste_vehicules)
                     for voiture in liste_vehicules:
@@ -657,8 +657,8 @@ class Intersection:
         nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-
-        return somme / nb
+            #TODO
+        return somme / nb if nb != 0 else 1000
 
 
     def recuperer_etat_trafic(self):

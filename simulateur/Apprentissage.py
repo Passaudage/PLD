@@ -57,14 +57,14 @@ class Apprentissage:
         duree *= self.simulateur.nombre_ticks_seconde
 
         nb_tours_simulateur = 0
-        nb_interactions = 0
+        nb_interactions = 4
 
         accumulateur = 0
 
         while accumulateur < duree:
 
             for i in range(nb_interactions):
-                for experiment in experiments: # potentiellement multithreadable
+                for experiment in self.experiments: # potentiellement multithreadable
                     experiment.doInteractions(1)
 
                 # faire avancer la simulation
