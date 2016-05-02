@@ -646,9 +646,13 @@ class Intersection:
     def evaluer_situation(self):
         somme = 0.0
         nb = 0
+        vmax = Intersection.vitesse_max
         for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
             if troncon is not None:
                 for voie in (troncon.voies_sens1 + troncon.voies_sens2):
+                    if voie.vitesse_max > vmax:
+                        vmax = voie.vitesse_max
+
                     liste_vehicules = voie.get_vehicules()
                     nb += len(liste_vehicules)
                     for voiture in liste_vehicules:
@@ -657,12 +661,12 @@ class Intersection:
         nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-            #TODO
-        return somme / nb if nb != 0 else 1000
+        return somme / nb if nb != 0 else vmax
 
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
+        vmax = Intersection.vitesse_max
         for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
             if troncon is not None:
                 for voie in (troncon.voies_sens1 + troncon.voies_sens2):
@@ -671,8 +675,7 @@ class Intersection:
                     somme = 0.0
                     for voiture in liste_vehicules:
                         somme += abs(voiture.vitesse)
-                    # TODO : mettre une vitesse_max cohérente
-                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else 1000
+                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
                     etat_trafic.append(vitmoy)
 
         liste_vehicules = self.vehicules
@@ -680,8 +683,7 @@ class Intersection:
         somme = 0.0
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-        # TODO : mettre une vitesse_max cohérente
-        vitmoy = somme /len(liste_vehicules) if liste_vehicules else 1000
+        vitmoy = somme /len(liste_vehicules) if liste_vehicules else Intersection.vitesse_max
         etat_trafic.append(vitmoy)
 
         etat_trafic.append(self.timestamp_maj)
