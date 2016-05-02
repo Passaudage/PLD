@@ -8,6 +8,7 @@ import SimulationIntersectionTask
 import EnvironnementUrbain
 
 import threading
+import pickle
 
 class Apprentissage:
 
@@ -49,10 +50,10 @@ class Apprentissage:
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
-        thread = threading.Thread(None, self.demarrer_apprentissage, kwargs = {'duree' : 1})
+        thread = threading.Thread(None, self.demarrer_apprentissage,
+                kwargs = {'duree' : 0.5})
 
         thread.start()
-
 
     def demarrer_apprentissage(self, duree):
         """
@@ -93,7 +94,18 @@ class Apprentissage:
     def notifier_fin(self):
         self.terminated = True
 
+    def sauvegarder_modele(self):
+        pickle.dump(self.reseaux_action, open('data.pkl', 'wb'))
 
+    def restaurer_modele(self):
+        pkl_file = open('data.pkl', 'rb')
+
+        reseaux_action = pickle.load(pkl_file)
+
+        for reseau in reseaux_action:
+            print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
+
+        pkl_file.close()
 
 
         

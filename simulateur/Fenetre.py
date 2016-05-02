@@ -15,8 +15,8 @@ import sys
 
 def get_simulateur():
 
-    sim = jacky.charger_simulateur()
-    #sim = DoubleCarrefour.charger_simulateur()
+    #sim = jacky.charger_simulateur()
+    sim = DoubleCarrefour.charger_simulateur()
     #~ sim = TripleCarrefour.charger_simulateur()
 
     return sim
@@ -57,7 +57,8 @@ class Application(Gtk.Application):
         self.win.show_all()
 
     def simuler_callback(self, action, parametre):
-        self.def_visual()
+        if self.visual is None:
+            self.def_visual()
 
     def quitter_callback(self, action, parametre):
         if self.visual is not None:
@@ -67,8 +68,9 @@ class Application(Gtk.Application):
         sys.exit()
 
     def apprentissage_callback(self, action, parametre):
-        sim = get_simulateur()
-        self.apprentissage = Apprentissage.Apprentissage(sim)
+        if self.apprentissage is None:
+            sim = get_simulateur()
+            self.apprentissage = Apprentissage.Apprentissage(sim)
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
