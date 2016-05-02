@@ -195,6 +195,15 @@ class Intersection:
         print("feux du troncon droite")
         self.troncon_droite.afficher_feux()
 
+    def appliquer_configuration(self, numero_config):
+        configuration = self.combinaison[numero_config]
+        for ident, feu in self.feux.items():
+            feu.passant = False
+        
+        for ident, feu in configuration:
+            feu.passant = True
+
+
 
     def _creer_feux_troncon(self, sens, troncon, voies_entrantes, offset):
         """
