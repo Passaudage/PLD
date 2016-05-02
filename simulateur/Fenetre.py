@@ -10,21 +10,7 @@ import jacky
 import DoubleCarrefour
 import TripleCarrefour
 
-menu_xml="""
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
-  <menu id="menubar">
-    <section>
-      <attribute name="label" translatable="yes">Change label</attribute>
-      <item>
-        <attribute name="label">Test001</attribute>
-      </item>
-    </section>
-</interface>
-"""
-
-# <attribute name="action">win.change_label</attribute>
-
+import sys
 
 class Fenetre(Gtk.ApplicationWindow):
     """
@@ -46,15 +32,15 @@ class Fenetre(Gtk.ApplicationWindow):
         self.connect('delete-event', self.quit)
 
 
-    def quit(self, a, b):
-        # voir la doc, je ne sais pas à quoi correspondent ces deux arguments...
-        self.app.visual.notifier_fin()
+    def quit(self, action, parameter):
+        self.app.quitter_callback(action, parameter)
 
 
 class Application(Gtk.Application):
 
     def __init__(self):
         Gtk.Application.__init__(self)
+        self.visual = None
 
     def do_activate(self):
         self.win = Fenetre(self)
@@ -62,6 +48,11 @@ class Application(Gtk.Application):
 
     def simuler_callback(self, action, parameter):
         self.def_visual()
+
+    def quitter_callback(self, action, parameter):
+        if self.visual is not None:
+            self.visual.notifier_fin()
+        sys.exit()
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -74,6 +65,11 @@ class Application(Gtk.Application):
         simuler_action = Gio.SimpleAction.new("simuler", None)
         simuler_action.connect("activate", self.simuler_callback)
         self.add_action(simuler_action)
+
+        # action "quitter" de la barre de menu
+        quitter_action = Gio.SimpleAction.new("quitter", None)
+        quitter_action.connect("activate", self.quitter_callback)
+        self.add_action(quitter_action)
 
     def def_visual(self):
         #~ self.sim = jacky.charger_simulateur()

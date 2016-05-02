@@ -12,7 +12,8 @@
           <attribute name="label">Apprentissage</attribute>
         </item>
         <item>
-          <attribute name ="label">Quitter</attribute>
+          <attribute name="label">Quitter</attribute>
+          <attribute name="action">app.quitter</attribute>
         </item>
       </section>
     </submenu>
