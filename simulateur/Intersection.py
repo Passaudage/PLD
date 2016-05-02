@@ -39,7 +39,7 @@ class Intersection:
         self.hauteur = hauteur
         self.largeur = largeur
         self.temps_vert = 0
-        self.temps_rouge= 0
+        self.timestamp_maj = 0
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -307,13 +307,13 @@ class Intersection:
             configuration = Intersection.dec2bin(i,12)
             # Si la configuration est correcte
             if(not self.correcte(configuration)):
-				# On ajoute les feux à rendre passant
-				liste_feux = []
-				for j in range(len(configuration)):
-					if(j == '1'):
-						liste_feux.append(self.feux[j])
-				# on ajoute la combinaison à la map
-				self.combinaisons[index] = liste_feux
+                # On ajoute les feux à rendre passant
+                liste_feux = []
+                for j in range(len(configuration)):
+                        if(j == '1'):
+                                liste_feux.append(self.feux[j])
+                # on ajoute la combinaison à la map
+                self.combinaisons[index] = liste_feux
                 
                 
     def correcte(self,config):
@@ -456,9 +456,9 @@ class Intersection:
         vecteur_repere_x = Coordonnees.Coordonnees(direction.y, - direction.x)
 
         #print("@qlabernia : len(vehicules)=" + str(len(self.vehicules)))
-        print("-> Voiture référence : " + str(voiture))
-        print("   pos : " + str(coord))
-        print("   dir : " + str(direction))
+        #print("-> Voiture référence : " + str(voiture))
+        #print("   pos : " + str(coord))
+        #print("   dir : " + str(direction))
 
         for vehicule in self.vehicules :
 
@@ -608,32 +608,36 @@ class Intersection:
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
-        temps_vert = 33
-        temps_rouge = 3
-        step = 30
-        self.temps_vert += increment
-        self.temps_rouge += increment
-        if( self.temps_vert / moteur.nombre_ticks_seconde > temps_vert):
-            for key, value in self.feux.items():
-                if(value.passant):
-                    value.change_couleur()
+        self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
+        self.temps_vert += increment 
 
+        if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
+            for index, feu in self.feux.items():
+                feu.change_couleur()
             self.temps_vert = 0
 
-        if( self.temps_rouge / moteur.nombre_ticks_seconde > temps_rouge):
-            for key, value in self.feux.items():
-                if (not value.passant):
-                    value.change_couleur()
-                    value.vient_juste_de_passer_au_rouge = True
-            step = -step
-            self.temps_rouge = -step
 
     def recuperer_etat_trafic(self):
-        etat_trafic = {}
+        etat_trafic = []
+        for troncon in [self.troncon_sud, self.troncon_est, self.troncon_nord, self.troncon_ouest]:
+            if troncon is not None:
+                for voie in [troncon.voies_sens1, troncon.voies_sens2]:
+                    liste_vehicules = voie.get_vehicules()
+                    etat_trafic.append(len(liste_vehicules))
+                    somme = 0.0
+                    for voiture in liste_vehicules:
+                        somme += abs(voiture.vitesse)
+                    vitmoy = somme /len(liste_voitures)
+                    etat_trafic.append(vitmoy)
 
-        # TODO
+        liste_vehicules = self.vehicules
+        etat_trafic.append(len(liste_vehicules))
+        somme = 0.0
+        for voiture in liste_vehicules:
+            somme += abs(voiture.vitesse)
+        vitmoy = somme /len(liste_voitures)
+        etat_trafic.append(vitmoy)
 
-        return etat_trafic
+        etat_trafic.append(self.timestamp_maj)
 
-
-           
+        return etat_trafic 
