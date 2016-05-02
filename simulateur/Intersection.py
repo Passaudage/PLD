@@ -646,7 +646,7 @@ class Intersection:
     def evaluer_situation(self):
         somme = 0.0
         nb = 0
-        for troncon in [self.troncon_sud, self.troncon_est, self.troncon_nord, self.troncon_ouest]:
+        for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
             if troncon is not None:
                 for voie in [troncon.voies_sens1, troncon.voies_sens2]:
                     liste_vehicules = voie.get_vehicules()
@@ -663,15 +663,16 @@ class Intersection:
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
-        for troncon in [self.troncon_sud, self.troncon_est, self.troncon_nord, self.troncon_ouest]:
+        for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
             if troncon is not None:
-                for voie in [troncon.voies_sens1, troncon.voies_sens2]:
+                for voie in (troncon.voies_sens1 + troncon.voies_sens2):
                     liste_vehicules = voie.get_vehicules()
                     etat_trafic.append(len(liste_vehicules))
                     somme = 0.0
                     for voiture in liste_vehicules:
                         somme += abs(voiture.vitesse)
-                    vitmoy = somme /len(liste_voitures)
+                    # TODO : mettre une vitesse_max cohérente
+                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else vitesse_max
                     etat_trafic.append(vitmoy)
 
         liste_vehicules = self.vehicules
@@ -679,7 +680,8 @@ class Intersection:
         somme = 0.0
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-        vitmoy = somme /len(liste_voitures)
+        # TODO : mettre une vitesse_max cohérente
+        vitmoy = somme /len(liste_vehicules) if liste_vehicules else vitesse_max
         etat_trafic.append(vitmoy)
 
         etat_trafic.append(self.timestamp_maj)

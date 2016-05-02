@@ -23,10 +23,11 @@ class EnvironnementUrbain(Environment):
                 # action : une des configurations valide de feux.
         """
 
+        print("Action* : " + str(action))
         print("Action : " + str(action[0]))
 
         # on change les feux
-        duree_validite = self.intersection.appliquer_config(action[0])
+        duree_validite = self.intersection.appliquer_configuration(action[0])
 
     def reset(self):
         """ Most environments will implement this optional method that allows for reinitialization.

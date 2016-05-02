@@ -28,17 +28,20 @@ class Apprentissage:
 
         for intersection in self.intersections:
             # Initialiser le réseau pour l'apprentissage
-            reseaux_action.append( ActionValueNetwork(self.nb_variables_trafic,
-                        len(intersection.combinaisons)) )
+            av_network = ActionValueNetwork(self.nb_variables_trafic,
+                        len(intersection.combinaisons))
+            self.reseaux_action.append(av_network)
 
             # Classe d'apprentissage
             learner = NFQ()
             learner.explorer.epsilon = 0.4 # TODO : à tuner
 
-            agents.append(LearningAgent(av_network, learner))
-            env = EnvironnementUrbain.EnvironnementUrbain(intersection, sim)
-            task = SimulationIntersectionTask(env)
-            experiments.append(Experiment(task, agent))
+            agent = LearningAgent(av_network, learner)
+            self.agents.append(agent)
+            
+            env = EnvironnementUrbain.EnvironnementUrbain(intersection, self.simulateur)
+            task = SimulationIntersectionTask.SimulationIntersectionTask(env)
+            self.experiments.append(Experiment(task, agent))
 
 
 

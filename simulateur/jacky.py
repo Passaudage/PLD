@@ -11,13 +11,13 @@ def charger_simulateur():
     
     sm = SimulationManager.SimulationManager(5)
     gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_sud)
+    sm.add_listener(gen_sud)
     gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_ouest)
+    sm.add_listener(gen_ouest)
     gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    #~ sm.add_listener(gen_est)
+    sm.add_listener(gen_est)
     gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-   # sm.add_listener(gen_nord)
+    sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(sm, Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
@@ -120,7 +120,7 @@ def charger_simulateur():
         print(str(k)+" "+str(v))
         for f in v:
             print("feu " + str(f[0])) 
-    raise Exception("Bonfante")
+    #raise Exception("Bonfante")
    
     return sm
 
