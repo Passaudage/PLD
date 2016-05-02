@@ -10,37 +10,38 @@ def charger_simulateur():
     longueur_troncon = 5000 
     
     # Manager #
-    sm = SimulationManager.SimulationManager(1)
+    sm = SimulationManager.SimulationManager(5)
     
     # Générateurs #
-    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
+    gen1_sud = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen1_sud)
-    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
+    gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen1_ouest)
     
-    gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen2_sud)
-    gen2_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen2_est = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen2_est)
 
-    gen3_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen3_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen3_ouest)
-    gen3_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen3_nord = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen3_nord)
 
-    gen4_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen4_est = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen4_est)
-    gen4_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen4_nord = GenerateurEntrees.GenerateurEntrees([[1 , 9], [2, 8], [3, 10]])
     sm.add_listener(gen4_nord)
 
     # Intersections #
-    i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
+    i = Intersection.Intersection(sm,Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
-    i2 = Intersection.Intersection(Coordonnees.Coordonnees(13150, 6050), 2100, 2100)
+    i2 = Intersection.Intersection(sm,Coordonnees.Coordonnees(13150, 6050), 2100, 2100)
     sm.add_listener(i2)
-    i3 = Intersection.Intersection(Coordonnees.Coordonnees(6050, 13150), 2100, 2100)
+    i3 = Intersection.Intersection(sm,Coordonnees.Coordonnees(6050, 13150), 2100, 2100)
     sm.add_listener(i3)
-    i4 = Intersection.Intersection(Coordonnees.Coordonnees(13150, 13150), 2100, 2100)
+    i4 = Intersection.Intersection(sm,Coordonnees.Coordonnees(13150, 13150), 2100, 2100)
+    sm.add_listener(i4)
     
     # Tronçons #
     t1_sud = Troncon.Troncon(i,
@@ -208,7 +209,7 @@ def charger_simulateur():
     i.creer_feux()
     i2.creer_feux()
     i3.creer_feux()
-    i3.creer_feux()
+    i4.creer_feux()
     
 #    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
 #    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
