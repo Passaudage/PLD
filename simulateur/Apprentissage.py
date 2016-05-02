@@ -12,17 +12,19 @@ import pickle
 
 class Apprentissage:
 
-    nb_tours_simulateur = 0
+    nb_tours_simulateur = 1
     nb_interactions = 4
 
     def __init__(self, simulateur):
         self.simulateur = simulateur
 
         self.intersections = []
-        self.reseaux_action = []
+        self.reseaux_action = {}
         self.agents = []
         self.experiments = []
         self.terminated = False
+        self.apprentissage_termine = False
+        self.apprentissage_en_cours = False
 
         for listener in self.simulateur.listeners:
             if type(listener) is Intersection.Intersection:
@@ -37,7 +39,7 @@ class Apprentissage:
             # Initialiser le réseau pour l'apprentissage
             av_network = ActionValueNetwork(self.nb_variables_trafic,
                         len(intersection.combinaisons))
-            self.reseaux_action.append(av_network)
+            self.reseaux_action[intersection] = av_network
 
             # Classe d'apprentissage
             learner = NFQ()
@@ -50,10 +52,21 @@ class Apprentissage:
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
+        self.derouler_simulateur_libre(5)
+
         thread = threading.Thread(None, self.demarrer_apprentissage,
-                kwargs = {'duree' : 0.5})
+                kwargs = {'duree' : 2})
 
         thread.start()
+
+    def derouler_simulateur_libre(self, duree):
+
+        duree *= self.simulateur.nombre_ticks_seconde
+        accumulateur = 0
+
+        while accumulateur < duree:
+            self.simulateur.avance_temps()
+            accumulateur += self.simulateur.grain
 
     def demarrer_apprentissage(self, duree):
         """
@@ -63,7 +76,7 @@ class Apprentissage:
             nb_interactions : nombre de prise en compte de l'environnement
             avant chaque apprentissage (nombre d'élément dans un minibatch)
         """
-
+        self.apprentissage_en_cours = True
         duree *= self.simulateur.nombre_ticks_seconde
 
         accumulateur = 0
@@ -89,6 +102,8 @@ class Apprentissage:
             if self.terminated: # juste pour éviter de trop attendre
                 break
 
+        self.apprentissage_en_cours = False
+        self.apprentissage_termine = True
         print("Fin apprentissage")
 
     def notifier_fin(self):

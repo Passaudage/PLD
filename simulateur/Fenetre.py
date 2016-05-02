@@ -15,8 +15,8 @@ import sys
 
 def get_simulateur():
 
-    #sim = jacky.charger_simulateur()
-    sim = DoubleCarrefour.charger_simulateur()
+    sim = jacky.charger_simulateur()
+    #sim = DoubleCarrefour.charger_simulateur()
     #~ sim = TripleCarrefour.charger_simulateur()
 
     return sim
@@ -58,7 +58,8 @@ class Application(Gtk.Application):
 
     def simuler_callback(self, action, parametre):
         if self.visual is None:
-            self.def_visual()
+            sim = get_simulateur()
+            self.def_visual(sim)
 
     def quitter_callback(self, action, parametre):
         if self.visual is not None:
@@ -71,6 +72,22 @@ class Application(Gtk.Application):
         if self.apprentissage is None:
             sim = get_simulateur()
             self.apprentissage = Apprentissage.Apprentissage(sim)
+        else:
+            if self.apprentissage.apprentissage_en_cours:
+                self.apprentissage.terminated = True
+            elif self.apprentissage.apprentissage_termine:
+                # le but est d'afficher une simulation en prenant en compte
+                # les changements de feux à partir du réseau de neurone
+                print("On affiche la simulation basée sur l'apprentissage")
+                
+                #sim = get_simulateur()
+                sim = self.apprentissage.simulateur
+
+                # on enregistre chaque réseau pour les intersections
+                for intersection in self.apprentissage.reseaux_action:
+                    intersection.reseau_neurone = self.apprentissage.reseaux_action[intersection]
+
+                self.def_visual(sim)
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -94,9 +111,9 @@ class Application(Gtk.Application):
         quitter_action.connect("activate", self.quitter_callback)
         self.add_action(quitter_action)
 
-    def def_visual(self):
+    def def_visual(self, sim):
 
-        self.sim = get_simulateur()
+        self.sim = sim
 
         self.visual = Visualisateur.Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
         self.visual.demarrer_simulation()
