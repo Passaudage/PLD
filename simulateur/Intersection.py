@@ -275,10 +275,10 @@ class Intersection:
 
 
     def trouver_configurations_feux(self):
-		"""
-			renvoie toutes les combinaisons possibles de feus
-			# @author : marcus
-		"""
+        """
+            renvoie toutes les combinaisons possibles de feus
+            # @author : marcus
+        """
         liste = []
         configuration = None
         for i in range(4096):
@@ -289,33 +289,33 @@ class Intersection:
                 
                 
     def correcte(self,config):
-		"""
-			renvoie vrai si la configuration est correcte
-			# @author : marcus
-		"""
-		coupe = False
-		liste_points = []
+        """
+            renvoie vrai si la configuration est correcte
+            # @author : marcus
+        """
+        coupe = False
+        liste_points = []
         for c in config:
-			if(c=='1'):
-				(d1,f1,d2,f2) = trouver_coordonnees_feu(config.index(c))
-				liste_points.append((d1,f1))
-				if(d2 is not None):
-					liste_points.append((d2,f2))
-		for points1 in liste_points:
-			for points2 in liste_points
-				if(points1 != points2)
-					if(Coordonnees.se_coupent(points1[1], points1[2], points2[1], points2[2])):
-						return False
-		return True
+            if(c=='1'):
+                (d1,f1,d2,f2) = trouver_coordonnees_feu(config.index(c))
+                liste_points.append((d1,f1))
+                if(d2 is not None):
+                    liste_points.append((d2,f2))
+        for points1 in liste_points:
+            for points2 in liste_points:
+                if(points1 != points2):
+                    if(Coordonnees.se_coupent(points1[1], points1[2], points2[1], points2[2])):
+                        return False
+        return True
         
         
         
     def trouver_coordonnees_feu(self, numero):
-		"""
-			retourne la où les droites correspondant à un feu
-			# numero : numéro du feu dans l'intersection
-			# @author : marcus
-		"""
+        """
+            retourne la où les droites correspondant à un feu
+            # numero : numéro du feu dans l'intersection
+            # @author : marcus
+        """
         voie1 = None
         voie2 = None
         if(numero < 3):
@@ -331,27 +331,27 @@ class Intersection:
             numero-=9
         if(numero==0):
             for v in voies:
-                if(v.direction_possible('G'):
+                if(v.direction_possible('G')):
                     voie1 = v
                     pass
             return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'G').coordonnees_debut, None, None)
         elif(numero==1):
-            if(voies[1].direction_possible('TD'):
-				voie1 = voies[1]
-			if(voies[-1].direction_possible('TD'):
-				voie2 = voies[-1]
-			if(voie1 is None):
-				voie1 = voies[2]
-			if(voie2 is None):
-				d2 = None
-				f2 =None
-			else:
-				d2=voie2.coordonnees_sortie
-				f2=self.demander_voies_sorties(voie2, 'TD').coordonnees_debut
-			return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
+            if(voies[1].direction_possible('TD')):
+                voie1 = voies[1]
+            if(voies[-1].direction_possible('TD')):
+                voie2 = voies[-1]
+            if(voie1 is None):
+                voie1 = voies[2]
+            if(voie2 is None):
+                d2 = None
+                f2 =None
+            else:
+                d2=voie2.coordonnees_sortie
+                f2=self.demander_voies_sorties(voie2, 'TD').coordonnees_debut
+            return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
         elif(numero==2):
             for i in voies[::-1]:
-                if(voies[i].directions_possible('D'):
+                if(voies[i].directions_possible('D')):
                     voie1 = voies[i]
                     pass
             return(voie1.coordonnees_sortie, self.demander_voies_sorties(voie1, 'D').coordonnees_debut, None, None)
