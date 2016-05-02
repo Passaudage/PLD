@@ -1,5 +1,10 @@
-import Intersection
+from pybrain.rl.learners.valuebased import ActionValueNetwork
+from pybrain.rl.agents import LearningAgent
+from pybrain.rl.learners import NFQ
+from pybrain.rl.experiments import Experiment
 
+import Intersection
+import SimulationIntersectionTask
 import EnvironnementUrbain
 
 class Apprentissage:
@@ -17,7 +22,7 @@ class Apprentissage:
                 self.intersections.append(listener)
 
         if not self.intersections:
-            raise Exception("Aucune intersection enregistrées au simulateur")
+            raise Exception("Aucune intersection enregistrée au simulateur")
 
         self.nb_variables_trafic = len(self.intersections[0].recuperer_etat_trafic())
 
@@ -34,6 +39,8 @@ class Apprentissage:
             env = EnvironnementUrbain.EnvironnementUrbain(intersection, sim)
             task = SimulationIntersectionTask(env)
             experiments.append(Experiment(task, agent))
+
+
 
     def demarrer_apprentissage(self, duree):
         """
@@ -52,14 +59,14 @@ class Apprentissage:
         while accumulateur < duree:
 
             for i in range(nb_interactions):
-                for experiment in experiments:
+                for experiment in experiments: # potentiellement multithreadable
                     experiment.doInteractions(1)
 
                 # faire avancer la simulation
                 for s in range(nb_tours_simulateur):
                     self.simulateur.avance_temps()
 
-            for agent in self.agents:
+            for agent in self.agents: # potentiellement multithreadable
                 agent.learn()
 
             accumulateur += self.simulateur.grain
