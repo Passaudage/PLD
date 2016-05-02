@@ -178,6 +178,7 @@ class Vehicule:
         # si l'obstacle est un feu rouge
         if (vehicule_blocant == "feu"):
             #~ print("obstacle feu")
+            self.decrochage_arbre()
             self.mettre_coordonnees_a_jour(incr, nb_tick, Coordonnees.Coordonnees(0,0), coordonnees_obstacle)
             return
         # Si l'obstacle est un véhicule, on met éventuellement l'arbre à jour
