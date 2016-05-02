@@ -617,6 +617,23 @@ class Intersection:
                 feu.change_couleur()
             self.temps_vert = 0
 
+    def evaluer_situation(self):
+        somme = 0.0
+        nb = 0
+        for troncon in [self.troncon_sud, self.troncon_est, self.troncon_nord, self.troncon_ouest]:
+            if troncon is not None:
+                for voie in [troncon.voies_sens1, troncon.voies_sens2]:
+                    liste_vehicules = voie.get_vehicules()
+                    nb += len(liste_vehicules)
+                    for voiture in liste_vehicules:
+                        somme += abs(voiture.vitesse)
+        liste_vehicules = self.vehicules
+        nb += (len(liste_vehicules))
+        for voiture in liste_vehicules:
+            somme += abs(voiture.vitesse)
+
+        return somme / nb
+
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
