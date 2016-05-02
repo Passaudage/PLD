@@ -124,7 +124,7 @@ class Coordonnees:
                 tous_a_droite = False
             if point.y <= 0:
                 tous_au_dessus = False
-            if point.y >= 0
+            if point.y >= 0:
                 tous_au_dessous = False 
 
         if tous_au_dessous or tous_au_dessous or tous_a_droite or tous_a_gauche:
