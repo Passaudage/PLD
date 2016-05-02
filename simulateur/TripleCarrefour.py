@@ -17,23 +17,22 @@ def charger_simulateur():
     sm.add_listener(gen1_sud)
     gen1_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [10000, 50]])
     sm.add_listener(gen1_ouest)
-    #~ gen1_nord = GenerateurEntrees.GenerateurEntrees([[1 , 50], [2, 50], [1000, 50]])
-    #~ sm.add_listener(gen1_nord)
     
     gen2_sud = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen2_sud)
     gen2_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen2_est)
-    gen2_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen2_nord)
-    
+
     gen3_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen3_ouest)
-    gen3_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
-    sm.add_listener(gen3_est)
     gen3_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
     sm.add_listener(gen3_nord)
-    
+
+    gen4_est = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen4_est)
+    gen4_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    sm.add_listener(gen4_nord)
+
     # Intersections #
     i = Intersection.Intersection(Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
@@ -41,8 +40,9 @@ def charger_simulateur():
     sm.add_listener(i2)
     i3 = Intersection.Intersection(Coordonnees.Coordonnees(6050, 13150), 2100, 2100)
     sm.add_listener(i3)
+    i4 = Intersection.Intersection(Coordonnees.Coordonnees(13150, 13150), 2100, 2100)
     
-    # Tronçons #    
+    # Tronçons #
     t1_sud = Troncon.Troncon(i,
             None,
              Coordonnees.Coordonnees(6050, 0),
@@ -67,7 +67,7 @@ def charger_simulateur():
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
 
-    #~ t1_nord.ajouter_generateur("sens2",gen1_nord)
+    #t1_nord.ajouter_generateur("sens2",gen1_nord)
     
     t2_sud = Troncon.Troncon(i2,
             None,
@@ -84,16 +84,15 @@ def charger_simulateur():
 
     t2_est.ajouter_generateur("sens2",gen2_est)
     
-    t2_nord = Troncon.Troncon(None, i2, Coordonnees.Coordonnees(13150, 7100), Coordonnees.Coordonnees(13150, longueur_troncon+7100),
+    t2_nord = Troncon.Troncon(i4, i2, Coordonnees.Coordonnees(13150, 7100), Coordonnees.Coordonnees(13150, longueur_troncon+7100),
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
 
-    t2_nord.ajouter_generateur("sens2",gen2_nord)
        
-    t3_est = Troncon.Troncon(None, i3, Coordonnees.Coordonnees(7100, 13150), Coordonnees.Coordonnees(7100+longueur_troncon, 13150),
+    t3_est = Troncon.Troncon(i4, i3, Coordonnees.Coordonnees(7100, 13150), Coordonnees.Coordonnees(7100+longueur_troncon, 13150),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},
                     {"G": 0.3, "TD": 0.2, "D": 0.5})
-    t3_est.ajouter_generateur("sens1",gen3_est)
+
     
     t3_ouest = Troncon.Troncon(i3, None, Coordonnees.Coordonnees(0, 13150), Coordonnees.Coordonnees(longueur_troncon, 13150),
                     {"G": 0.5, "TD": 0.2, "D": 0.3},
@@ -106,6 +105,18 @@ def charger_simulateur():
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
 
     t3_nord.ajouter_generateur("sens2",gen3_nord)
+
+    t4_nord =Troncon.Troncon(None, i4, Coordonnees.Coordonnees(13150, 14200), Coordonnees.Coordonnees(13150, longueur_troncon+14200),
+                             {"G": 0.2, "TD": 0.4, "D": 0.4},
+                             {"G": 0.3, "TD": 0.5, "D": 0.2})
+
+    t4_nord.ajouter_generateur("sens2", gen4_nord)
+
+    t4_est = Troncon.Troncon(None, i4, Coordonnees.Coordonnees(14200, 13150), Coordonnees.Coordonnees(14200+longueur_troncon, 13150),
+                             {"G": 0.2, "TD": 0.4, "D": 0.4},
+                             {"G": 0.3, "TD": 0.5, "D": 0.2})
+
+    t4_est.ajouter_generateur("sens2", gen4_est)
  
     # Voies #
     t1_sud.creer_voie(["G"], "sens1", 1388)
@@ -178,10 +189,25 @@ def charger_simulateur():
     t3_est.creer_voie(["G"], "sens2", 1388)
     t3_est.creer_voie(["TD"], "sens2", 1388)
     t3_est.creer_voie(["D"], "sens2", 1388)
+
+    t4_est.creer_voie(["G"], "sens1", 1388)
+    t4_est.creer_voie(["TD", "G"], "sens1", 1388)
+    t4_est.creer_voie(["D", "TD"], "sens1", 1388)
+    t4_est.creer_voie(["G"], "sens2", 1388)
+    t4_est.creer_voie(["TD"], "sens2", 1388)
+    t4_est.creer_voie(["D"], "sens2", 1388)
+
+    t4_nord.creer_voie(["G"], "sens1", 1388)
+    t4_nord.creer_voie(["TD"], "sens1", 1388)
+    t4_nord.creer_voie(["D"], "sens1", 1388)
+    t4_nord.creer_voie(["G"], "sens2", 1388)
+    t4_nord.creer_voie(["TD"], "sens2", 1388)
+    t4_nord.creer_voie(["D"], "sens2", 1388)
     
     # Feux #
     i.creer_feux()
     i2.creer_feux()
+    i3.creer_feux()
     i3.creer_feux()
     
 #    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
