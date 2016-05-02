@@ -275,18 +275,20 @@ class Intersection:
 
 	
 
-def dec2bin(d,nb=0):
+    def dec2bin(d,nb=0):
 
-    """dec2bin(d,nb=0): conversion nombre entier positif ou nul -> chaîne binaire (si nb>0, complète à gauche par des zéros)"""
+        """
+            dec2bin(d,nb=0): conversion nombre entier positif ou nul -> chaîne binaire (si nb>0, complète à gauche par des zéros)
+        """
 
-    if d==0:
-        b="0"
-    else:
-        b=""
-        while d!=0:
-            b="01"[d&1]+b
-            d=d>>1
-    return b.zfill(nb)
+        if d==0:
+            b="0"
+        else:
+            b=""
+            while d!=0:
+                b="01"[d&1]+b
+                d=d>>1
+        return b.zfill(nb)
 
 
     def trouver_configurations_feux(self):
@@ -297,7 +299,7 @@ def dec2bin(d,nb=0):
         liste = []
         configuration = None
         for i in range(4096):
-            configuration = dec2bin(i,12)
+            configuration = Intersection.dec2bin(i,12)
             if(not self.correcte(configuration)):
                 liste.append(configuration)
         return liste
@@ -312,7 +314,7 @@ def dec2bin(d,nb=0):
         liste_points = []
         for c in config:
             if(c=='1'):
-                (d1,f1,d2,f2) = trouver_coordonnees_feu(config.index(c))
+                (d1,f1,d2,f2) = self.trouver_coordonnees_feu(config.index(c))
                 liste_points.append((d1,f1))
                 if(d2 is not None):
                     liste_points.append((d2,f2))
