@@ -273,6 +273,21 @@ class Intersection:
                 #~ if(alignement2.x != 0 and alignement2.y != 0 and alignement4.x != 0 and alignement4.y != 0):
                     #~ raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
+	
+
+def dec2bin(d,nb=0):
+
+    """dec2bin(d,nb=0): conversion nombre entier positif ou nul -> chaîne binaire (si nb>0, complète à gauche par des zéros)"""
+
+    if d==0:
+        b="0"
+    else:
+        b=""
+        while d!=0:
+            b="01"[d&1]+b
+            d=d>>1
+    return b.zfill(nb)
+
 
     def trouver_configurations_feux(self):
         """
@@ -282,7 +297,7 @@ class Intersection:
         liste = []
         configuration = None
         for i in range(4096):
-            configuration = dec2bin(i)
+            configuration = dec2bin(i,12)
             if(not self.correcte(configuration)):
                 liste.append(configuration)
         return liste
