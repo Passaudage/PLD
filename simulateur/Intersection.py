@@ -511,6 +511,7 @@ class Intersection:
             for key, value in self.feux.items():
                 if (not value.passant):
                     value.change_couleur()
+                    value.vient_juste_de_passer_au_rouge = True
             self.temps_rouge = 0
 
            

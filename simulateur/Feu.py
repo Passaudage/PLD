@@ -26,10 +26,12 @@ class Feu():
         self.intersection = intersection
 
         # Couleur actuel de l'axe passé en parametre
+        self.vient_juste_de_passer_au_rouge = False
         if(sens == 0):
             self.passant = True
         else:
             self.passant = False
+            self.vient_juste_de_passer_au_rouge = False
         
         print ("FEU : " + str(self.passant))
 
@@ -41,11 +43,15 @@ class Feu():
         #~ self.change_couleur(simulation_manager.temps)
 
     def change_couleur(self):
+
         """
                     Change la couleur du feu
 
         """
-        self.passant = not(self.passant)
+        if(not self.passant and self.vient_juste_de_passer_au_rouge):
+            self.vient_juste_de_passer_au_rouge = False
+        else:
+            self.passant = not(self.passant)
 
     def est_passant(self):
         return self.passant
