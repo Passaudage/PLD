@@ -92,7 +92,7 @@ class Vehicule:
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
         if ((self.coordonnees - self.destination) * self.direction >= 0):
             
-            print ("destination atteinte : " + str(self.destination))
+            # print ("destination atteinte : " + str(self.destination))
 
             # sortie de l'intersection
             if (self.intersection is not None):

@@ -250,10 +250,10 @@ class Intersection:
                 alignement1 = point_tr_gauche - adj1.coordonnees_debut
                 alignement2 = point_tr_droite- adj1.coordonnees_debut
                 
-                print(troncon)
-                print(alignement1)
-                print(alignement2)
-                print()
+                # print(troncon)
+                # print(alignement1)
+                # print(alignement2)
+                # print()
                 
                 #~ co1 =None
                 #~ if(liste_troncon.index(troncon)+1==len(liste_troncon)):
@@ -303,16 +303,16 @@ class Intersection:
         configuration = None
         # Pour toutes les configurations
         for i in range(4096):
-            print(i)
+        #~ for i in range(5):
             configuration = Intersection.dec2bin(i,12)
-            print(configuration)
             # Si la configuration est correcte
-            if(not self.correcte(configuration)):
+            if(self.correcte(configuration)):
                 # On ajoute les feux à rendre passant
+                #~ print("zboub")
                 liste_feux = []
                 for j in range(len(configuration)):
-                    if(j == '1'):
-                        liste_feux.append(self.feux[j])
+                    if(configuration[j] == '1'):
+                        liste_feux.append((j,self.feux[j]))
                 # on ajoute la combinaison à la map
                 self.combinaisons[index] = liste_feux
 
@@ -326,16 +326,26 @@ class Intersection:
         """
         coupe = False
         liste_points = []
+        index = 0
         for c in config:
             if(c=='1'):
-                (d1,f1,d2,f2) = self.trouver_coordonnees_feu(config.index(c))
+                (d1,f1,d2,f2) = self.trouver_coordonnees_feu(index)
                 liste_points.append((d1,f1))
                 if(d2 is not None):
                     liste_points.append((d2,f2))
+            index += 1
+       #~ 
+        #~ print("B")
+        #~ for (d1,f1) in liste_points:
+            #~ print("B "+config+" "+str(d1)+" "+str(f1))
+    
         for points1 in liste_points:
             for points2 in liste_points:
                 if(points1 != points2):
-                    if(Coordonnees.se_coupent(points1[1], points1[2], points2[1], points2[2])):
+                    #~ print("ça marche ici?")
+                    #~ print("B : "+str(points1[0])+" "+str(points1[1])+" "+str(points2[0])+" "+str(points2[1])+" ")
+                    if(Coordonnees.Coordonnees.se_coupent(points1[0], points1[1], points2[0], points2[1])):
+                        #~ print("oh bah ça coupe")
                         return False
         return True
         
@@ -349,6 +359,7 @@ class Intersection:
         """
         voie1 = None
         voie2 = None
+        
         if(numero < 3):
             voies = self.troncon_bas.voies_sens1
         elif(numero<6):
@@ -360,6 +371,7 @@ class Intersection:
         elif(numero<12):
             voies = self.troncon_gauche.voies_sens1
             numero-=9
+            
         if(numero==0):
             for v in voies:
                 if(v.direction_possible('G')):
@@ -367,12 +379,12 @@ class Intersection:
                     pass
             return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'G').coordonnees_debut, None, None)
         elif(numero==1):
-            if(voies[1].direction_possible('TD')):
-                voie1 = voies[1]
-            if(voies[-1].direction_possible('TD')):
-                voie2 = voies[-1]
+            if(voies[0].direction_possible('TD')):
+                voie1 = voies[0]
+            if(voies[2].direction_possible('TD')):
+                voie2 = voies[2]
             if(voie1 is None):
-                voie1 = voies[2]
+                voie1 = voies[1]
             if(voie2 is None):
                 d2 = None
                 f2 =None
@@ -380,6 +392,11 @@ class Intersection:
                 d2=voie2.coordonnees_sortie
                 f2=self.demander_voies_sorties(voie2, 'TD').coordonnees_debut
             return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
+            #~ for v in voies:
+                #~ if(v.direction_possible('TD')):
+                    #~ voie1 = v
+                    #~ break
+            #~ return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, None, None)
         elif(numero==2):
             for v in voies[::-1]:
                 if(v.direction_possible('D')):
@@ -514,8 +531,6 @@ class Intersection:
 
                 if (vehicule_blocant is not None) and (point_rep.y < y_min_rep_blocage):
                     tous_y_devant_vehicule_blocant = False
-
-                print(point_rep)
 
             if not(un_y_devant_vehicule) or tous_y_derriere_vehicule or ((vehicule_blocant is not None) and tous_y_devant_vehicule_blocant):
                 continue
