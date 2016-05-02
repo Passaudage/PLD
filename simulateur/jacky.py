@@ -114,6 +114,7 @@ def charger_simulateur():
     #~ 
 
     i.trouver_configurations_feux()
+    print(i.combinaisons)
    
     return sm
 

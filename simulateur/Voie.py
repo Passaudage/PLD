@@ -82,5 +82,12 @@ class Voie:
     def get_proba_voie(self):
         return self.troncon.get_proba_situation_voie(self, self.directions)
 
+    def get_vehicules(self):
+       vehicules = []
+       for vehicule in self.vehicules:
+           if (vehicule.voie == self):
+               vehicules.append(vehicule)
+       return vehicules
+
     def demander_intersection(self):
         return self.troncon.get_intersection(self)
