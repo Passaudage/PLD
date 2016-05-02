@@ -303,7 +303,9 @@ class Intersection:
         configuration = None
         # Pour toutes les configurations
         for i in range(4096):
+            print(i)
             configuration = Intersection.dec2bin(i,12)
+            print(configuration)
             # Si la configuration est correcte
             if(not self.correcte(configuration)):
                 # On ajoute les feux à rendre passant
