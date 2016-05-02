@@ -499,21 +499,20 @@ class Intersection:
         #~ print("L'intersection a été notifié.")
         temps_vert = 33
         temps_rouge = 3
-        step = 30
+        step = 27
         self.temps_vert += increment
         self.temps_rouge += increment
         if( self.temps_vert / moteur.nombre_ticks_seconde > temps_vert):
             for key, value in self.feux.items():
                 if(value.passant):
                     value.change_couleur()
-
+                    value.vient_juste_de_passer_au_rouge = True
             self.temps_vert = 0
 
         if( self.temps_rouge / moteur.nombre_ticks_seconde > temps_rouge):
             for key, value in self.feux.items():
                 if (not value.passant):
                     value.change_couleur()
-                    value.vient_juste_de_passer_au_rouge = True
             step = -step
             self.temps_rouge = -step
 
