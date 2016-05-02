@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="menubar">
+    <submenu>
+      <attribute name="label">Fichier</attribute>
+      <section>
+        <item>
+          <attribute name="label">Simulation</attribute>
+          <attribute name="action">app.simuler</attribute>
+        </item>
+        <item>
+          <attribute name="label">Apprentissage</attribute>
+        </item>
+        <item>
+          <attribute name ="label">Quitter</attribute>
+        </item>
+      </section>
+    </submenu>
+    <item>
+      <attribute name="label">À propos</attribute>
+    </item>
+  </menu>
+</interface>

@@ -277,7 +277,7 @@ class Intersection:
                 #~ if(alignement2.x != 0 and alignement2.y != 0 and alignement4.x != 0 and alignement4.y != 0):
                     #~ raise Exception("Le troncon n'est pas ajusté correctement à droite : " + str(troncon.coordonnees_debut.x) + " " + str(troncon.coordonnees_debut.y))
 
-	
+    
 
     def dec2bin(d,nb=0):
 
@@ -307,13 +307,13 @@ class Intersection:
             configuration = Intersection.dec2bin(i,12)
             # Si la configuration est correcte
             if(not self.correcte(configuration)):
-				# On ajoute les feux à rendre passant
-				liste_feux = []
-				for j in range(len(configuration)):
-					if(j == '1'):
-						liste_feux.append(self.feux[j])
-				# on ajoute la combinaison à la map
-				self.combinaisons[index] = liste_feux
+                # On ajoute les feux à rendre passant
+                liste_feux = []
+                for j in range(len(configuration)):
+                    if(j == '1'):
+                        liste_feux.append(self.feux[j])
+                # on ajoute la combinaison à la map
+                self.combinaisons[index] = liste_feux
                 
                 
     def correcte(self,config):
