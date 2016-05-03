@@ -91,11 +91,13 @@ class Intersection:
         combi_hard = ["101011001001","011001011001","011001001101","111001001001","001101011001","001011001011","001111001001","001001101101","001001111001","001001001111","001101001101","101001101001"]      
         for comb in combi_hard:
             index = 0
+            liste = []
             for c in comb:
                 if(c=='1'):
-                    self.combinaisons[index_dic] = (index,self.feux[index])
-                    index_dic +=1
+                    liste.append((index,self.feux[index]))
                 index +=1                   
+            self.combinaisons[index_dic] = liste
+            index_dic +=1
 
     def get_proba(self, troncon, direction):
         if(troncon == self.troncon_gauche):
@@ -330,6 +332,8 @@ class Intersection:
             renvoie toutes les combinaisons possibles de feus
             # @author : marcus
         """
+        self.build_combinaisons()
+        return
         index = 0
         configuration = None
         # Pour toutes les configurations
@@ -709,7 +713,7 @@ class Intersection:
     def evaluer_situation(self):
         anc_eval = self.anc_score
         nb = 0
-        minim = 250
+        minim = 145687
         maxim = 0
 
         for voie in self.entrantes:
@@ -729,13 +733,13 @@ class Intersection:
         #    nb += vehicule.time_arret
         self.anc_score = nb
 
-        return -nb + 1000#anc_eval - nb
+        return anc_eval - nb
 
     def recuperer_etat_trafic(self):
 
         seuil_charge_trafic = 12.0 * self.simulateur.nombre_ticks_seconde
 
-        seuil1 = 4
+        seuil1 = 5
         seuil2 = 7
 
         etat_trafic = 0
