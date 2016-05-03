@@ -10,13 +10,13 @@ def charger_simulateur():
     longueur_troncon = 5000
     
     sm = SimulationManager.SimulationManager(5)
-    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 300], [2, 500], [3, 9]])
+    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 35]])
     sm.add_listener(gen_sud)
-    gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3]])
     sm.add_listener(gen_ouest)
-    gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 30], [2, 50], [3, 9]])
+    gen_est = GenerateurEntrees.GenerateurEntrees([[1 , 5]])
     sm.add_listener(gen_est)
-    gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3], [2, 5], [3, 9]])
+    gen_nord = GenerateurEntrees.GenerateurEntrees([[1 , 3]])
     sm.add_listener(gen_nord)
 
     i = Intersection.Intersection(sm, Coordonnees.Coordonnees(6050, 6050), 2100, 2100)

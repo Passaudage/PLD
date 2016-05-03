@@ -12,7 +12,7 @@ import pickle
 
 class Apprentissage:
 
-    nb_tours_simulateur = 50
+    nb_second_increment_simulateur = 5 # en secondes
     nb_interactions = 4
 
     def __init__(self, simulateur):
@@ -44,7 +44,7 @@ class Apprentissage:
 
             # Classe d'apprentissage
             learner = NFQ()
-            learner.explorer.epsilon = 0.2 # TODO : à tuner
+            learner.explorer.epsilon = 0.7 # TODO : à tuner
 
             agent = LearningAgent(av_network, learner)
             self.agents.append(agent)
@@ -53,7 +53,7 @@ class Apprentissage:
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
-        self.derouler_simulateur_libre(5)
+        self.derouler_simulateur_libre(60)
 
         thread = threading.Thread(None, self.demarrer_apprentissage,
                 kwargs = {'duree' : 3600})
@@ -80,6 +80,8 @@ class Apprentissage:
         self.apprentissage_en_cours = True
         duree *= self.simulateur.nombre_ticks_seconde
 
+        nb_tours_simulateur = int((self.nb_second_increment_simulateur * self.simulateur.nombre_ticks_seconde) / self.simulateur.grain)
+
         accumulateur = 0
 
         while accumulateur < duree:
@@ -89,7 +91,7 @@ class Apprentissage:
                     experiment.doInteractions(1)
 
                 # faire avancer la simulation
-                for s in range(self.nb_tours_simulateur):
+                for s in range(nb_tours_simulateur):
                     self.simulateur.avance_temps()
 
                 if self.terminated: # juste pour éviter de trop attendre
@@ -100,13 +102,13 @@ class Apprentissage:
                 agent.learn()
                 print(" ok...")
 
-            accumulateur += self.simulateur.grain * self.nb_tours_simulateur * self.nb_interactions
+            accumulateur += self.simulateur.grain * nb_tours_simulateur * self.nb_interactions
             print("Temps passé simulation : " + str(accumulateur/self.simulateur.nombre_ticks_seconde))
 
             if self.terminated: # juste pour éviter de trop attendre
                 break
 
-        self.sauvegarder_modele()
+        sauvegarder_modele()
 
         self.apprentissage_en_cours = False
         self.apprentissage_termine = True
@@ -115,18 +117,20 @@ class Apprentissage:
     def notifier_fin(self):
         self.terminated = True
 
-    def sauvegarder_modele(self, nom_fichier = "reseau.pkl"):
+    def sauvegarder_modele(nom_fichier = "reseau.pkl"):
         pickle.dump(self.reseaux_action, open(nom_fichier, 'wb'))
 
-    def restaurer_modele(self, nom_fichier = "reseau.pkl"):
+    def restaurer_modele(nom_fichier = "reseau.pkl"):
         pkl_file = open(nom_fichier, 'rb')
 
         reseaux_action = pickle.load(pkl_file)
 
-        for reseau in reseaux_action:
-            print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
+        #for reseau in reseaux_action:
+        #    print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
 
         pkl_file.close()
+
+        return reseaux_action
 
 
         

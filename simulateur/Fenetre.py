@@ -15,8 +15,8 @@ import sys
 
 def get_simulateur():
 
-    #sim = jacky.charger_simulateur()
-    sim = DoubleCarrefour.charger_simulateur()
+    sim = jacky.charger_simulateur()
+    #sim = DoubleCarrefour.charger_simulateur()
     #~ sim = TripleCarrefour.charger_simulateur()
 
     return sim
@@ -81,6 +81,9 @@ class Application(Gtk.Application):
                 print("On affiche la simulation basée sur l'apprentissage")
                 
                 #sim = get_simulateur()
+                if self.apprentissage.simulateur is None:
+                    sim = get_simulateur()
+
                 sim = self.apprentissage.simulateur
 
                 # on enregistre chaque réseau pour les intersections
@@ -88,6 +91,9 @@ class Application(Gtk.Application):
                     intersection.reseau_neurone = self.apprentissage.reseaux_action[intersection]
 
                 self.def_visual(sim)
+
+
+
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
