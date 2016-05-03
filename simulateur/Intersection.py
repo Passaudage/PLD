@@ -663,37 +663,46 @@ class Intersection:
     def evaluer_situation(self):
         somme = 0.0
         nb = 0
+        nb_entrantes_vit_nulle = 0
         vmax = Intersection.vitesse_max
-        for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
-            if troncon is not None:
-                for voie in (troncon.voies_sens1 + troncon.voies_sens2):
-                    if voie.vitesse_max > vmax:
-                        vmax = voie.vitesse_max
+        for voie in self.sortantes:
+            if voie.vitesse_max > vmax:
+                vmax = voie.vitesse_max
 
-                    liste_vehicules = voie.get_vehicules()
-                    nb += len(liste_vehicules)
-                    for voiture in liste_vehicules:
-                        somme += abs(voiture.vitesse)
+            liste_vehicules = voie.get_vehicules()
+            nb += len(liste_vehicules)
+            for voiture in liste_vehicules:
+                somme += abs(voiture.vitesse)
+
+        for voie in (self.entrantes + self.sortantes):
+            if voie.vitesse_max > vmax:
+                vmax = voie.vitesse_max
+
+            liste_vehicules = voie.get_vehicules()
+            nb += len(liste_vehicules)
+            for voiture in liste_vehicules:
+                somme += abs(voiture.vitesse)
+                if abs(voiture.vitesse) <= 2:
+                    nb_entrantes_vit_nulle += 1
+
         liste_vehicules = self.vehicules
         nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-        return (somme / nb)**2 if nb != 0 else vmax**2
+        return -nb_entrantes_vit_nulle
 
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
         vmax = Intersection.vitesse_max
-        for troncon in [self.troncon_bas, self.troncon_droite, self.troncon_haut, self.troncon_gauche]:
-            if troncon is not None:
-                for voie in (troncon.voies_sens1 + troncon.voies_sens2):
-                    liste_vehicules = voie.get_vehicules()
-                    etat_trafic.append(len(liste_vehicules))
-                    somme = 0.0
-                    for voiture in liste_vehicules:
-                        somme += abs(voiture.vitesse)
-                    vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
-                    etat_trafic.append(vitmoy)
+        for voie in (self.entrantes + self.sortantes):
+            liste_vehicules = voie.get_vehicules()
+            etat_trafic.append(len(liste_vehicules))
+            somme = 0.0
+            for voiture in liste_vehicules:
+                somme += abs(voiture.vitesse)
+            vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
+            etat_trafic.append(vitmoy)
 
         liste_vehicules = self.vehicules
         etat_trafic.append(len(liste_vehicules))
