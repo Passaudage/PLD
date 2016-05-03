@@ -26,27 +26,50 @@ Le Grand-Lyon ne possède pas dans son catalogue open-date de données sur les f
 
 \subsection{Modélisation des tronçons}
 Afin de simplifier le problème, nous avons restreins la géométrie des carrefours à des carrefours où les tronçons sont à angles droits et ou chaque tronçon désert au maximum 3 directions (Gauche, Tout Droit, Droite). Chaque voie possède une ou plusieurs directions (Gauche, Tout Droit, Droite) ainsi qu'une vitesse maximale. 
+
 Afin de rendre réaliste la trajectoire dans les intersections, nous avons choisi d'interpoler la trajectoire en virage par une courbe d'ordre 3. 
 \subsection{Modèle de gestion du trafic}
 Pour modéliser le comportement des véhicules, deux approches sont possibles. L’approche macroscopique, qui considère un flux de véhicule et effectue des calculs à l'instar de la mécanique des fluides. La deuxième approche, l'approche microscopique, considère les véhicules individuellement et tente de modéliser son comportement, éventuellement en fonction de celui des autres. 
+
 Nous avons choisi d'utiliser une approche microscopique et de retenir le modèle du conducteur intelligent (Intelligent Driver Model en anglais \footnote{Page Wikipedia sur IDM \url{https://en.wikipedia.org/wiki/Intelligent_driver_model}}). Ce modèle est un des plus récents, un des plus efficaces, et un modèle dans lequel les équations restent compréhensibles et ont un sens physique.
+
 Ce modèle donne la vitesse et l'accélération d'un véhicule en fonction de la vitesse maximale de la voie, de la distance avec l'obstacle le précédant et de différents paramètres comme l'accélération maximale ou la décélération maximale (freinage).
 
-\subsection{Modèle du changement de voie}
+\subsection{Modèle du changement de voie et file de dépendance}
+%TODO MARC
 
+\section{Apprentissage par renforcement}
+\subsection{Principes}
+L'apprentissage par renforcement est une méthode d'apprentissage automatique qui permet d'apprendre à partir d'exemples réalisés dans des situations différentes. Le but est d'optimiser une fonction de récompense. Le 
 
-\section{Apprentissage}
+\subsection{Mise en place dans le projet}
+Il existe plusieurs bibliothèques d'apprentissage en \emph{Python}. Nous avons choisi la bibliothèque \emph{Pybrain} qui est facile à installer et à utiliser. Il ne propose malheureusement pas de calcul sur GPU contrairement à la bibliothèque \emph{Caffe}, mais celle ci est plus difficile à installer et mettre en \oe uvre. 
+
+La fonction de récompense que nous avons mise en place prend en compte la vitesse moyenne avec une pénalité en fonction du nombre de véhicules arrêtés. 
 
 \section{Bilan du projet}
-\subsection{infructueuses}
+\subsection{Tentatives infructueuses}
+\subsubsection{Deep Learning}
+\paragraph{Principes :}{
+Le Deep Learning est un ensemble de méthode d'apprentissage automatique. Il permet à un ordinateur d'apprendre à partir d'exemples.
+}
+\paragraph{Raison de l'échec :}{
+Le Grand-Lyon n'ayant aucune donnée sur les feux de signalisation, nous n'avons aucun exemple. Nous pouvons construire des exemples à partir de notre simulateur. Cependant, créer suffisamment d'exemples prendrai beaucoup trop de temps. 
+}
 
+\subsubsection{Algorithme génétique}
+\paragraph{Principes :}{
+Le principe des algorithmes génétiques est similaire à l'évolution génétique d'un individu. Initialement, plusieurs solutions sont générées et évaluées. A chaque solution est attribué un chance de se reproduire. Avec ses solutions, on crée de nouvelles solutions, composés de gênes provenant de plusieurs solutions mères. On introduit également un phénomène de mutation génétique qui consiste à modifier aléatoire un gêne, afin de ne pas tomber dans un optimum local.
+On répète ce phénomène tant que l'évolution des solutions est visible. 
+}
+\paragraph{Raison de l'échec :}{
+
+}
 
 %% EXAMPLE CECI EST UN EXEMPLE
-\subsection{Tentative 1}
-\subsubsection{Qu'est ce que c'est ?}
-\subsubsection{Pourquoi c'etait un echec ou une reussite ?}
+%\subsection{Tentative 1}
+%\subsubsection{Qu'est ce que c'est ?}
+%\subsubsection{Pourquoi c'etait un echec ou une reussite ?}
 %% CECI EST LA FIN DE L'EXEMPLE
-
-
 
 \end{document}
