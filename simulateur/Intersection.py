@@ -44,6 +44,8 @@ class Intersection:
         self.timestamp_maj = 0
         self.reseau_neurone = None
         self.reseau_timestamp_maj = 0
+
+        self.anc_score = 0
         
         # Troncon gauche
         self.troncon_gauche = None
@@ -662,20 +664,21 @@ class Intersection:
                 self.temps_vert = 0
 
     def evaluer_situation(self):
+        anc_eval = self.anc_score
         nb = 0
 
         for voie in (self.sortantes + self.entrantes):
             liste_vehicules = voie.get_vehicules()
         
             for vehicule in liste_vehicules:
-                nb -= vehicule.time_alive
+                nb += vehicule.time_alive
 
         liste_vehicules = self.vehicules
 
         for voiture in liste_vehicules:
-            nb -= vehicule.time_alive
-
-        return nb
+            nb += vehicule.time_alive
+        self.anc_score = nb
+        return nb - anc_eval
 
 
 
