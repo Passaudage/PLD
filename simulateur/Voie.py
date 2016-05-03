@@ -94,3 +94,4 @@ class Voie:
             if (vehicule.voie == self):
                 vehicules.append(vehicule)
         return vehicules
+
