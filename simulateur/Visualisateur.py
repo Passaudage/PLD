@@ -21,7 +21,7 @@ class Visualisateur:
             # @author : Quentin
     """
 
-    def __init__(self, simulateur, taille_x, taille_y):
+    def __init__(self, simulateur, taille_x, taille_y, monitoring = None):
 
         self.grain = 1 # en ticks
         self.simulateur = simulateur
@@ -29,6 +29,8 @@ class Visualisateur:
         self.taille_x = taille_x
         self.taille_y = taille_y
         self.terminated = False
+
+        self.monitoring = monitoring
 
         self.zone_dessin.connect('draw', self.dessiner_tout)
 
@@ -69,6 +71,9 @@ class Visualisateur:
 
     def boucle_simulation(self):
         
+
+        dernier_temps = time.clock()
+
         while not self.terminated:
             for i in range(1):
                 self.simulateur.avance_temps()
@@ -77,7 +82,10 @@ class Visualisateur:
                     self.position_dec = not self.position_dec
                 self.position = self.position - 2 if self.position_dec else self.position + 2
 
-            #self.dessiner_tout()
+            if (self.monitoring is not None) and time.clock() > (dernier_temps + 1):
+                self.monitoring.visual.maj({"Fonction récompense" : self.intersections[0].evaluer_situation()})
+
+
             time.sleep(self.grain / self.simulateur.nombre_ticks_seconde)
 
     def dessiner_tout(self, widget, cairo_context):

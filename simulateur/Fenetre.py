@@ -12,6 +12,7 @@ import Apprentissage
 
 import Intersection
 import Vehicule
+import graphe.Monitoring
 
 import sys
 
@@ -53,6 +54,7 @@ class Application(Gtk.Application):
         Gtk.Application.__init__(self)
         self.visual = None
         self.apprentissage = None
+        self.monitoring = None
 
     def do_activate(self):
         self.win = Fenetre(self)
@@ -60,8 +62,11 @@ class Application(Gtk.Application):
 
     def simuler_callback(self, action, parametre):
         if self.visual is None:
+            proto_data = {"Fonction récompense" : [30000, -30000, 60]}
+            self.monitoring = graphe.Monitoring.Monitoring(self, proto_data)
+
             sim = get_simulateur()
-            self.def_visual(sim)
+            self.def_visual(sim, self.monitoring)
 
     def quitter_callback(self, action, parametre):
         if self.visual is not None:
@@ -75,7 +80,7 @@ class Application(Gtk.Application):
             sim = get_simulateur()
             duree = 7200
             increment_simulateur_apprentissage = 20 # secondes
-            self.apprentissage = Apprentissage.Apprentissage(sim,increment_simulateur_apprentissage,
+            self.apprentissage = Apprentissage.Apprentissage(sim, increment_simulateur_apprentissage,
              duree)
         else:
             if self.apprentissage.apprentissage_en_cours:
@@ -164,11 +169,12 @@ class Application(Gtk.Application):
         quitter_action.connect("activate", self.quitter_callback)
         self.add_action(quitter_action)
 
-    def def_visual(self, sim):
+    def def_visual(self, sim, monitoring):
 
         self.sim = sim
 
-        self.visual = Visualisateur.Visualisateur(self.sim, Fenetre.taille_x, Fenetre.taille_y)
+        self.visual = Visualisateur.Visualisateur(self.sim,
+            Fenetre.taille_x, Fenetre.taille_y, monitoring)
         self.visual.demarrer_simulation()
         self.win.add(self.visual.zone_dessin)
         self.win.show_all()

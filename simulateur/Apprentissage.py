@@ -61,7 +61,7 @@ class Apprentissage:
 
         self.nb_variables_trafic = len(self.intersections[0].recuperer_etat_trafic())
 
-        self.nb_etats_entree = 4096
+        self.nb_etats_entree = 531441
 
         for intersection in self.intersections:
             # Initialiser le réseau pour l'apprentissage

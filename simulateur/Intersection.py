@@ -709,7 +709,10 @@ class Intersection:
         for voiture in liste_vehicules:
             nb += vehicule.time_alive
         self.anc_score = nb
-        return anc_eval - nb
+
+        evaluation = anc_eval - nb
+
+        return evaluation
 
 
 
@@ -717,13 +720,18 @@ class Intersection:
 
         seuil_charge_trafic = 12.0 * self.simulateur.nombre_ticks_seconde
 
+        seuil1 = 3
+        seuil2 = 7
+
         etat_trafic = 0
         compteur = 0
 
         for voie in self.entrantes:
-            prem_veh = voie.premier_vehicule()
-            if prem_veh is not None and prem_veh.time_alive > seuil_charge_trafic:
-                etat_trafic += 2**compteur
+            nb_vehicules = len(voie.vehicules)
+            if nb_vehicules <= seuil1:
+                etat_trafic += 3**compteur
+            elif nb_vehicules > seuil2:
+                etat_trafic += 3**compteur + 1
             
             compteur += 1
 
