@@ -10,6 +10,15 @@ import EnvironnementUrbain
 import threading
 import pickle
 
+class ThreadLearning (threading.Thread):
+    def __init__(self, agent):
+        threading.Thread.__init__(self)
+        self.agent = agent
+
+    def run(self):
+        self.agent.learn()
+
+
 class Apprentissage:
 
     nb_second_increment_simulateur = 5 # en secondes
@@ -97,10 +106,16 @@ class Apprentissage:
                 if self.terminated: # juste pour éviter de trop attendre
                     break
 
+            threads = []
             for agent in self.agents: # potentiellement multithreadable
                 print("learning")
-                agent.learn()
+                thread = ThreadLearning(agent)
+                threads.append(thread)
+                thread.start()
                 print(" ok...")
+
+            for thread in threads:
+                thread.join()
 
             accumulateur += self.simulateur.grain * nb_tours_simulateur * self.nb_interactions
             print("Temps passé simulation : " + str(accumulateur/self.simulateur.nombre_ticks_seconde))
