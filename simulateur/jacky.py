@@ -118,14 +118,15 @@ def charger_simulateur():
     #~ t_est.voies_sens2[2].creer_vehicule(sm, 0, 500)
     #~ 
 
-    i.trouver_configurations_feux()
+    #i.trouver_configurations_feux()
+    i.build_combinaisons()
 
-    #~ print(i.combinaisons)
-    #for k,v in i.combinaisons.items():
-    #    print(str(k)+" "+str(v))
-    #    for f in v:
-    #        print("feu " + str(f[0])) 
-    #raise Exception("Bonfante")
+     print(i.combinaisons)
+    for k,v in i.combinaisons.items():
+        print(str(k)+" "+str(v))
+        for f in v:
+            print("feu " + str(f[0])) 
+    raise Exception("Bonfante")
    
     return sm
 

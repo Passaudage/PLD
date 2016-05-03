@@ -86,6 +86,17 @@ class Intersection:
         # Map voiture/Liste de points restant à passer
         self.chemins_voitures = {}
 
+	def build_combinaisons(self):
+		index_dic = 0		
+		combi_hard = ["101011001001","011001011001","011001001101","111001001001","001101011001","001011001011","001111001001","001001101101","001001111001","001001001111","001101001101","101001101001"]		
+		for comb in combi_hard:
+			index = 0
+			for c in comb:
+				if(c=='1'):
+					self.combinaisons[index_dic] = (index,self.feux[index])
+					index_dic +=1
+				index +=1					
+
     def get_proba(self, troncon, direction):
         if(troncon == self.troncon_gauche):
             somme = self.proba_haut+self.proba_droite+self.proba_bas
