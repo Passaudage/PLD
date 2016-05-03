@@ -210,6 +210,11 @@ def charger_simulateur():
     i2.creer_feux()
     i3.creer_feux()
     i4.creer_feux()
+
+    i.trouver_configurations_feux()
+    i2.trouver_configurations_feux()
+    i3.trouver_configurations_feux()
+    i4.trouver_configurations_feux()
     
 #    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)
 #    t2_est.voies_sens2[1].creer_vehicule(sm, 0, 500)

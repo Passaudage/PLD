@@ -1,5 +1,8 @@
+import Intersection
+
 class SimulationManager:
     nombre_ticks_seconde = 100
+
     def __init__(self, grain):
         self.grain = grain
         self.temps = 0
@@ -17,6 +20,8 @@ class SimulationManager:
 
     def del_listener(self, listener):
         self.listeners.remove(listener)
+
+
 
 #########################################################
 # Classe de test

@@ -36,6 +36,15 @@ class Visualisateur:
         self.intersections = []
         self.troncons = []
 
+        self.recuperer_inter_troncons()
+
+        self.definir_limite()
+
+        self.rotation = 0
+        self.position = 300
+        self.position_dec = True
+
+    def recuperer_inter_troncons(self):
         for listener in self.simulateur.listeners:
             if type(listener) is Intersection.Intersection:
                 self.intersections.append(listener)
@@ -49,27 +58,14 @@ class Visualisateur:
                 if listener.troncon_bas is not None and listener.troncon_bas not in self.troncons:
                     self.troncons.append(listener.troncon_bas)
 
-        self.definir_limite()
-
-        self.rotation = 0
-        self.position = 300
-        self.position_dec = True
-
     def notifier_fin(self):
         self.terminated = True
 
     def demarrer_simulation(self):
+        self.terminated = False
         self.thread_sim = threading.Thread(None, self.boucle_simulation)
         self.thread_sim.start()
         
-        return
-
-        self.thread_sim = threading.Thread(None, self.boucle_simulation)
-        self.thread_sim.start()
-
-        self.thread_dessin = threading.Thread(None, self.boucle_dessiner)
-        self.thread_dessin.start()
-
 
     def boucle_simulation(self):
         

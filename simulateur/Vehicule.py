@@ -33,6 +33,7 @@ class Vehicule:
         self.val_acceleration = 0
         self.bloque_par = None
         self.timestamp_maj = 0
+        self.time_alive = 0
         
         self.existence = False
 
@@ -64,6 +65,7 @@ class Vehicule:
                 # @author : Marcus
         """
         self.timestamp_maj = simulateur.temps
+        self.time_alive += nb_increment
 
         self.avance_vehicule(nb_increment, simulateur.nombre_ticks_seconde)
         if (len(self.vehicules_suivants) == 0):
@@ -92,7 +94,7 @@ class Vehicule:
         # Si on a dépassé la destination (arrivée sur intersection ou nouvelle_voie)
         if ((self.coordonnees - self.destination) * self.direction >= 0):
             
-            print ("destination atteinte : " + str(self.destination))
+            # print ("destination atteinte : " + str(self.destination))
 
             # sortie de l'intersection
             if (self.intersection is not None):

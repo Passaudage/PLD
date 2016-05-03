@@ -96,7 +96,19 @@ class Troncon:
             self.voies_sens2.append(v)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
-
+     
+     
+    def donner_voies_intersections(self):
+        """
+           donne les voies possédées aux intersections limitrophes
+           # @author : marcus
+        """
+        if(self.intersection_tete is not None):
+            self.intersection_tete.entrantes += self.voies_sens1
+            self.intersection_tete.sortantes += self.voies_sens2
+        if(self.intersection_queue is not None):
+            self.intersection_queue.entrantes += self.voies_sens2
+            self.intersection_queue.sortantes += self.voies_sens1
 
     # end creer voie
 
