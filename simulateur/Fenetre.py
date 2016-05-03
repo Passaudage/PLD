@@ -74,7 +74,7 @@ class Application(Gtk.Application):
         if self.apprentissage is None:
             sim = get_simulateur()
             duree = 7200
-            increment_simulateur_apprentissage = 30 # secondes
+            increment_simulateur_apprentissage = 20 # secondes
             self.apprentissage = Apprentissage.Apprentissage(sim,increment_simulateur_apprentissage,
              duree)
         else:
@@ -112,7 +112,7 @@ class Application(Gtk.Application):
 
         # on enregistre chaque réseau pour les intersections
         for intersection in reseaux:
-            intersections[intersection].reseau_neurone = reseaux[intersection]
+            intersections[intersection].ajouter_reseau_neurone(reseaux[intersection])
 
         self.def_visual(sim)
 

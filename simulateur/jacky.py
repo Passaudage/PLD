@@ -10,7 +10,7 @@ def charger_simulateur():
     longueur_troncon = 5000
     
     sm = SimulationManager.SimulationManager(5)
-    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 20]])
+    gen_sud = GenerateurEntrees.GenerateurEntrees([[1 , 15]])
     sm.add_listener(gen_sud)
     gen_ouest = GenerateurEntrees.GenerateurEntrees([[1 , 3]])
     sm.add_listener(gen_ouest)

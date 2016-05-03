@@ -79,8 +79,8 @@ class Apprentissage:
             #learner.explorer.epsilon = 2 # TODO : à tuner
 
             #### Q-learning ####
-            alpha = 0.8 # learning rate
-            gamma = 0.3 # proche de zéro : optimisation à court terme
+            alpha = 0.6 # learning rate
+            gamma = 0.5 # proche de zéro : optimisation à court terme
 
             learner = Q(alpha, gamma)
             learner.explorer.epsilon = 0.4

@@ -4,6 +4,9 @@ import Vehicule
 import time
 import SimulationManager
 
+from pybrain.rl.agents import LearningAgent
+from pybrain.rl.learners import Q
+
 """
     Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
 """
@@ -26,7 +29,7 @@ class Intersection:
             # (des histoires d'arrondi...)
             # @author : Bonfante
     """
-    duree_minimum_feu = 10 * SimulationManager.SimulationManager.nombre_ticks_seconde # secondes * nb_ticks_par_second
+    duree_minimum_feu = 20 * SimulationManager.SimulationManager.nombre_ticks_seconde # secondes * nb_ticks_par_second
     vitesse_max = 555 # cm.s^{-1}
     sur_place = {}
     
@@ -44,6 +47,8 @@ class Intersection:
         self.timestamp_maj = 0
         self.reseau_neurone = None
         self.reseau_timestamp_maj = 0
+        self.agent_apprentissage = None
+        self.cur_recompense = 0
 
         self.anc_score = 0
         
@@ -639,6 +644,18 @@ class Intersection:
 
         return (None, None)
 
+    def ajouter_reseau_neurone(self, reseau_neurone):
+        #### Q-learning ####
+        alpha = 0.4 # learning rate
+        gamma = 0.3 # proche de zéro : optimisation à court terme
+
+        learner = Q(alpha, gamma)
+        learner.explorer.epsilon = 0.4
+        ####################
+
+        self.reseau_neurone = reseau_neurone
+        self.agent_apprentissage = LearningAgent(reseau_neurone, learner)
+
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
 
@@ -646,9 +663,23 @@ class Intersection:
             if (moteur.temps - self.reseau_timestamp_maj) < Intersection.duree_minimum_feu:
                 return
 
+            if self.agent_apprentissage is not None:
+                cur_recompense = self.cur_recompense
+                self.cur_recompense = self.evaluer_situation()
+
+
             # on peut demander au réseau de neurone d'appliquer sa politique
             print(self.recuperer_etat_trafic())
             action = self.reseau_neurone.getMaxAction(self.recuperer_etat_trafic())
+
+            if self.agent_apprentissage is not None:
+
+                self.agent_apprentissage.integrateObservation(self.recuperer_etat_trafic())
+                self.agent_apprentissage.getAction()
+                self.agent_apprentissage.giveReward(cur_recompense)
+
+                self.agent_apprentissage.learn()
+
             self.appliquer_configuration(action)
             print("Action : " + str(action))
             self.reseau_timestamp_maj = moteur.temps
@@ -684,7 +715,7 @@ class Intersection:
 
     def recuperer_etat_trafic(self):
 
-        seuil_charge_trafic = 11.0 * self.simulateur.nombre_ticks_seconde
+        seuil_charge_trafic = 12.0 * self.simulateur.nombre_ticks_seconde
 
         etat_trafic = 0
         compteur = 0
