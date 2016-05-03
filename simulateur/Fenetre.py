@@ -117,7 +117,8 @@ class Application(Gtk.Application):
 
         # on enregistre chaque réseau pour les intersections
         for intersection in reseaux:
-            intersections[intersection].ajouter_reseau_neurone(reseaux[intersection])
+            #intersections[intersection].ajouter_reseau_neurone(reseaux[intersection])
+            intersections[intersection].reseau_neurone = (reseaux[intersection])
 
         self.def_visual(sim)
 
