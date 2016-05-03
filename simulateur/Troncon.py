@@ -7,7 +7,7 @@ import random
 class Troncon:
     const_largeur_voie = 350 # centimètres
 
-    def __init__(self, position_geo, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, directions_sens_1, directions_sens_2):  #sens1 : gauche vers droite, bas vers haut
+    def __init__(self, intersection_tete, intersection_queue, coordonnees_debut, coordonnees_fin, directions_sens_1, directions_sens_2):  #sens1 : gauche vers droite, bas vers haut
         self.intersection_tete = intersection_tete #en haut ou à droite
         self.intersection_queue = intersection_queue #en bas ou à gauche
         self.coordonnees_debut = coordonnees_debut
@@ -22,7 +22,6 @@ class Troncon:
         self.dir_voies_sens2 = {"G": [], "TD": [], "D": []}
         self.feux_sens1 = {}
         self.feux_sens2 = {}
-        self.position_geo = position_geo
 
         tete_presente = queue_presente = True 
         if(self.intersection_queue==None):
@@ -97,18 +96,19 @@ class Troncon:
             self.voies_sens2.append(v)
             for direction in directions:
                 self.dir_voies_sens2[direction] = [self.dir_voies_sens2.get(direction)] + [v]
-        if(self.position_geo=='H'):
-            self.intersection_queue.entrantes += self.voies_sens2
-            self.intersection_queue.sortantes += self.voies_sens1
-        elif(self.position_geo=='B'):
+     
+     
+    def donner_voies_intersections(self):
+        """
+           donne les voies possédées aux intersections limitrophes
+           # @author : marcus
+        """
+        if(self.intersection_tete is not None):
             self.intersection_tete.entrantes += self.voies_sens1
             self.intersection_tete.sortantes += self.voies_sens2
-        elif(self.position_geo=='D'):
-            self.intersection_queue.entrantes += self.voies_sens1
-            self.intersection_queue.sortantes += self.voies_sens2
-        elif(self.position_geo=='G'):
-            self.intersection_tete.entrantes += self.voies_sens2
-            self.intersection_tete.sortantes += self.voies_sens1
+        if(self.intersection_queue is not None):
+            self.intersection_queue.entrantes += self.voies_sens2
+            self.intersection_queue.sortantes += self.voies_sens1
 
     # end creer voie
 
