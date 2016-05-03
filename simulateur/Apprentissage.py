@@ -12,10 +12,9 @@ import pickle
 
 class Apprentissage:
 
-    nb_second_increment_simulateur = 5 # en secondes
     nb_interactions = 4
 
-    def __init__(self, simulateur):
+    def __init__(self, simulateur, increment_simulateur_apprentissage, duree):
         self.simulateur = simulateur
 
         self.intersections = []
@@ -25,6 +24,7 @@ class Apprentissage:
         self.terminated = False
         self.apprentissage_termine = False
         self.apprentissage_en_cours = False
+        self.nb_seconde_increment_simulateur = increment_simulateur_apprentissage
 
         for listener in self.simulateur.listeners:
             if type(listener) is Intersection.Intersection:
@@ -56,7 +56,7 @@ class Apprentissage:
         self.derouler_simulateur_libre(60)
 
         thread = threading.Thread(None, self.demarrer_apprentissage,
-                kwargs = {'duree' : 3600})
+                kwargs = {'duree' : duree})
 
         thread.start()
 
@@ -80,7 +80,7 @@ class Apprentissage:
         self.apprentissage_en_cours = True
         duree *= self.simulateur.nombre_ticks_seconde
 
-        nb_tours_simulateur = int((self.nb_second_increment_simulateur * self.simulateur.nombre_ticks_seconde) / self.simulateur.grain)
+        nb_tours_simulateur = int((self.nb_seconde_increment_simulateur * self.simulateur.nombre_ticks_seconde) / self.simulateur.grain)
 
         accumulateur = 0
 
@@ -108,7 +108,7 @@ class Apprentissage:
             if self.terminated: # juste pour éviter de trop attendre
                 break
 
-        sauvegarder_modele()
+        self.sauvegarder_modele()
 
         self.apprentissage_en_cours = False
         self.apprentissage_termine = True
@@ -117,20 +117,20 @@ class Apprentissage:
     def notifier_fin(self):
         self.terminated = True
 
-    def sauvegarder_modele(nom_fichier = "reseau.pkl"):
+    def sauvegarder_modele(self, nom_fichier = "reseau.pkl"):
         pickle.dump(self.reseaux_action, open(nom_fichier, 'wb'))
 
-    def restaurer_modele(nom_fichier = "reseau.pkl"):
-        pkl_file = open(nom_fichier, 'rb')
+def restaurer_modele(nom_fichier = "reseau.pkl"):
+    pkl_file = open(nom_fichier, 'rb')
 
-        reseaux_action = pickle.load(pkl_file)
+    reseaux_action = pickle.load(pkl_file)
 
-        #for reseau in reseaux_action:
-        #    print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
+    #for reseau in reseaux_action:
+    #    print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
 
-        pkl_file.close()
+    pkl_file.close()
 
-        return reseaux_action
+    return reseaux_action
 
 
         

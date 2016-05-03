@@ -26,7 +26,7 @@ class Intersection:
             # (des histoires d'arrondi...)
             # @author : Bonfante
     """
-    duree_minimum_feu = 5 * SimulationManager.SimulationManager.nombre_ticks_seconde # secondes * nb_ticks_par_second
+    duree_minimum_feu = 10 * SimulationManager.SimulationManager.nombre_ticks_seconde # secondes * nb_ticks_par_second
     vitesse_max = 555 # cm.s^{-1}
     sur_place = {}
     
@@ -641,27 +641,24 @@ class Intersection:
         #~ print("L'intersection a été notifié.")
 
         if self.reseau_neurone is not None:
-
-
             if (moteur.temps - self.reseau_timestamp_maj) < Intersection.duree_minimum_feu:
                 return
-                
-            print("Demandons au réseau de neurone !")
+
             # on peut demander au réseau de neurone d'appliquer sa politique
             action = self.reseau_neurone.getMaxAction(self.recuperer_etat_trafic())
             self.appliquer_configuration(action)
             print("Action : " + str(action))
             self.reseau_timestamp_maj = moteur.temps
 
-            return
+        else:
 
-        self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
-        self.temps_vert += increment
+            self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
+            self.temps_vert += increment
 
-        if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
-            for index, feu in self.feux.items():
-                feu.change_couleur()
-            self.temps_vert = 0
+            if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
+                for index, feu in self.feux.items():
+                    feu.change_couleur()
+                self.temps_vert = 0
 
     def evaluer_situation(self):
         somme = 0.0
@@ -706,6 +703,6 @@ class Intersection:
         vitmoy = somme /len(liste_vehicules) if liste_vehicules else Intersection.vitesse_max
         etat_trafic.append(vitmoy)
 
-        etat_trafic.append(self.timestamp_maj)
+        #etat_trafic.append(self.timestamp_maj)
 
         return etat_trafic 

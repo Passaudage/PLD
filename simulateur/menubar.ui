@@ -15,6 +15,11 @@
           <attribute name="accel">&lt;Primary&gt;a</attribute>
         </item>
         <item>
+          <attribute name="label">Charger réseau</attribute>
+          <attribute name="action">app.charger_apprentissage</attribute>
+          <attribute name="accel">&lt;Primary&gt;r</attribute>
+        </item>
+        <item>
           <attribute name="label">Quitter</attribute>
           <attribute name="action">app.quitter</attribute>
           <attribute name="accel">&lt;Primary&gt;q</attribute>

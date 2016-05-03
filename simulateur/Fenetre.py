@@ -10,6 +10,7 @@ import jacky
 import DoubleCarrefour
 import TripleCarrefour
 import Apprentissage
+import Intersection
 
 import sys
 
@@ -71,7 +72,10 @@ class Application(Gtk.Application):
     def apprentissage_callback(self, action, parametre):
         if self.apprentissage is None:
             sim = get_simulateur()
-            self.apprentissage = Apprentissage.Apprentissage(sim)
+            duree = 600 # 10 minutes
+            increment_simulateur_apprentissage = 10 # secondes
+            self.apprentissage = Apprentissage.Apprentissage(sim,increment_simulateur_apprentissage,
+             duree)
         else:
             if self.apprentissage.apprentissage_en_cours:
                 self.apprentissage.terminated = True
@@ -92,7 +96,25 @@ class Application(Gtk.Application):
 
                 self.def_visual(sim)
 
+    def charger_apprentissage_callback(self, action, parametre):
 
+        sim = get_simulateur()
+
+        reseaux = Apprentissage.restaurer_modele()
+
+        intersections = {}
+
+        for listener in sim.listeners:
+            if type(listener) is Intersection.Intersection:
+                intersections[str(listener.coordonnees)] = listener
+
+        # on enregistre chaque réseau pour les intersections
+        for intersection in reseaux:
+
+            intersections[str(intersection.coordonnees)].reseau_neurone = reseaux[intersection]
+            print("ok")
+
+        self.def_visual(sim)
 
 
     def do_startup(self):
@@ -111,6 +133,11 @@ class Application(Gtk.Application):
         apprentissage_action = Gio.SimpleAction.new("apprentissage", None)
         apprentissage_action.connect("activate", self.apprentissage_callback)
         self.add_action(apprentissage_action)
+
+        # action "charger_apprentissage" de la barre de menu
+        charger_apprentissage_action = Gio.SimpleAction.new("charger_apprentissage", None)
+        charger_apprentissage_action.connect("activate", self.charger_apprentissage_callback)
+        self.add_action(charger_apprentissage_action)
 
         # action "quitter" de la barre de menu
         quitter_action = Gio.SimpleAction.new("quitter", None)
