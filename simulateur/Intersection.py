@@ -718,7 +718,7 @@ class Intersection:
         #    nb += vehicule.time_arret
         self.anc_score = nb
 
-        return -nb + 100#anc_eval - nb
+        return -nb + 1000#anc_eval - nb
 
     def recuperer_etat_trafic(self):
 
