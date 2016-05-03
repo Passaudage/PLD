@@ -15,8 +15,8 @@ import sys
 
 def get_simulateur():
 
-    sim = jacky.charger_simulateur()
-    #sim = DoubleCarrefour.charger_simulateur()
+    #sim = jacky.charger_simulateur()
+    sim = DoubleCarrefour.charger_simulateur()
     #~ sim = TripleCarrefour.charger_simulateur()
 
     return sim

@@ -402,7 +402,7 @@ class Intersection:
                 d2 = None
                 f2 =None
             else:
-                d2=voie2.coordonnees_sortie
+                d2=voie2.coordonnees_fin
                 f2=self.demander_voies_sorties(voie2, 'TD').coordonnees_debut
             return(voie1.coordonnees_fin, self.demander_voies_sorties(voie1, 'TD').coordonnees_debut, d2, f2)
             #~ for v in voies:
@@ -681,7 +681,7 @@ class Intersection:
         nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
-        return somme / nb if nb != 0 else vmax
+        return (somme / nb)**2 if nb != 0 else vmax**2
 
 
     def recuperer_etat_trafic(self):
