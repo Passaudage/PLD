@@ -9,6 +9,12 @@ class SimulationIntersectionTask(Task):
         self.environnement = environnement
         self.derniere_recompense = 0
 
+    def changer_intersection(self, intersection):
+        self.environnement.intersection = intersection
+
+    def recuperer_intersection(self):
+        return self.environnement.intersection
+
     def performAction(self, action):
         """
             Demande à l'environnement de répercuter un changement : changer

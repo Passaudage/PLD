@@ -37,7 +37,7 @@ class ThreadLearning (threading.Thread):
 
 class Apprentissage:
 
-    nb_interactions = 4
+    nb_interactions = 6
 
     def __init__(self, simulateur, increment_simulateur_apprentissage, duree):
         self.simulateur = simulateur
@@ -46,6 +46,7 @@ class Apprentissage:
         self.reseaux_action = {}
         self.agents = []
         self.experiments = []
+        self.tasks = {}
         self.terminated = False
         self.apprentissage_termine = False
         self.apprentissage_en_cours = False
@@ -75,10 +76,12 @@ class Apprentissage:
             self.agents.append(agent)
 
             env = EnvironnementUrbain.EnvironnementUrbain(intersection, self.simulateur)
+            
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
+            self.tasks[str(intersection.coordonnees)] = task
             self.experiments.append(Experiment(task, agent))
 
-        self.duree_initiale = 60 # en secondes
+        self.duree_initiale = 120 # en secondes
 
         thread = threading.Thread(None, self.demarrer_apprentissage,
                 kwargs = {'duree' : duree})
@@ -116,6 +119,15 @@ class Apprentissage:
             Vehicule.Vehicule.liste_voitures = []
             self.simulateur = get_simulateur()
             self.derouler_simulateur_libre(self.duree_initiale)
+
+            intersections = []
+
+            for listener in self.simulateur.listeners:
+                if type(listener) is Intersection.Intersection:
+                    intersections.append(listener)
+
+            for intersection in intersections:
+                self.tasks[str(intersection.coordonnees)].changer_intersection(intersection)
 
             for i in range(self.nb_interactions):
                 for experiment in self.experiments: # potentiellement multithreadable

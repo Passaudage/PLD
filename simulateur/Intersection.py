@@ -661,60 +661,66 @@ class Intersection:
                 self.temps_vert = 0
 
     def evaluer_situation(self):
-        somme = 0.0
         nb = 0
-        nb_entrantes_vit_nulle = 0
-        vmax = Intersection.vitesse_max
-        for voie in self.sortantes:
-            #print("SORTANTES")
-            if voie.vitesse_max > vmax:
-                vmax = voie.vitesse_max
 
+        for voie in (self.sortantes + self.entrantes):
             liste_vehicules = voie.get_vehicules()
-            nb += len(liste_vehicules)
-            for voiture in liste_vehicules:
-                somme += abs(voiture.vitesse)
-
-        for voie in (self.entrantes + self.sortantes):
-            #print("ENTRANTES")
-            if voie.vitesse_max > vmax:
-                vmax = voie.vitesse_max
-
-            liste_vehicules = voie.get_vehicules()
-            nb += len(liste_vehicules)
-            for voiture in liste_vehicules:
-                somme += abs(voiture.vitesse)
-                if abs(voiture.vitesse) <= 2:
-                    nb_entrantes_vit_nulle += 1
+        
+            for vehicule in liste_vehicules:
+                nb -= vehicule.time_alive
 
         liste_vehicules = self.vehicules
-        nb += (len(liste_vehicules))
-        for voiture in liste_vehicules:
-            somme += abs(voiture.vitesse)
 
-        return -nb_entrantes_vit_nulle
+        for voiture in liste_vehicules:
+            nb -= vehicule.time_alive
+
+        return nb
+
 
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
-        vmax = Intersection.vitesse_max
         for voie in (self.entrantes + self.sortantes):
-            liste_vehicules = voie.get_vehicules()
-            etat_trafic.append(len(liste_vehicules))
-            somme = 0.0
-            for voiture in liste_vehicules:
-                somme += abs(voiture.vitesse)
-            vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
-            etat_trafic.append(vitmoy)
+            prem_veh = voie.premier_vehicule()
+            if prem_veh is not None:
+                etat_trafic.append(prem_veh.time_alive)
+            else:
+                etat_trafic.append(0)
+            last_veh = voie.dernier_vehicule()
+            if last_veh is not None:
+                etat_trafic.append(last_veh.time_alive)
+            else:
+                etat_trafic.append(0)
+            etat_trafic.append(voie.nombre_vehicules())
 
-        liste_vehicules = self.vehicules
-        etat_trafic.append(len(liste_vehicules))
-        somme = 0.0
-        for voiture in liste_vehicules:
-            somme += abs(voiture.vitesse)
-        vitmoy = somme /len(liste_vehicules) if liste_vehicules else Intersection.vitesse_max
-        etat_trafic.append(vitmoy)
+        etat_trafic.append(len(self.vehicules))
 
-        #etat_trafic.append(self.timestamp_maj)
+        for identifiant, feu in self.feux.items():
+            if feu.est_passant():
+                etat_trafic.append(1)
+            else:
+                etat_trafic.append(0)
 
-        return etat_trafic 
+        return etat_trafic
+
+#        vmax = Intersection.vitesse_max
+#        for voie in (self.entrantes + self.sortantes):
+#            liste_vehicules = voie.get_vehicules()
+#            etat_trafic.append(len(liste_vehicules))
+#            somme = 0.0
+#            for voiture in liste_vehicules:
+#                somme += abs(voiture.vitesse)
+#            vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
+#            etat_trafic.append(vitmoy)
+#
+#        liste_vehicules = self.vehicules
+#        etat_trafic.append(len(liste_vehicules))
+#        somme = 0.0
+#        for voiture in liste_vehicules:
+#            somme += abs(voiture.vitesse)
+#        vitmoy = somme /len(liste_vehicules) if liste_vehicules else Intersection.vitesse_max
+#        etat_trafic.append(vitmoy)
+#
+#        #etat_trafic.append(self.timestamp_maj)
+#
+#        return etat_trafic 

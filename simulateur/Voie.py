@@ -67,6 +67,15 @@ class Voie:
         else:
             return None
 
+    def premier_vehicule(self):
+        if(self.vehicules):
+            return self.vehicules[0]
+        else:
+            return None
+
+    def nombre_vehicules(self):
+        return len(self.vehicules)
+
     def setTroncon(self, troncon):
         self.troncon = troncon
 
