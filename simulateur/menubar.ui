@@ -27,7 +27,9 @@
       </section>
     </submenu>
     <item>
-      <attribute name="label">À propos</attribute>
+      <attribute name="label">Reset</attribute>
+      <attribute name="action">app.reset</attribute>
+      <attribute name="accel">&lt;Primary&gt;n</attribute>
     </item>
   </menu>
 </interface>

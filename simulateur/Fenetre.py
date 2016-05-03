@@ -2,15 +2,16 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gio, Gtk
 
-import SimulationManager
 
 import Visualisateur
 import main
 import jacky
 import DoubleCarrefour
 import TripleCarrefour
-import Apprentissage
+import Apprentissage 
+
 import Intersection
+import Vehicule
 
 import sys
 
@@ -116,6 +117,21 @@ class Application(Gtk.Application):
 
         self.def_visual(sim)
 
+    def reset_callback(self, action, parametre):
+        if self.visual is not None:
+
+            if self.visual.thread_sim is not None:
+                self.visual.notifier_fin()
+                self.visual.thread_sim.join()
+
+
+            Vehicule.Vehicule.liste_voitures = []
+            self.visual.simulateur = get_simulateur();
+            self.visual.intersections = []
+            self.visual.troncons = []
+            self.visual.recuperer_inter_troncons()
+            self.visual.demarrer_simulation()
+
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -138,6 +154,11 @@ class Application(Gtk.Application):
         charger_apprentissage_action = Gio.SimpleAction.new("charger_apprentissage", None)
         charger_apprentissage_action.connect("activate", self.charger_apprentissage_callback)
         self.add_action(charger_apprentissage_action)
+
+        # action "charger_apprentissage" de la barre de menu
+        reset_action = Gio.SimpleAction.new("reset", None)
+        reset_action.connect("activate", self.reset_callback)
+        self.add_action(reset_action)
 
         # action "quitter" de la barre de menu
         quitter_action = Gio.SimpleAction.new("quitter", None)

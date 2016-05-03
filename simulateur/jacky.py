@@ -22,7 +22,7 @@ def charger_simulateur():
     i = Intersection.Intersection(sm, Coordonnees.Coordonnees(6050, 6050), 2100, 2100)
     sm.add_listener(i)
     
-    t_sud = Troncon.Troncon('B',i,
+    t_sud = Troncon.Troncon(i,
             None,
              Coordonnees.Coordonnees(6050, 0),
              Coordonnees.Coordonnees(6050, longueur_troncon),
@@ -31,19 +31,19 @@ def charger_simulateur():
                 
     t_sud.ajouter_generateur("sens1",gen_sud)
     
-    t_est = Troncon.Troncon('D',None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
+    t_est = Troncon.Troncon(None, i, Coordonnees.Coordonnees(7100, 6050), Coordonnees.Coordonnees(7100+longueur_troncon, 6050),
                     {"G": 0.2, "TD": 0.5, "D": 0.3},
                     {"G": 0.3, "TD": 0.2, "D": 0.5})
 
     t_est.ajouter_generateur("sens2",gen_est)
     
-    t_ouest = Troncon.Troncon('G',i, None, Coordonnees.Coordonnees(0, 6050), Coordonnees.Coordonnees(longueur_troncon, 6050),
+    t_ouest = Troncon.Troncon(i, None, Coordonnees.Coordonnees(0, 6050), Coordonnees.Coordonnees(longueur_troncon, 6050),
                     {"G": 0.5, "TD": 0.2, "D": 0.3},
                     {"G": 0.1, "TD": 0.7, "D": 0.2})
 
     t_ouest.ajouter_generateur("sens1",gen_ouest)
 
-    t_nord = Troncon.Troncon('H',None, i, Coordonnees.Coordonnees(6050, 7100), Coordonnees.Coordonnees(6050, longueur_troncon+7100),
+    t_nord = Troncon.Troncon(None, i, Coordonnees.Coordonnees(6050, 7100), Coordonnees.Coordonnees(6050, longueur_troncon+7100),
                     {"G": 0.2, "TD": 0.4, "D": 0.4},
                     {"G": 0.3, "TD": 0.5, "D": 0.2})
 
@@ -76,6 +76,11 @@ def charger_simulateur():
     t_ouest.creer_voie(["G"], "sens2", 1388)
     t_ouest.creer_voie(["TD"], "sens2", 1388)
     t_ouest.creer_voie(["D"], "sens2", 1388)
+    
+    t_ouest.donner_voies_intersections()
+    t_est.donner_voies_intersections()
+    t_nord.donner_voies_intersections()
+    t_sud.donner_voies_intersections()
 
     i.creer_feux()
     #~ gen_sud.ajoute_voie_entrante(t_sud.voies_sens2)

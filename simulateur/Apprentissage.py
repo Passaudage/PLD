@@ -10,6 +10,22 @@ import EnvironnementUrbain
 import threading
 import pickle
 
+import Vehicule
+
+import main
+import jacky
+import DoubleCarrefour
+import TripleCarrefour
+
+
+def get_simulateur():
+
+    sim = jacky.charger_simulateur()
+    #sim = DoubleCarrefour.charger_simulateur()
+    #~ sim = TripleCarrefour.charger_simulateur()
+
+    return sim
+
 class ThreadLearning (threading.Thread):
     def __init__(self, agent):
         threading.Thread.__init__(self)
@@ -62,7 +78,7 @@ class Apprentissage:
             task = SimulationIntersectionTask.SimulationIntersectionTask(env)
             self.experiments.append(Experiment(task, agent))
 
-        self.derouler_simulateur_libre(60)
+        self.duree_initiale = 60 # en secondes
 
         thread = threading.Thread(None, self.demarrer_apprentissage,
                 kwargs = {'duree' : duree})
@@ -94,6 +110,12 @@ class Apprentissage:
         accumulateur = 0
 
         while accumulateur < duree:
+
+            # reset du simulateur
+            print("Reset du simulateur")
+            Vehicule.Vehicule.liste_voitures = []
+            self.simulateur = get_simulateur()
+            self.derouler_simulateur_libre(self.duree_initiale)
 
             for i in range(self.nb_interactions):
                 for experiment in self.experiments: # potentiellement multithreadable

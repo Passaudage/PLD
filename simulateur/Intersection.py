@@ -78,7 +78,7 @@ class Intersection:
         # Chemins voitures
         # Map voiture/Liste de points restant à passer
         self.chemins_voitures = {}
-        
+
     def get_proba(self, troncon, direction):
         if(troncon == self.troncon_gauche):
             somme = self.proba_haut+self.proba_droite+self.proba_bas
