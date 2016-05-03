@@ -69,19 +69,24 @@ class Interface:
     def dessiner_legende(self):
 
         self.cairo_context.scale(1, -1)
-        self.cairo_context.translate(0, self.taille_y)
-        self.cairo_context.move_to(Interface.marge, self.hauteur_graphe)
+        self.cairo_context.translate(0, -self.taille_y)
+        self.cairo_context.move_to(Interface.marge, self.hauteur_graphe+5)
+        index = 2
         print((Interface.marge, self.hauteur_graphe))
         for variable in self.variables_min_max_nb_points.keys():
             couleur = self.variables_couleurs.get(variable)
             print(variable + str(couleur))
             self.cairo_context.set_source_rgba(couleur[0], couleur[1], couleur[2], 1)
-            self.cairo_context.rel_move_to(0, 10)
+            #~ self.cairo_context.rel_move_to(0, 3)
             text = variable + " " + " min : " + str(self.variables_min_max_nb_points.get(variable)[0]) \
                    + " max : " + str(self.variables_min_max_nb_points.get(variable)[1])
+            print("BONFANTE : "+str(text))
             self.cairo_context.show_text(text)
-            self.cairo_context.rel_move_to(0, 10)
-            self.cairo_context.stroke()
+            self.cairo_context.move_to(Interface.marge, self.hauteur_graphe+10*index)
+            index +=1
+            #~ self.cairo_context.rel_move_to(0, 3)
+            #~ self.cairo_context.stroke()
+        print("BONFANTE")
 
     def dessiner_axes(self):
         self.cairo_context.set_source_rgba(0, 0, 0, 1)
