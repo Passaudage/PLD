@@ -11,8 +11,14 @@ class Graphe:
 
 
     def maj(self, nouveaux_points):
-        for variable in nouveaux_points.keys():
-            self.variables_points[variable].append(nouveaux_points.get(variable))
+        for variable in self.variables_points.keys():
+            if(variable in nouveaux_points.keys()):
+                self.variables_points[variable].insert(0,nouveaux_points.get(variable))
+            else:
+                if(len(self.variables_points[variable]) >=1):
+                    self.variables_points[variable].insert(0, self.variables_points[variable][0])
+                else: self.variables_points[variable].append(0)
+
             nb_points = self.variables_min_max_nbpoints.get(variable)[2]
             if(len(self.variables_points[variable]) > nb_points):
                 del self.variables_points.get(variable)[-1]

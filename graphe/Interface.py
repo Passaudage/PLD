@@ -6,7 +6,10 @@ import math
 
 class Interface:
 
-    couleurs = {1:(1,0,0), 2: (0,1,0), 3:(0,0,1)}
+    couleurs = {7:(1,0,0.4), 6: (1,87/255,2/255), 5:(0, 168/255, 253/255),
+                4: (0, 33/255, 71/255), 3: (80/255, 125/255, 42/255),
+                2:(1, 215/255, 0), 1:(197/255, 118/255, 111/255)}
+
 
     marge = 10
     def __init__(self, variables_min_max_nbpoint, taille_x, taille_y, hauteur_graphe):
@@ -51,17 +54,24 @@ class Interface:
             couleur = self.variables_couleurs.get(variable)
             self.cairo_context.set_source_rgba(couleur[0], couleur[1], couleur[2], 1)
 
-            nb_points = self.variables_min_max_nb_points.get(variable)[2]
-            point_dessine = 0
-            point_precedent = None
-            for value in self.graphe.variables_points.get(variable):
-                x = Interface.marge + (self.longueur_axe_abscisses - point_dessine/nb_points*self.longueur_axe_abscisses)
+            nb_points = self.variables_min_max_nb_points.get(variable)[2]-1
+
+            iter_value = iter(self.graphe.variables_points.get(variable))
+            x_premier_point = Interface.marge + self.longueur_axe_abscisses
+            y_premier_point = self.mettre_a_echelle(next(iter_value), variable)
+            point_precedent = (x_premier_point, y_premier_point+self.origine_graphe[1])
+            self.cairo_context.arc(x_premier_point, y_premier_point + self.origine_graphe[1], 2, 0, 2 * math.pi)
+            self.cairo_context.fill()
+
+            point_dessine = 1
+            for value in iter_value:
+                x = Interface.marge + (self.longueur_axe_abscisses - (point_dessine/nb_points*self.longueur_axe_abscisses))
                 y = self.mettre_a_echelle(value, variable)
-                self.cairo_context.arc(x, y+self.origine_graphe[1], 2, 0, 2*math.pi)
+                self.cairo_context.arc(x, y + self.origine_graphe[1], 2, 0, 2 * math.pi)
                 self.cairo_context.fill()
-                if(point_precedent != None):
-                    self.cairo_context.move_to(point_precedent[0], point_precedent[1])
-                    self.cairo_context.line_to(x, y+self.origine_graphe[1])
+
+                self.cairo_context.move_to(point_precedent[0], point_precedent[1])
+                self.cairo_context.line_to(x, y+self.origine_graphe[1])
                 point_precedent = (x, y+ self.origine_graphe[1])
                 self.cairo_context.stroke()
                 point_dessine+=1
@@ -70,23 +80,20 @@ class Interface:
 
         self.cairo_context.scale(1, -1)
         self.cairo_context.translate(0, -self.taille_y)
-        self.cairo_context.move_to(Interface.marge, self.hauteur_graphe+5)
-        index = 2
-        print((Interface.marge, self.hauteur_graphe))
+        self.cairo_context.move_to(Interface.marge, self.hauteur_graphe)
+        index1 = 1
+        index2 = 0
         for variable in self.variables_min_max_nb_points.keys():
+            self.cairo_context.move_to(Interface.marge, self.hauteur_graphe + index1 * 25 + index2 * 15)
             couleur = self.variables_couleurs.get(variable)
-            print(variable + str(couleur))
             self.cairo_context.set_source_rgba(couleur[0], couleur[1], couleur[2], 1)
-            #~ self.cairo_context.rel_move_to(0, 3)
+            #self.cairo_context.select_font_face("Georgia", self.cairo_context.CAIRO_FONT_SLANT_NORMAL, self.cairo_context.CAIRO_FONT_WEIGHT_BOLD)
+            self.cairo_context.set_font_size(15)
             text = variable + " " + " min : " + str(self.variables_min_max_nb_points.get(variable)[0]) \
                    + " max : " + str(self.variables_min_max_nb_points.get(variable)[1])
-            print("BONFANTE : "+str(text))
             self.cairo_context.show_text(text)
-            self.cairo_context.move_to(Interface.marge, self.hauteur_graphe+10*index)
-            index +=1
-            #~ self.cairo_context.rel_move_to(0, 3)
-            #~ self.cairo_context.stroke()
-        print("BONFANTE")
+            index1+=1
+            index2+=1
 
     def dessiner_axes(self):
         self.cairo_context.set_source_rgba(0, 0, 0, 1)
