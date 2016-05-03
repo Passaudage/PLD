@@ -37,7 +37,7 @@ class ThreadLearning (threading.Thread):
 
 class Apprentissage:
 
-    nb_interactions = 6
+    nb_interactions = 3 # nombre d'exemples dans un minibatch
 
     def __init__(self, simulateur, increment_simulateur_apprentissage, duree):
         self.simulateur = simulateur
@@ -66,11 +66,11 @@ class Apprentissage:
             # Initialiser le réseau pour l'apprentissage
             av_network = ActionValueNetwork(self.nb_variables_trafic,
                         len(intersection.combinaisons))
-            self.reseaux_action[intersection] = av_network
+            self.reseaux_action[str(intersection.coordonnees)] = av_network
 
             # Classe d'apprentissage
             learner = NFQ()
-            learner.explorer.epsilon = 0.7 # TODO : à tuner
+            learner.explorer.epsilon = 0.9 # TODO : à tuner
 
             agent = LearningAgent(av_network, learner)
             self.agents.append(agent)
@@ -81,7 +81,7 @@ class Apprentissage:
             self.tasks[str(intersection.coordonnees)] = task
             self.experiments.append(Experiment(task, agent))
 
-        self.duree_initiale = 120 # en secondes
+        self.duree_initiale = 10 # en secondes
 
         thread = threading.Thread(None, self.demarrer_apprentissage,
                 kwargs = {'duree' : duree})
@@ -109,25 +109,32 @@ class Apprentissage:
         duree *= self.simulateur.nombre_ticks_seconde
 
         nb_tours_simulateur = int((self.nb_seconde_increment_simulateur * self.simulateur.nombre_ticks_seconde) / self.simulateur.grain)
+        nb_minibatch = 6
 
         accumulateur = 0
 
+        compteur_minibatch = 0
+
         while accumulateur < duree:
 
-            # reset du simulateur
-            print("Reset du simulateur")
-            Vehicule.Vehicule.liste_voitures = []
-            self.simulateur = get_simulateur()
-            self.derouler_simulateur_libre(self.duree_initiale)
+            if compteur_minibatch >= nb_minibatch:
 
-            intersections = []
+                # reset du simulateur
+                print("Reset du simulateur")
+                Vehicule.Vehicule.liste_voitures = []
+                self.simulateur = get_simulateur()
+                self.derouler_simulateur_libre(self.duree_initiale)
 
-            for listener in self.simulateur.listeners:
-                if type(listener) is Intersection.Intersection:
-                    intersections.append(listener)
+                compteur_minibatch = 0
 
-            for intersection in intersections:
-                self.tasks[str(intersection.coordonnees)].changer_intersection(intersection)
+                intersections = []
+
+                for listener in self.simulateur.listeners:
+                    if type(listener) is Intersection.Intersection:
+                        intersections.append(listener)
+
+                for intersection in intersections:
+                    self.tasks[str(intersection.coordonnees)].changer_intersection(intersection)
 
             for i in range(self.nb_interactions):
                 for experiment in self.experiments: # potentiellement multithreadable
@@ -151,11 +158,16 @@ class Apprentissage:
                 thread.join()
             print(" ok...")
 
-            accumulateur += self.simulateur.grain * nb_tours_simulateur * self.nb_interactions
+            
             print("Temps passé simulation : " + str(accumulateur/self.simulateur.nombre_ticks_seconde))
 
             if self.terminated: # juste pour éviter de trop attendre
                 break
+
+            compteur_minibatch += 1
+
+            if compteur_minibatch == nb_minibatch:
+                accumulateur += self.simulateur.grain * nb_tours_simulateur * self.nb_interactions
 
         self.sauvegarder_modele()
 
@@ -173,9 +185,6 @@ def restaurer_modele(nom_fichier = "reseau.pkl"):
     pkl_file = open(nom_fichier, 'rb')
 
     reseaux_action = pickle.load(pkl_file)
-
-    #for reseau in reseaux_action:
-    #    print("reseau : " + str(reseau.getMaxAction(self.intersections[0].recuperer_etat_trafic())))
 
     pkl_file.close()
 

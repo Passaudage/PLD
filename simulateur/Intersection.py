@@ -645,6 +645,7 @@ class Intersection:
                 return
 
             # on peut demander au réseau de neurone d'appliquer sa politique
+            print(self.recuperer_etat_trafic())
             action = self.reseau_neurone.getMaxAction(self.recuperer_etat_trafic())
             self.appliquer_configuration(action)
             print("Action : " + str(action))
@@ -687,19 +688,19 @@ class Intersection:
             else:
                 etat_trafic.append(0)
             last_veh = voie.dernier_vehicule()
-            if last_veh is not None:
-                etat_trafic.append(last_veh.time_alive)
-            else:
-                etat_trafic.append(0)
+            # if last_veh is not None:
+            #     etat_trafic.append(last_veh.time_alive)
+            # else:
+            #     etat_trafic.append(0)
             etat_trafic.append(voie.nombre_vehicules())
 
         etat_trafic.append(len(self.vehicules))
 
-        for identifiant, feu in self.feux.items():
-            if feu.est_passant():
-                etat_trafic.append(1)
-            else:
-                etat_trafic.append(0)
+        # for identifiant, feu in self.feux.items():
+        #     if feu.est_passant():
+        #         etat_trafic.append(1)
+        #     else:
+        #         etat_trafic.append(0)
 
         return etat_trafic
 
