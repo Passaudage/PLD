@@ -73,7 +73,7 @@ class Application(Gtk.Application):
     def apprentissage_callback(self, action, parametre):
         if self.apprentissage is None:
             sim = get_simulateur()
-            duree = 2400 # 10 minutes
+            duree = 800 # 10 minutes
             increment_simulateur_apprentissage = 10 # secondes
             self.apprentissage = Apprentissage.Apprentissage(sim,increment_simulateur_apprentissage,
              duree)
@@ -84,16 +84,17 @@ class Application(Gtk.Application):
                 # le but est d'afficher une simulation en prenant en compte
                 # les changements de feux à partir du réseau de neurone
                 print("On affiche la simulation basée sur l'apprentissage")
-                
-                #sim = get_simulateur()
-                if self.apprentissage.simulateur is None:
-                    sim = get_simulateur()
+                Vehicule.Vehicule.liste_voitures = []
+                sim = get_simulateur()
+                intersections = []
 
-                sim = self.apprentissage.simulateur
+                for listener in sim.listeners:
+                    if type(listener) is Intersection.Intersection:
+                        intersections.append(listener)
 
                 # on enregistre chaque réseau pour les intersections
-                for intersection in self.apprentissage.reseaux_action:
-                    intersection.reseau_neurone = self.apprentissage.reseaux_action[intersection]
+                for intersection in intersections:
+                    intersection.reseau_neurone = self.apprentissage.reseaux_action[str(intersection.coordonnees)]
 
                 self.def_visual(sim)
 
@@ -111,7 +112,7 @@ class Application(Gtk.Application):
 
         # on enregistre chaque réseau pour les intersections
         for intersection in reseaux:
-            intersections[str(intersection.coordonnees)].reseau_neurone = reseaux[intersection]
+            intersections[intersection].reseau_neurone = reseaux[intersection]
 
         self.def_visual(sim)
 
