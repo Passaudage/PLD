@@ -678,6 +678,7 @@ class Intersection:
                 self.agent_apprentissage.getAction()
                 self.agent_apprentissage.giveReward(cur_recompense)
 
+                print("Apprentissage")
                 self.agent_apprentissage.learn()
 
             self.appliquer_configuration(action)
@@ -723,7 +724,7 @@ class Intersection:
 
         seuil_charge_trafic = 12.0 * self.simulateur.nombre_ticks_seconde
 
-        seuil1 = 3
+        seuil1 = 4
         seuil2 = 7
 
         etat_trafic = 0
@@ -731,10 +732,8 @@ class Intersection:
 
         for voie in self.entrantes:
             nb_vehicules = len(voie.vehicules)
-            if nb_vehicules <= seuil1:
-                etat_trafic += 3**compteur
-            elif nb_vehicules > seuil2:
-                etat_trafic += 3**compteur + 1
+            if nb_vehicules > seuil1:
+                etat_trafic += 2**compteur
             
             compteur += 1
 
