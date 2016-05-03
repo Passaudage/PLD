@@ -683,29 +683,26 @@ class Intersection:
 
 
     def recuperer_etat_trafic(self):
-        etat_trafic = []
+
+        seuil_charge_trafic = 11.0 * self.simulateur.nombre_ticks_seconde
+
+        etat_trafic = 0
+        compteur = 0
+
         for voie in self.entrantes:
             prem_veh = voie.premier_vehicule()
-            if prem_veh is not None:
-                etat_trafic.append(prem_veh.time_alive)
-            else:
-                etat_trafic.append(0)
-            last_veh = voie.dernier_vehicule()
-            # if last_veh is not None:
-            #     etat_trafic.append(last_veh.time_alive)
-            # else:
-            #     etat_trafic.append(0)
-            etat_trafic.append(voie.nombre_vehicules())
+            if prem_veh is not None and prem_veh.time_alive > seuil_charge_trafic:
+                etat_trafic += 2**compteur
+            
+            compteur += 1
 
-        etat_trafic.append(len(self.vehicules))
+        # Deux états pour chaque voie : 12 voies
+        # -> peu chargé, chargé : soit 4096 états
 
-        # for identifiant, feu in self.feux.items():
-        #     if feu.est_passant():
-        #         etat_trafic.append(1)
-        #     else:
-        #         etat_trafic.append(0)
+        # 19.3 sec (d'un bout à l'autre)
+        # 13.15 sec (d'un feu, arrété à l'autre bout)
 
-        return etat_trafic
+        return [etat_trafic]
 
 #        vmax = Intersection.vitesse_max
 #        for voie in (self.entrantes + self.sortantes):

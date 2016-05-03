@@ -61,16 +61,30 @@ class Apprentissage:
 
         self.nb_variables_trafic = len(self.intersections[0].recuperer_etat_trafic())
 
+        self.nb_etats_entree = 4096
 
         for intersection in self.intersections:
             # Initialiser le réseau pour l'apprentissage
-            av_network = ActionValueNetwork(self.nb_variables_trafic,
+            #av_network = ActionValueNetwork(self.nb_variables_trafic,
+            #            len(intersection.combinaisons))
+
+            av_network = ActionValueTable(self.nb_etats_entree,
                         len(intersection.combinaisons))
+            av_network.initialize()
+
             self.reseaux_action[str(intersection.coordonnees)] = av_network
 
             # Classe d'apprentissage
-            learner = NFQ()
-            learner.explorer.epsilon = 2 # TODO : à tuner
+            #learner = NFQ()
+            #learner.explorer.epsilon = 2 # TODO : à tuner
+
+            #### Q-learning ####
+            alpha = 0.8 # learning rate
+            gamma = 0.3 # proche de zéro : optimisation à court terme
+
+            learner = Q(alpha, gamma)
+            learner.explorer.epsilon = 0.4
+            ####################
 
             agent = LearningAgent(av_network, learner)
             self.agents.append(agent)
@@ -109,7 +123,7 @@ class Apprentissage:
         duree *= self.simulateur.nombre_ticks_seconde
 
         nb_tours_simulateur = int((self.nb_seconde_increment_simulateur * self.simulateur.nombre_ticks_seconde) / self.simulateur.grain)
-        nb_minibatch = 6
+        nb_minibatch = 12
 
         accumulateur = 0
 

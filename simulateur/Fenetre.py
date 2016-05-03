@@ -73,8 +73,8 @@ class Application(Gtk.Application):
     def apprentissage_callback(self, action, parametre):
         if self.apprentissage is None:
             sim = get_simulateur()
-            duree = 600 # 10 minutes
-            increment_simulateur_apprentissage = 20 # secondes
+            duree = 7200
+            increment_simulateur_apprentissage = 30 # secondes
             self.apprentissage = Apprentissage.Apprentissage(sim,increment_simulateur_apprentissage,
              duree)
         else:
