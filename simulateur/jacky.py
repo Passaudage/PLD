@@ -121,7 +121,7 @@ def charger_simulateur():
     #i.trouver_configurations_feux()
     i.build_combinaisons()
 
-     print(i.combinaisons)
+    print(i.combinaisons)
     for k,v in i.combinaisons.items():
         print(str(k)+" "+str(v))
         for f in v:
