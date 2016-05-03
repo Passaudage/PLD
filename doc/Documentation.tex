@@ -22,18 +22,18 @@
 Le nombre de véhicules a beaucoup augmenté ces dernières années. Les infrastructures routières se retrouvent alors de plus en plus encombrées. De ce fait, il est nécessaire de réfléchir à une gestion du trafic. De nos jours, les municipalités tentent d'améliorer les transports en commun et les modes de déplacements verts en incitant les automobilistes à ne plus prendre leurs véhicules pour leurs déplacements quotidiens. Cependant, certaines personnes n'ont pas le choix et doivent continuer à prendre leurs véhicules. Nous pensons par exemple aux personnes âgées, aux personnes à mobilité réduite ou bien encore aux livreurs. De plus, le nombre de bus pour les transports en commun participe à l'augmentation du trafic. La nécessité d'une optimisation de la gestion des feux de signalisation nous semblait évidente. C'est pourquoi nous avons décidé de nous pencher sur ce problème très complexe. En effet, plusieurs thèses ont été publiées sur ce sujet \footnote{Régulation du trafic urbain \url{http://www.biblio.univ-evry.fr/theses/2009/2009EVRY0035.pdf}} et l'optimum du problème n'a toujours pas été trouvé. Nous tenterons, dans le faible temps imparti, de pointer du doigt les points difficiles à l'optimisation des feux de signalisation et de montrer que les méthodes d'apprentissage peuvent être une bonne solution à ce problème.
 
 \section{Simulateur}
-Le Grand-Lyon ne possède pas dans son catalogue open-date de données sur les feux de signalisation. En effet, ceux-ci sont gérés par une société privée et la mise à disposition des données de ceux-ci n'est pas une option. Nous avons donc été contraint de développé un simulateur qui reflète du mieux que possible le comportement réel des usagers de la route.
+Le Grand-Lyon ne possède pas dans son catalogue open-date de données sur les feux de signalisation. En effet, ceux-ci sont gérés par une société privée et la mise à disposition des données de ceux-ci n'est pas une option. Nous avons donc été contraint de développer un simulateur qui reflète du mieux que possible le comportement réel des usagers de la route.
 
 \subsection{Modélisation des tronçons}
-Afin de simplifier le problème, nous avons restreins la géométrie des carrefours à des carrefours où les tronçons sont à angles droits et ou chaque tronçon désert au maximum 3 directions (Gauche, Tout Droit, Droite). Chaque voie possède une ou plusieurs directions (Gauche, Tout Droit, Droite) ainsi qu'une vitesse maximale. 
+Afin de simplifier le problème, nous avons restreint la géométrie des carrefours à des carrefours où les tronçons sont à angles droits et où chaque tronçon dessert au maximum 3 directions (Gauche, Tout Droit, Droite). Chaque voie possède une ou plusieurs directions (Gauche, Tout Droit, Droite) ainsi qu'une vitesse maximale. 
 
-Afin de rendre réaliste la trajectoire dans les intersections, nous avons choisi d'interpoler la trajectoire en virage par une courbe d'ordre 3. 
+Afin de rendre réaliste la trajectoire dans les intersections, nous avons choisi d'interpoler la trajectoire en virage par une courbe de polynôme de degré 3. 
 \subsection{Modèle de gestion du trafic}
-Pour modéliser le comportement des véhicules, deux approches sont possibles. L’approche macroscopique, qui considère un flux de véhicule et effectue des calculs à l'instar de la mécanique des fluides. La deuxième approche, l'approche microscopique, considère les véhicules individuellement et tente de modéliser son comportement, éventuellement en fonction de celui des autres. 
+Pour modéliser le comportement des véhicules, deux approches sont possibles. L’approche macroscopique, qui considère un flux de véhicules et effectue des calculs à l'instar de la mécanique des fluides. La deuxième approche, l'approche microscopique, considère les véhicules individuellement et tente de modéliser leur comportement, éventuellement en fonction de celui des autres. 
 
-Nous avons choisi d'utiliser une approche microscopique et de retenir le modèle du conducteur intelligent (Intelligent Driver Model en anglais \footnote{Page Wikipedia sur IDM \url{https://en.wikipedia.org/wiki/Intelligent_driver_model}}). Ce modèle est un des plus récents, un des plus efficaces, et un modèle dans lequel les équations restent compréhensibles et ont un sens physique.
+Nous avons choisi d'utiliser une approche microscopique et de retenir le modèle du conducteur intelligent (Intelligent Driver Model en anglais \footnote{Page Wikipedia sur IDM \url{https://en.wikipedia.org/wiki/Intelligent_driver_model}}). Ce modèle est l'un des plus récents, un des plus efficaces, et un modèle dans lequel les équations restent compréhensibles et ont un sens physique.
 
-Ce modèle donne la vitesse et l'accélération d'un véhicule en fonction de la vitesse maximale de la voie, de la distance avec l'obstacle le précédant et de différents paramètres comme l'accélération maximale ou la décélération maximale (freinage).
+Ce modèle donne la vitesse et l'accélération d'un véhicule en fonction de la vitesse maximale de la voie, de la distance avec l'obstacle le précédant et d'autres paramètres tels que l'accélération maximale ou la décélération maximale (freinage).
 
 \subsection{Modèle du changement de voie et file de dépendance}
 %TODO MARC
@@ -45,7 +45,7 @@ L'apprentissage par renforcement est une méthode d'apprentissage automatique qu
 \subsection{Mise en place dans le projet}
 Il existe plusieurs bibliothèques d'apprentissage en \emph{Python}. Nous avons choisi la bibliothèque \emph{Pybrain} qui est facile à installer et à utiliser. Il ne propose malheureusement pas de calcul sur GPU contrairement à la bibliothèque \emph{Caffe}, mais celle ci est plus difficile à installer et mettre en \oe uvre. 
 
-La fonction de récompense que nous avons mise en place prend en compte la vitesse moyenne avec une pénalité en fonction du nombre de véhicules arrêtés. 
+La fonction de récompense que nous avons mise en place prend en compte la vitesse moyenne des véhicules avec une pénalité en fonction du nombre de véhicules arrêtés. 
 
 \section{Bilan du projet}
 \subsection{Tentatives infructueuses}
@@ -54,16 +54,16 @@ La fonction de récompense que nous avons mise en place prend en compte la vites
 Le Deep Learning est un ensemble de méthode d'apprentissage automatique. Il permet à un ordinateur d'apprendre à partir d'exemples.
 }
 \paragraph{Raison de l'échec :}{
-Le Grand-Lyon n'ayant aucune donnée sur les feux de signalisation, nous n'avons aucun exemple. Nous pouvons construire des exemples à partir de notre simulateur. Cependant, créer suffisamment d'exemples prendrai beaucoup trop de temps. 
+Le Grand-Lyon n'ayant aucune donnée sur les feux de signalisation, nous n'avons aucun exemple. Nous pouvons construire des exemples à partir de notre simulateur. Cependant, créer suffisamment d'exemples prendrait beaucoup trop de temps. 
 }
 
 \subsubsection{Algorithme génétique}
 \paragraph{Principes :}{
-Le principe des algorithmes génétiques est similaire à l'évolution génétique d'un individu. Initialement, plusieurs solutions sont générées et évaluées. A chaque solution est attribué un chance de se reproduire. Avec ses solutions, on crée de nouvelles solutions, composés de gênes provenant de plusieurs solutions mères. On introduit également un phénomène de mutation génétique qui consiste à modifier aléatoire un gêne, afin de ne pas tomber dans un optimum local.
+Le principe des algorithmes génétiques est similaire à l'évolution génétique d'un individu. Initialement, plusieurs solutions sont générées et évaluées. A chaque solution est attribuée un chance de se reproduire. Avec ses solutions, on crée de nouvelles solutions, composées de gênes provenant de plusieurs solutions mères. On introduit également un phénomène de mutation génétique qui consiste à modifier aléatoirement un gêne, afin de ne pas tomber dans un optimum local.
 On répète ce phénomène tant que l'évolution des solutions est visible. 
 }
 \paragraph{Raison de l'échec :}{
-Notre approche de l'algorithmie génétique n'était pas la bonne. De ce fait, nous n'avons pas réussi à imaginer une solution de création de solution basée sur cette méthode. Cependant, après réflexion trop tardive, nous nous sommes rendu compte qu'il était possible d'adopter une stratégie de ce genre.
+Notre approche de l'algorithmie génétique n'était pas la bonne. De ce fait, nous n'avons pas réussi à imaginer une solution de création de solution basée sur cette méthode. Cependant, après une réflexion trop tardive, nous nous sommes rendu compte qu'il était possible d'adopter une stratégie de ce genre.
 }
 
 %% EXAMPLE CECI EST UN EXEMPLE
