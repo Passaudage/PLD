@@ -112,10 +112,10 @@ class Apprentissage:
                 thread = ThreadLearning(agent)
                 threads.append(thread)
                 thread.start()
-                print(" ok...")
 
             for thread in threads:
                 thread.join()
+            print(" ok...")
 
             accumulateur += self.simulateur.grain * nb_tours_simulateur * self.nb_interactions
             print("Temps passé simulation : " + str(accumulateur/self.simulateur.nombre_ticks_seconde))

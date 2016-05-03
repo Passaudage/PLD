@@ -666,6 +666,7 @@ class Intersection:
         nb_entrantes_vit_nulle = 0
         vmax = Intersection.vitesse_max
         for voie in self.sortantes:
+            #print("SORTANTES")
             if voie.vitesse_max > vmax:
                 vmax = voie.vitesse_max
 
@@ -675,6 +676,7 @@ class Intersection:
                 somme += abs(voiture.vitesse)
 
         for voie in (self.entrantes + self.sortantes):
+            #print("ENTRANTES")
             if voie.vitesse_max > vmax:
                 vmax = voie.vitesse_max
 
