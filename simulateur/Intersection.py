@@ -667,7 +667,7 @@ class Intersection:
         anc_eval = self.anc_score
         nb = 0
 
-        for voie in (self.sortantes + self.entrantes):
+        for voie in self.entrantes:
             liste_vehicules = voie.get_vehicules()
         
             for vehicule in liste_vehicules:
@@ -678,13 +678,13 @@ class Intersection:
         for voiture in liste_vehicules:
             nb += vehicule.time_alive
         self.anc_score = nb
-        return nb - anc_eval
+        return anc_eval - nb
 
 
 
     def recuperer_etat_trafic(self):
         etat_trafic = []
-        for voie in (self.entrantes + self.sortantes):
+        for voie in self.entrantes:
             prem_veh = voie.premier_vehicule()
             if prem_veh is not None:
                 etat_trafic.append(prem_veh.time_alive)

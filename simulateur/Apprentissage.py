@@ -70,7 +70,7 @@ class Apprentissage:
 
             # Classe d'apprentissage
             learner = NFQ()
-            learner.explorer.epsilon = 0.9 # TODO : à tuner
+            learner.explorer.epsilon = 2 # TODO : à tuner
 
             agent = LearningAgent(av_network, learner)
             self.agents.append(agent)
