@@ -691,6 +691,7 @@ class Intersection:
         nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
             somme += abs(voiture.vitesse)
+
         return -nb_entrantes_vit_nulle
 
 
