@@ -1,3 +1,5 @@
+import Intersection
+
 class SimulationManager:
     nombre_ticks_seconde = 100
 
@@ -18,6 +20,8 @@ class SimulationManager:
 
     def del_listener(self, listener):
         self.listeners.remove(listener)
+
+
 
 #########################################################
 # Classe de test
