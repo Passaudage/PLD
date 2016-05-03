@@ -34,6 +34,7 @@ class Vehicule:
         self.bloque_par = None
         self.timestamp_maj = 0
         self.time_alive = 0
+        self.time_arret = 0
         
         self.existence = False
 
@@ -375,6 +376,8 @@ class Vehicule:
         val_vitesse = self.direction * self.vitesse + dv
 
         val_vitesse = max(val_vitesse, 0)
+        if val_vitesse < 0.1:
+            self.time_arret += increment_temps
 
         self.vitesse = self.direction * val_vitesse
 

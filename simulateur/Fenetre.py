@@ -169,7 +169,7 @@ class Application(Gtk.Application):
         quitter_action.connect("activate", self.quitter_callback)
         self.add_action(quitter_action)
 
-    def def_visual(self, sim, monitoring):
+    def def_visual(self, sim, monitoring = None):
 
         self.sim = sim
 

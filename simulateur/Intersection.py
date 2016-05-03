@@ -702,19 +702,15 @@ class Intersection:
             liste_vehicules = voie.get_vehicules()
         
             for vehicule in liste_vehicules:
-                nb += vehicule.time_alive
+                nb += vehicule.time_arret
 
         liste_vehicules = self.vehicules
 
         for voiture in liste_vehicules:
-            nb += vehicule.time_alive
+            nb += vehicule.time_arret
         self.anc_score = nb
 
-        evaluation = anc_eval - nb
-
-        return evaluation
-
-
+        return -nb#anc_eval - nb
 
     def recuperer_etat_trafic(self):
 
