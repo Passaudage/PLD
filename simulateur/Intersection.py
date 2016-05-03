@@ -661,35 +661,17 @@ class Intersection:
                 self.temps_vert = 0
 
     def evaluer_situation(self):
-        somme = 0.0
         nb = 0
-        nb_entrantes_vit_nulle = 0
-        vmax = Intersection.vitesse_max
-        for voie in self.sortantes:
-            if voie.vitesse_max > vmax:
-                vmax = voie.vitesse_max
 
+        for voie in (self.sortantes + self.entrante)
             liste_vehicules = voie.get_vehicules()
-            nb += len(liste_vehicules)
-            for voiture in liste_vehicules:
-                somme += abs(voiture.vitesse)
-
-        for voie in (self.entrantes + self.sortantes):
-            if voie.vitesse_max > vmax:
-                vmax = voie.vitesse_max
-
-            liste_vehicules = voie.get_vehicules()
-            nb += len(liste_vehicules)
-            for voiture in liste_vehicules:
-                somme += abs(voiture.vitesse)
-                if abs(voiture.vitesse) <= 2:
-                    nb_entrantes_vit_nulle += 1
+            for vehicule in liste_vehicules:
+                nb -= vehicule.time_alive
 
         liste_vehicules = self.vehicules
-        nb += (len(liste_vehicules))
         for voiture in liste_vehicules:
-            somme += abs(voiture.vitesse)
-        return -nb_entrantes_vit_nulle
+            nb -= vehicule.time_alive
+        return nb
 
 
     def recuperer_etat_trafic(self):
