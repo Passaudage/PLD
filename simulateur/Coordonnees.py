@@ -136,8 +136,8 @@ class Coordonnees:
 
         a = (f2_n.y - d2_n.y)/(f2_n.x - d2_n.x)
         
-        if a == 0:
-            return True
+        if a == 0 :
+            return f2_n.y == f1_n.y
 
         b = f2_n.y - a*f2_n.x
 

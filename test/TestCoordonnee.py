@@ -163,6 +163,36 @@ def test_se_coupent8():
 		print("Test se_coupent ok")
 	else:
 		print("Test se_coupent ko")
+		
+def test_se_coupent9():
+	c1 = Coordonnees(2,2)
+	c2 = Coordonnees(2,4)
+	c3 = Coordonnees(1,4)
+	c4 = Coordonnees(1,2)
+	if(not Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+		
+def test_se_coupent10():
+	c1 = Coordonnees(2,2)
+	c2 = Coordonnees(4,2)
+	c3 = Coordonnees(4,1)
+	c4 = Coordonnees(2,1)
+	if(not Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
+		
+def test_se_coupent11():
+	c1 = Coordonnees(2,2)
+	c2 = Coordonnees(4,2)
+	c3 = Coordonnees(4,1)
+	c4 = Coordonnees(2,1)
+	if(not Coordonnees.se_coupent(c1,c2,c3,c4)):
+		print("Test se_coupent ok")
+	else:
+		print("Test se_coupent ko")
 	
 test_string()
 test_abs()
@@ -179,6 +209,11 @@ test_se_coupent4()
 test_se_coupent5()
 test_se_coupent6()
 test_se_coupent7()
+test_se_coupent8()
+test_se_coupent9()
+test_se_coupent10()
+test_se_coupent11()
+
 
 c = Coordonnees(1, 1)
 c2 = Coordonnees(2, 1)
