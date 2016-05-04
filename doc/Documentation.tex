@@ -37,19 +37,19 @@ Nous avons choisi d'utiliser une approche microscopique et de retenir le modèle
 Ce modèle fournit la vitesse et l'accélération d'un véhicule en fonction de la vitesse maximale de la voie, de la distance avec l'obstacle le précédant et d'autres paramètres tels que l'accélération maximale ou la décélération maximale (freinage).
 
 \subsection{File de dépendance}
-L'ensemble du trafic est géré de façon séquentiel, à l'aide d'un gestionnaire de simulation, qui notifie régulièrement lorsqu'un nouveau \og tick \fg de temps a lieu. Les véhicules sont ainsi gérés à l'aide d'arbres. Le premier véhicule de l'arbre ne dépend de personnes. Ses fils dépendent de lui et ainsi de suite. On dit qu'un véhicule dépend d'un autre si la progresse du premier est entravée par la progression du deuxième. Le gestionnaire notifie les racines qui se sont au préalable inscrites, celles-ci calculent et exécutent leur mouvement et les autres actions qu'elles doivent accomplir, puis transmettent la notification à leurs descendants dans l'arbre. 
+L'ensemble du trafic est géré de façon séquentiel, à l'aide d'un gestionnaire de simulation, qui notifie régulièrement lorsqu'un nouveau \og tick \fg de temps a lieu. Les véhicules sont notamment gérés à l'aide d'arbres qui permettent de gérer des liens de dépendance. Le premier véhicule de l'arbre est libre. Ses fils dépendent de lui et ainsi de suite. On dit qu'un véhicule dépend d'un autre si la progresse du premier est entravée par la progression du deuxième. Le gestionnaire notifie les racines qui se sont au préalable inscrites, celles-ci calculent et exécutent leur mouvement et les autres actions qu'elles doivent accomplir, puis transmettent la notification à leurs descendants dans l'arbre.  De cette manière, l'ensemble des actions sont effectuées dans l'ordre adéquat.
 
 \subsection{Actions opérées par les véhicules}
-Chaque véhicule se voit attribué à sa génération une destination, il est aussi inséré dans un arbre et ajouté à une voie. A chaque notification, un véhicule exécute les tâches suivantes : il vérifie s'il a atteint sa destination, auquel cas il demande à l'environnement la prochaine, il calcule ensuite la position de l'obstacle le plus proche dans sa direction, change éventuellement d'arbre en fonction, puis de déplace. 
+Chaque véhicule se voit attribué à sa génération une destination, il est aussi inséré dans un arbre et ajouté à une voie. A chaque notification, un véhicule exécute les tâches suivantes : il vérifie s'il a atteint sa destination, auquel cas il demande à l'environnement la prochaine, il calcule ensuite la position de l'obstacle le plus proche dans sa direction, change éventuellement d'arbre en fonction, puis se déplace. 
 
 \section{Apprentissage par renforcement}
 \subsection{Principes}
-L'apprentissage par renforcement est une méthode d'apprentissage automatique qui permet d'apprendre à partir d'exemples réalisés dans des situations différentes. Le but est d'optimiser une fonction de récompense. Le 
+L'apprentissage par renforcement est une méthode d'apprentissage automatique qui permet d'apprendre à partir d'exemples réalisés dans des situations différentes. Le but est d'optimiser l'action choisie pour une configuration de l'environnement donnée, en maximisant une fonction de récompense.
 
 \subsection{Mise en place dans le projet}
-Il existe plusieurs bibliothèques d'apprentissage en \emph{Python}. Nous avons choisi la bibliothèque \emph{Pybrain} qui est facile à installer et à utiliser. Il ne propose malheureusement pas de calcul sur GPU contrairement à la bibliothèque \emph{Caffe}, mais celle ci est plus difficile à installer et mettre en \oe uvre. 
+Il existe plusieurs bibliothèques d'apprentissage en \emph{Python}. Nous avons choisi la bibliothèque \emph{Pybrain} qui est facile à installer et à utiliser. Elle ne propose malheureusement pas de calcul sur GPU contrairement à la bibliothèque \emph{Caffe}, mais cette dernière est plus difficile à installer à et mettre en \oe uvre. 
 
-La fonction de récompense que nous avons mise en place prend en compte la vitesse moyenne des véhicules avec une pénalité en fonction du nombre de véhicules arrêtés. 
+La fonction de récompense que nous avons mise en place prend en compte le nombre de véhicules passés par l'intersection depuis la dernière observation de l'environnement.
 
 \section{Bilan du projet}
 \subsection{Tentatives infructueuses}
@@ -67,7 +67,7 @@ Le principe des algorithmes génétiques est similaire à l'évolution génétiq
 On répète ce phénomène tant que l'évolution des solutions est visible. 
 }
 \paragraph{Raison de l'échec :}{
-Notre approche de l'algorithmie génétique n'était pas la bonne. De ce fait, nous n'avons pas réussi à imaginer une solution de création de solution basée sur cette méthode. Cependant, après une réflexion trop tardive, nous nous sommes rendu compte qu'il était possible d'adopter une stratégie de ce genre.
+Spécifiquement pour ce projet, notre approche de l'algorithme génétique n'était pas la bonne. De ce fait, nous n'avons pas réussi à imaginer une solution de création de solution basée sur cette méthode. Cependant, après une réflexion trop tardive, nous nous sommes rendu compte qu'il était possible d'adopter une stratégie de ce genre mais qu'elle nécessiterait une durée de mise en \oe uvre et de paramétrage importante.
 }
 
 %% EXAMPLE CECI EST UN EXEMPLE
@@ -77,6 +77,6 @@ Notre approche de l'algorithmie génétique n'était pas la bonne. De ce fait, n
 %% CECI EST LA FIN DE L'EXEMPLE
 
 \section{Conclusion}
-Ce projet n'est pas totalement fini par manque de temps. On ne présentera pas dans ce rapport de réponse claire et précise au sujet. Nous n'avons pas d'interface flamboyante avec un beau site web dynamique. Mais ce projet n'est pas un projet comme les autres. Le but n’était pas de fournir une application fonctionnelle mais bien de montrer que l'approche de l'apprentissage est viable dans le cadre de l'amélioration de la gestion des feux de signalisation. 
+Ce projet n'est pas totalement abouti par manque de temps. On ne présentera pas dans ce rapport de réponse claire et précise au sujet. Nous n'avons pas d'interface flamboyante avec un beau site web dynamique. Mais ce projet n'est pas un projet comme les autres. Le but néétait pas de fournir une application fonctionnelle mais bien de montrer que l'approche de l'apprentissage est viable dans le cadre de l'amélioration de la gestion des feux de signalisation. Il s'agit d'un projet qui est orienté vers une problématique de recherche importante, et c'est pourquoi le terminer dans le temps imparti est difficile.
 
 \end{document}
