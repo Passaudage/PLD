@@ -711,29 +711,33 @@ class Intersection:
                 self.temps_vert = 0
 
     def evaluer_situation(self):
-        anc_eval = self.anc_score
-        nb = 0
-        minim = 145687
-        maxim = 0
+        nb = len(self.vehicules) - self.anc_score
+        self.anc_score = len(self.vehicules)
+        return nb
 
-        for voie in self.entrantes:
-            liste_vehicules = voie.get_vehicules()
-            nb += len(liste_vehicules)
-            minim = min(minim, len(liste_vehicules))
-            maxim = max(maxim, len(liste_vehicules))
+        #anc_eval = self.anc_score
+#        nb = 0
+#        minim = 145687
+#        maxim = 0
+#
+#        for voie in self.entrantes:
+#            liste_vehicules = voie.get_vehicules()
+#            nb += len(liste_vehicules)
+#            minim = min(minim, len(liste_vehicules))
+#            maxim = max(maxim, len(liste_vehicules))
         
             #for vehicule in liste_vehicules:
             #    nb += vehicule.time_arret
 
-        liste_vehicules = self.vehicules
-        nb += len(liste_vehicules)
+#        liste_vehicules = self.vehicules
+#        nb += len(liste_vehicules)
 
-        nb += maxim - minim
+#        nb += maxim - minim
         #for voiture in liste_vehicules:
         #    nb += vehicule.time_arret
-        self.anc_score = nb
+#        self.anc_score = nb
 
-        return anc_eval - nb
+#        return anc_eval - nb
 
     def recuperer_etat_trafic(self):
 
