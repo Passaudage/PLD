@@ -1,7 +1,3 @@
-"""
-    Celui qui n'a jamais eu de poule, l'abbreuve à la rivière.
-"""
-
 from enum import Enum
 
 class Couleur(Enum):

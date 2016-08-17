@@ -4,10 +4,6 @@ import Vehicule
 import time
 import SimulationManager
 
-"""
-    Si tu vois une chevre dans le repaire d'un lion, aie peur d'elle.
-"""
-
 def min_liste_coord(liste, y = True):
     element_min = None
     for element in liste:
@@ -42,7 +38,6 @@ class Intersection:
         self.largeur = largeur
         self.temps_vert = 0
         self.timestamp_maj = 0
-        self.reseau_neurone = None
         self.reseau_timestamp_maj = 0
         
         # Troncon gauche
@@ -640,25 +635,13 @@ class Intersection:
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
 
-        if self.reseau_neurone is not None:
-            if (moteur.temps - self.reseau_timestamp_maj) < Intersection.duree_minimum_feu:
-                return
+        self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
+        self.temps_vert += increment
 
-            # on peut demander au réseau de neurone d'appliquer sa politique
-            action = self.reseau_neurone.getMaxAction(self.recuperer_etat_trafic())
-            self.appliquer_configuration(action)
-            print("Action : " + str(action))
-            self.reseau_timestamp_maj = moteur.temps
-
-        else:
-
-            self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
-            self.temps_vert += increment
-
-            if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
-                for index, feu in self.feux.items():
-                    feu.change_couleur()
-                self.temps_vert = 0
+        if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
+            for index, feu in self.feux.items():
+                feu.change_couleur()
+            self.temps_vert = 0
 
     def evaluer_situation(self):
         nb = 0
