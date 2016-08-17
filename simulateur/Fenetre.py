@@ -51,7 +51,6 @@ class Application(Gtk.Application):
     def __init__(self):
         Gtk.Application.__init__(self)
         self.visual = None
-        self.apprentissage = None
 
     def do_activate(self):
         self.win = Fenetre(self)
@@ -65,8 +64,6 @@ class Application(Gtk.Application):
     def quitter_callback(self, action, parametre):
         if self.visual is not None:
             self.visual.notifier_fin()
-        if self.apprentissage is not None:
-            self.apprentissage.notifier_fin()
         sys.exit()
 
     def reset_callback(self, action, parametre):
@@ -96,16 +93,6 @@ class Application(Gtk.Application):
         simuler_action = Gio.SimpleAction.new("simuler", None)
         simuler_action.connect("activate", self.simuler_callback)
         self.add_action(simuler_action)
-
-        # action "apprentissage" de la barre de menu
-        apprentissage_action = Gio.SimpleAction.new("apprentissage", None)
-        apprentissage_action.connect("activate", self.apprentissage_callback)
-        self.add_action(apprentissage_action)
-
-        # action "charger_apprentissage" de la barre de menu
-        charger_apprentissage_action = Gio.SimpleAction.new("charger_apprentissage", None)
-        charger_apprentissage_action.connect("activate", self.charger_apprentissage_callback)
-        self.add_action(charger_apprentissage_action)
 
         # action "charger_apprentissage" de la barre de menu
         reset_action = Gio.SimpleAction.new("reset", None)
