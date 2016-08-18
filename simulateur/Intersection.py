@@ -36,9 +36,7 @@ class Intersection:
         self.coordonnees = coordonnees
         self.hauteur = hauteur
         self.largeur = largeur
-        self.temps_vert = 0
         self.timestamp_maj = 0
-        self.reseau_timestamp_maj = 0
         
         # Troncon gauche
         self.troncon_gauche = None
