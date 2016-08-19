@@ -3,6 +3,7 @@ import Coordonnees
 import Vehicule
 import time
 import SimulationManager
+import GestionnaireFeux
 
 def min_liste_coord(liste, y = True):
     element_min = None
@@ -71,6 +72,9 @@ class Intersection:
         # Chemins voitures
         # Map voiture/Liste de points restant à passer
         self.chemins_voitures = {}
+
+
+        
 
     def get_proba(self, troncon, direction):
         if(troncon == self.troncon_gauche):
@@ -192,14 +196,17 @@ class Intersection:
         print("feux du troncon droite")
         self.troncon_droite.afficher_feux()
 
-    def appliquer_configuration(self, numero_config):
+    def appliquer_configuration(self, numero_config, timestamp):
         configuration = self.combinaisons[numero_config]
-        for ident, feu in self.feux.items():
-            feu.passant = False
         
-        for ident, feu in configuration:
-            feu.passant = True
-
+        allfeux     = {feu for _, feu in self.feux.items()}
+        feuxconfig  = {feu for _, feu in configuration}
+        feuachanger = {feu for feu in allfeux if (feu in feuxconfig and not feu.passant)
+                                                 or (feu not in feuxconfig and feu.passant)
+                             }
+        
+        for feu in feuachanger:
+            feu.change_couleur(timestamp)
 
 
     def _creer_feux_troncon(self, sens, troncon, voies_entrantes, offset):
@@ -231,7 +238,6 @@ class Intersection:
                     else:
                         sens_feu = 1
                     feu = Feu.Feu(self, sens_feu)
-                    self.simulateur.add_listener(feu)
                     self.feux[index] = feu
                 # On ajoute le feu a ce troncon
                 troncon.ajouter_feux(sens,direction, feu)
@@ -265,7 +271,6 @@ class Intersection:
             # Si la configuration est correcte
             if(self.correcte(configuration)):
                 # On ajoute les feux à rendre passant
-                #~ print("zboub")
                 liste_feux = []
                 for j in range(len(configuration)):
                     if(configuration[j] == '1'):
@@ -275,11 +280,13 @@ class Intersection:
 
                 index +=1
 
+        self.gestionnaire = GestionnaireFeux.gestionnaireDefaut()(len(self.combinaisons))
+
 
     def correcte(self,config):
         """
             renvoie vrai si la configuration est correcte
-            # @author : marcus
+            @author : marcus
         """
         coupe = False
         liste_points = []
@@ -291,18 +298,11 @@ class Intersection:
                 if(d2 is not None):
                     liste_points.append((d2,f2))
             index += 1
-       #~ 
-        #~ print("B")
-        #~ for (d1,f1) in liste_points:
-            #~ print("B "+config+" "+str(d1)+" "+str(f1))
-    
+
         for points1 in liste_points:
             for points2 in liste_points:
                 if(points1 != points2):
-                    #~ print("ça marche ici?")
-                    #~ print("B : "+str(points1[0])+" "+str(points1[1])+" "+str(points2[0])+" "+str(points2[1])+" ")
                     if(Coordonnees.Coordonnees.se_coupent(points1[0], points1[1], points2[0], points2[1])):
-                        #~ print("oh bah ça coupe")
                         return False
         return True
         
@@ -583,14 +583,10 @@ class Intersection:
 
     def notifie_temps(self, increment, moteur):
         #~ print("L'intersection a été notifié.")
-
-        self.timestamp_maj = (moteur.temps / moteur.nombre_ticks_seconde) % (24*3600)
-        self.temps_vert += increment
-
-        if (self.temps_vert / moteur.nombre_ticks_seconde > 30):
-            for index, feu in self.feux.items():
-                feu.change_couleur()
-            self.temps_vert = 0
+        timestamp = moteur.temps / moteur.nombre_ticks_seconde
+        config = self.gestionnaire.getConfig(timestamp, self.recuperer_etat_trafic(timestamp))
+        self.appliquer_configuration(config, timestamp)
+        
 
     def evaluer_situation(self):
         nb = 0
@@ -610,49 +606,25 @@ class Intersection:
 
 
 
-    def recuperer_etat_trafic(self):
-        etat_trafic = []
+    def recuperer_etat_trafic(self, timestamp):
+        etat_trafic = {}
+        etat_trafic["daytime"] = timestamp % (24 * 3600)
+        i = 0
         for voie in (self.entrantes + self.sortantes):
-            prem_veh = voie.premier_vehicule()
-            if prem_veh is not None:
-                etat_trafic.append(prem_veh.time_alive)
-            else:
-                etat_trafic.append(0)
-            last_veh = voie.dernier_vehicule()
-            if last_veh is not None:
-                etat_trafic.append(last_veh.time_alive)
-            else:
-                etat_trafic.append(0)
-            etat_trafic.append(voie.nombre_vehicules())
+            chaine = "occupation_voie_{0:d}".format(i)
+            etat_trafic[chaine] = voie.nombre_vehicules()
+            i += 1
 
-        etat_trafic.append(len(self.vehicules))
+        etat_trafic['occupation_intersection'] = len(self.vehicules)
 
         for identifiant, feu in self.feux.items():
             if feu.est_passant():
-                etat_trafic.append(1)
+               etat = 1
             else:
-                etat_trafic.append(0)
+               etat = 0
+            
+            duree_feu = feu.ticksRouge(timestamp)
+            etat_trafic["etat_feu_{0}".format(identifiant)] = etat
+            etat_trafic["dureestop_feu_{0}".format(identifiant)] = duree_feu
 
         return etat_trafic
-
-#        vmax = Intersection.vitesse_max
-#        for voie in (self.entrantes + self.sortantes):
-#            liste_vehicules = voie.get_vehicules()
-#            etat_trafic.append(len(liste_vehicules))
-#            somme = 0.0
-#            for voiture in liste_vehicules:
-#                somme += abs(voiture.vitesse)
-#            vitmoy = somme /len(liste_vehicules) if liste_vehicules else voie.vitesse_max
-#            etat_trafic.append(vitmoy)
-#
-#        liste_vehicules = self.vehicules
-#        etat_trafic.append(len(liste_vehicules))
-#        somme = 0.0
-#        for voiture in liste_vehicules:
-#            somme += abs(voiture.vitesse)
-#        vitmoy = somme /len(liste_vehicules) if liste_vehicules else Intersection.vitesse_max
-#        etat_trafic.append(vitmoy)
-#
-#        #etat_trafic.append(self.timestamp_maj)
-#
-#        return etat_trafic 

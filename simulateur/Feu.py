@@ -31,24 +31,21 @@ class Feu():
         
         print ("FEU : " + str(self.passant))
 
-    def notifie_temps(self, temps, simulation_manager):
-        """
-            Methode appelée lorsque le simulateur augmente le temps
-        """
-        pass
-        #~ self.change_couleur(simulation_manager.temps)
+        self.timestampLastChange = 0
 
-    def change_couleur(self):
+    def change_couleur(self, timestamp):
 
         """
-                    Change la couleur du feu
+            Change la couleur du feu
 
         """
-        if(not self.passant and self.vient_juste_de_passer_au_rouge):
-            self.vient_juste_de_passer_au_rouge = False
-        else:
-            self.passant = not(self.passant)
+        self.passant = not(self.passant)
+        self.timestampLastChange = timestamp
 
     def est_passant(self):
         return self.passant
 
+    def ticksRouge(self, timestamp):
+        if self.passant:
+            return 0
+        return timestamp - self.timestampLastChange
